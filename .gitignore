@@ -1,0 +1,10 @@
+############
+#CodeBlocks
+############
+*.cbp
+*.depend
+*.layout
+
+obj/
+bin/
+
