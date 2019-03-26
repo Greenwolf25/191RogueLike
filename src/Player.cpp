@@ -4,6 +4,7 @@
 #include <TextureLoader.h>
 #include <math.h>
 #include <iostream>
+#include <Timer.h>
 using namespace std;
 
 #define PI 3.14159265

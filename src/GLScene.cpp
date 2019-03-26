@@ -6,6 +6,7 @@
 #include <Parallax.h>
 #include <Player.h>
 #include <GameObject.h>
+#include <Timer.h>
 
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
@@ -98,6 +99,13 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             KbMs->wParam = wParam;
             KbMs->keyPressed();
             KbMs->keyEnv(Plx,0.001);
+            if(KbMs->isKeyPressed(0x50)){// p key
+                if(Timer::isPaused()){
+                    Timer::unpause();
+                }else{
+                    Timer::pause();
+                }
+            }
             break;
 		}
 
