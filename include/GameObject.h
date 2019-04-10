@@ -12,6 +12,10 @@ class GameObject
 
         double x, y, z;
         double xScale, yScale, zScale;
+        double xMin, xMax, yMin, yMax; //for mine animation
+
+
+
         double rotation; // current angle from default
 
         virtual void drawObject();
@@ -24,6 +28,10 @@ class GameObject
         Timer lifetime;
 
         void deleteSelf();
+        //void Gtimer();
+        //string gAction = " "; // these 3 won't be needed, only used with grenade
+        //void gExplode();
+
 
         TextureLoader *defaultTex;
 
@@ -36,9 +44,12 @@ class Projectile: public GameObject{
             Projectile();
             virtual ~Projectile();
 
-            float xVelo, yVelo;
+            float xVelo, yVelo; //bullet speed
+            double xMinP, xMaxP, yMinP, yMaxP; // for bullet animation
+            double xPscale,yPscale,zPscale; // bullet can have it's own size
 
             void runPerFrame();
+            void drawObject();
         protected:
         private:
 };

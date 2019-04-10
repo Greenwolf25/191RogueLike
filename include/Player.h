@@ -15,8 +15,10 @@ class Player
         virtual ~Player();
 
         double x, y, z;
+        double xMin, xMax, yMin, yMax;
         double xScale, yScale, zScale;
         double rotation; // current angle from default
+        double speed;
 
         void drawPlayer();
         void lookAt(double,double);
@@ -27,6 +29,7 @@ class Player
     protected:
         ObjList* objectList;
         Timer spawnTimer;
+        Timer animationTimer;
 
     private:
         TextureLoader *idle;

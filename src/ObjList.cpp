@@ -123,6 +123,34 @@ int ObjList::createProjectile(double inputX, double inputY, double xVelocity, do
     return index;
 }
 
+//new: to adjust bullet direction (just createProjectile again with only rotation added)
+int ObjList::createProjectile(double inputX, double inputY, double xVelocity, double YVelocity, double inputRotation)
+{
+    int index = -1;
+    for(int i = 0; i < size; i++){
+        if(objectList[i] == NULL){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) return -1; // if no free space return -1
+
+    Projectile *temp = new Projectile();
+    temp->z += (zOffput * index); // to avoid z fighting
+    temp->x = inputX;
+    temp->y = inputY;
+    temp->rotation = inputRotation;
+    temp->xVelo = xVelocity;
+    temp->yVelo = YVelocity;
+    temp->objList = this;
+    temp->objListIndex = index;
+    temp->Init(&textures[1]);
+    objectList[index] = temp;
+
+    return index;
+}
+
 bool ObjList::deleteObject(int index)
 {
     if(index >= size) return false;
@@ -165,7 +193,8 @@ int ObjList::Size()
 void ObjList::initTextures()
 {
     textures = new TextureLoader[2];
-    textures[0].LoadTexture("images/ball.png");
-    textures[1].LoadTexture("images/dart.png");
+    textures[0].LoadTexture("images/mine.png");
+    textures[1].LoadTexture("images/bullet.png");
+    //textures[2].LoadTexture("images/boom.png")
 }
 

@@ -15,6 +15,7 @@ class ObjList
 
         int createProjectile(double, double, double, double, double, double, double, double);// X,Y,Z,scaleX,scaleY,Rotate,speedX,SpeedY (return index) if no free space return -1
         int createProjectile(double, double, double, double); // X,Y,VelocityX,VelocityY (return index) if no free space return -1
+        int createProjectile(double,double,double,double,double); //x,y,Vx,Vy,rotation
 
         bool deleteObject(int); // delete index (return false if NULL)
         GameObject* getObj(int);
