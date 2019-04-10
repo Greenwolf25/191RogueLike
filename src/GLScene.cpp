@@ -7,7 +7,7 @@
 #include <Player.h>
 #include <GameObject.h>
 #include <Timer.h>
-
+//
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
 Player *player = new Player();
