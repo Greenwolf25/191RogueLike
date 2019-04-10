@@ -7,10 +7,12 @@
 #include <Player.h>
 #include <GameObject.h>
 #include <Timer.h>
-//
+#include <Menus.h>
+
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
 Player *player = new Player();
+Menus *menu = new Menus;
 
 ObjList *objectList = new ObjList(100);
 
@@ -26,8 +28,9 @@ GLScene::~GLScene()
 {
     //dtor
 }
-GLint GLScene::initGL()
+GLint GLScene::initGL(bool* quit)
 {
+    closeGame = quit;
     glShadeModel(GL_SMOOTH); // For smooth animation transitions
     glClearColor(0.6f, 0.8f, 0.8f, 0.0f); // set Background color (R,G,B,A)
     glClearDepth(1.0d); // What is in front and behind
@@ -39,7 +42,11 @@ GLint GLScene::initGL()
     GLLight Light(GL_LIGHT0); // Create light
     Light.setLight(GL_LIGHT0); // Set up light
 
-    Plx->parallaxInit("images/parallax.png");
+    menu->landingMenuInit("images/landPage.jpg");
+    menu->mainMenuInit("images/mMfix.png");
+    menu->helpMenuInit("images/helpMenu.png");
+    menu->pauseMenuInit("images/pauseMenu.png");
+    Plx->parallaxInit("images/testLevel.jpg");
     player->playerInit(objectList);
     objectList->initTextures();
 
@@ -59,20 +66,45 @@ GLint GLScene::drawGLScene()
         //glVertex3d(0.5,0,-1.0);
     glEnd();
 
-    glPushMatrix(); // draw the background object
+    if(menu->inMenu == true)
+    {
+        glPushMatrix();
+        menu->drawMenus(screenWidth, screenHeight);
+        glPopMatrix();
+    }
+
+    else
+    {
+        if(Timer::isPaused() == false)
+        {
+            glPushMatrix(); // draw the background object
+            Plx->drawSquare(screenWidth,screenHeight);
+            glPopMatrix();
+            player->drawPlayer();
+            objectList->draw();
+            //glPopMatrix();
+        }
+
+    }
+
+    /*glPushMatrix(); // draw the background object
     Plx->drawSquare(screenWidth,screenHeight);
-    glPopMatrix();
+    glPopMatrix();*/
 
-    player->drawPlayer();
+    //player->drawPlayer();
 
-    objectList->draw();
+    //objectList->draw();
 
 }
 
 GLint GLScene::idleGLScene()
 {
+    menu->menuInputs(KbMs,closeGame);
+
+    if(!menu->inMenu){
     player->playerInput(KbMs);
     objectList->runPerFrame();
+    }
 }
 
 
