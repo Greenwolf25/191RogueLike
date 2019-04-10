@@ -42,11 +42,11 @@ GLint GLScene::initGL(bool* quit)
     GLLight Light(GL_LIGHT0); // Create light
     Light.setLight(GL_LIGHT0); // Set up light
 
-    menu->landingMenuInit("images/landPage.jpg");
+    menu->landingMenuInit("images/landPage.png");
     menu->mainMenuInit("images/mMfix.png");
     menu->helpMenuInit("images/helpMenu.png");
     menu->pauseMenuInit("images/pauseMenu.png");
-    Plx->parallaxInit("images/testLevel.jpg");
+    Plx->parallaxInit("images/test2.png");
     player->playerInit(objectList);
     objectList->initTextures();
 
@@ -100,11 +100,8 @@ GLint GLScene::drawGLScene()
 GLint GLScene::idleGLScene()
 {
     menu->menuInputs(KbMs,closeGame);
-
-    if(!menu->inMenu){
     player->playerInput(KbMs);
     objectList->runPerFrame();
-    }
 }
 
 

@@ -10,13 +10,14 @@ class GLScene
         GLScene();          //Constructor
         virtual ~GLScene(); //Destructor
 
-        GLint initGL();     //Initialize
+        GLint initGL(bool*);     //Initialize
         GLint drawGLScene();//Draw Scene
         GLint idleGLScene();//run idle process
         GLvoid resizeGLScene(GLsizei,GLsizei); //Window resize function
 
         int winMsg(HWND,UINT,WPARAM,LPARAM);
         float screenWidth, screenHeight;
+        bool* closeGame;
 
     protected:
 

@@ -2,7 +2,7 @@
 
 clock_t Timer::offset = 0;
 clock_t Timer::pausedAt = 0;
-bool Timer::paused = true; // true if starting game in menu
+bool Timer::paused = false; // true if starting game in menu
 
 
 Timer::Timer()
@@ -49,7 +49,7 @@ clock_t Timer::getTicks()
     if(paused){
         return (clock() - startAt) - (offset - startingOffset + (clock() - pausedAt)); // if paused
     }
-    return (clock() - startAt) - (offset - startingOffset);
+    return (clock() - startAt);// - (offset - startingOffset);
 }
 
 bool Timer::pause()

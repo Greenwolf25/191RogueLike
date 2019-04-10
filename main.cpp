@@ -27,6 +27,7 @@ HINSTANCE	hInstance;		// Holds The Instance Of The Application
 bool	keys[256];			// Array Used For The Keyboard Routine
 bool	active=TRUE;		// Window Active Flag Set To TRUE By Default
 bool	fullscreen=TRUE;	// Fullscreen Flag Set To Fullscreen Mode By Default
+bool    done = false;  //
 
 LRESULT	CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);	// Declaration For WndProc
 
@@ -225,7 +226,7 @@ BOOL CreateGLWindow(char* title, int width, int height, int bits, bool fullscree
 	SetFocus(hWnd);									// Sets Keyboard Focus To The Window
 	Scene->resizeGLScene(width, height);			// Set Up Our Perspective GL Screen
 
-	if (!Scene->initGL())							// Initialize Our Newly Created GL Window
+	if (!Scene->initGL(&done))							// Initialize Our Newly Created GL Window
 	{
 		KillGLWindow();								// Reset The Display
 		MessageBox(NULL,"Initialization Failed.","ERROR",MB_OK|MB_ICONEXCLAMATION);
@@ -318,7 +319,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 					int			nCmdShow)			// Window Show State
 {
 	MSG		msg;									// Windows Message Structure
-	BOOL	done=FALSE;								// Bool Variable To Exit Loop
+	//BOOL	done=FALSE;								// Bool Variable To Exit Loop
 
 	int	fullscreenWidth  = GetSystemMetrics(SM_CXSCREEN);
     int	fullscreenHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -352,12 +353,12 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		else										// If There Are No Messages
 		{
 			// Draw The Scene.  Watch For ESC Key And Quit Messages From DrawGLScene()
-			if (keys[VK_ESCAPE])	// Active?  Was There A Quit Received?
+			/*if (keys[VK_ESCAPE])	// Active?  Was There A Quit Received?
 			{
 				done=TRUE;							// ESC or DrawGLScene Signalled A Quit
 			}
 			else									// Not Time To Quit, Update Screen
-			{
+			{*/
 			    time_now = glutGet(GLUT_ELAPSED_TIME);
 			    if(time_now-time_prev > 1000/FPS)
                 {
@@ -367,7 +368,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 				SwapBuffers(hDC);					// Swap Buffers (Double Buffering)
 				time_prev = time_now;
                 }
-			}
+			//}
 
 			if (keys[VK_F1])						// Is F1 Being Pressed?
 			{
