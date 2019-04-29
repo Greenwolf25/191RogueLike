@@ -26,6 +26,7 @@ class GameObject
         int objListIndex; // index of self for above
 
         Timer lifetime;
+        Timer animationTimer;
 
         void deleteSelf();
         //void Gtimer();
@@ -45,8 +46,6 @@ class Projectile: public GameObject{
             virtual ~Projectile();
 
             float xVelo, yVelo; //bullet speed
-            double xMinP, xMaxP, yMinP, yMaxP; // for bullet animation
-            double xPscale,yPscale,zPscale; // bullet can have it's own size
 
             void runPerFrame();
             void drawObject();
@@ -54,4 +53,15 @@ class Projectile: public GameObject{
         private:
 };
 
+class Mine: public GameObject{
+        public:
+            Mine();
+            virtual ~Mine();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+        protected:
+        private:
+};
 #endif // GAMEOBJECT_H

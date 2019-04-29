@@ -84,11 +84,11 @@ void Player::playerInput(Inputs *KbMs)
         y += speed;
         rotation = 0;
         cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
-        if(spawnTimer.getTicks() > 100)
+        if(animationTimer.getTicks() > 100)
         {
             xMin += .25;
             xMax += .25;
-            spawnTimer.reset();
+            animationTimer.reset();
         }
 
     }else if(KbMs->isKeyPressed(0x41)){// a key
@@ -143,7 +143,7 @@ void Player::playerInput(Inputs *KbMs)
         spawnTimer.reset();
     }
     if(KbMs->isKeyPressed(16)&& spawnTimer.getTicks() > 1000){// L shift (hold shift to place mine)
-        objectList->createObj(x, y);
+        objectList->createMine(x, y);
         spawnTimer.reset();
     }
 }

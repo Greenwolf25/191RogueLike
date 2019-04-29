@@ -17,6 +17,9 @@ class ObjList
         int createProjectile(double, double, double, double); // X,Y,VelocityX,VelocityY (return index) if no free space return -1
         int createProjectile(double,double,double,double,double); //x,y,Vx,Vy,rotation
 
+        int createMine(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
+        int createMine(double, double); // X,Y (return index) if no free space return -1
+
         bool deleteObject(int); // delete index (return false if NULL)
         GameObject* getObj(int);
         void draw();

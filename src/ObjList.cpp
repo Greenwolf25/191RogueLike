@@ -151,6 +151,58 @@ int ObjList::createProjectile(double inputX, double inputY, double xVelocity, do
     return index;
 }
 
+int ObjList::createMine(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation)
+{
+    int index = -1;
+    for(int i = 0; i < size; i++){
+        if(objectList[i] == NULL){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) return -1; // if no free space return -1
+
+    Mine *temp = new Mine();
+    temp->z = inputZ;
+    temp->x = inputX;
+    temp->y = inputY;
+    temp->xScale = scaleX;
+    temp->yScale = scaleY;
+    temp->rotation = inputRotation;
+    temp->objList = this;
+    temp->objListIndex = index;
+    temp->Init(&textures[0]);
+    objectList[index] = temp;
+
+    return index;
+
+}
+
+int ObjList::createMine(double inputX, double inputY)
+{
+    int index = -1;
+    for(int i = 0; i < size; i++){
+        if(objectList[i] == NULL){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) return -1; // if no free space return -1
+
+    Mine *temp = new Mine();
+    temp->z += (zOffput * index); // to avoid z fighting
+    temp->x = inputX;
+    temp->y = inputY;
+    temp->objList = this;
+    temp->objListIndex = index;
+    temp->Init(&textures[0]);
+    objectList[index] = temp;
+
+    return index;
+}
+
 bool ObjList::deleteObject(int index)
 {
     if(index >= size) return false;
