@@ -15,7 +15,7 @@ ObjList::~ObjList()
     delete[] objectList;
     delete[] textures;
 }
-
+/*
 int ObjList::createObj(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation)
 {
     int index = -1;
@@ -66,7 +66,7 @@ int ObjList::createObj(double inputX, double inputY)
     objectList[index] = temp;
 
     return index;
-}
+}*/
 
 int ObjList::createProjectile(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation, double xVelocity, double YVelocity)
 {

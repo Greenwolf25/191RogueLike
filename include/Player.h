@@ -29,6 +29,7 @@ class Player
     protected:
         ObjList* objectList;
         Timer spawnTimer;
+        Timer mineSpawnTimer;
         Timer animationTimer;
 
     private:

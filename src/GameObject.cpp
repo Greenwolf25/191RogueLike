@@ -11,12 +11,9 @@ GameObject::GameObject()
     xScale = 0.1;
     yScale = 0.1;
     zScale = 1.0;
-    //xMscale = 0.02;
-    //yMscale = 0.05;
-    //zMscale = 1.0;
     rotation = 0;
-    xMax = 0.5; //
-    yMax = 0.5;
+    xMax = 1.0; //
+    yMax = 1.0;
     xMin = 0.0;
     yMin = 0.0;
 
@@ -54,21 +51,14 @@ void GameObject::drawObject()
     glPopMatrix();
 }
 
-void GameObject::runPerFrame() //makes mine blink
+void GameObject::runPerFrame()
 {
-    if(animationTimer.getTicks() > 600)
-    {
-        xMin += 0.5;
-        xMax += 0.5;
-        animationTimer.reset();
-    }
+    //EMPTY AS IT IS A TEMPLATE
 }
 
 void GameObject::Init(TextureLoader* newTex)
 {
     defaultTex = newTex;
-    //defaultTex->LoadTexture("images/ball.png");
-    //cout << "GameObject init" << endl;
 }
 
 void GameObject::deleteSelf()

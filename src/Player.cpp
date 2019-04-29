@@ -142,9 +142,9 @@ void Player::playerInput(Inputs *KbMs)
 
         spawnTimer.reset();
     }
-    if(KbMs->isKeyPressed(16)&& spawnTimer.getTicks() > 1000){// L shift (hold shift to place mine)
+    if(KbMs->isKeyPressed(16)&& mineSpawnTimer.getTicks() > 1000){// L shift (hold shift to place mine)
         objectList->createMine(x, y);
-        spawnTimer.reset();
+        mineSpawnTimer.reset();
     }
 }
 

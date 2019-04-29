@@ -10,8 +10,8 @@ class ObjList
         ObjList(int);
         virtual ~ObjList();
 
-        int createObj(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
-        int createObj(double, double); // X,Y (return index) if no free space return -1
+        //int createObj(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
+        //int createObj(double, double); // X,Y (return index) if no free space return -1
 
         int createProjectile(double, double, double, double, double, double, double, double);// X,Y,Z,scaleX,scaleY,Rotate,speedX,SpeedY (return index) if no free space return -1
         int createProjectile(double, double, double, double); // X,Y,VelocityX,VelocityY (return index) if no free space return -1
