@@ -8,11 +8,15 @@
 #include <GameObject.h>
 #include <Timer.h>
 #include <Menus.h>
+#include <LevelGen.h>
 
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
 Player *player = new Player();
-Menus *menu = new Menus;
+Menus *menu = new Menus();
+LevelGen *level = new LevelGen();
+
+double tempX, tempY = 0.0;
 
 ObjList *objectList = new ObjList(100);
 
@@ -58,13 +62,20 @@ GLint GLScene::drawGLScene()
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glPointSize(10);
+    glPushMatrix();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+
+    glPointSize(3);
+    glTranslated(tempX,tempY,0.0);
     glColor3f(1,1,1);
     glBegin(GL_POINTS);
-        glVertex3d(0,0,-1.0);
-        glVertex3d(-0.5,0,-1.0);
-        //glVertex3d(0.5,0,-1.0);
+        glVertex3d(0,0,-1.05);
     glEnd();
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glPopMatrix();
 
     if(menu->inMenu)
     {
@@ -78,8 +89,10 @@ GLint GLScene::drawGLScene()
         if(!Timer::isPaused())
         {
             glPushMatrix(); // draw the background object
-                Plx->drawSquare(screenWidth,screenHeight);
+                //Plx->drawSquare(screenWidth,screenHeight);
             glPopMatrix();
+
+            level->drawLevel();
 
             player->drawPlayer();
             objectList->draw();
@@ -134,6 +147,20 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 }else{
                     Timer::pause();
                 }
+            }
+
+            if(KbMs->isKeyPressed(VK_UP)){// up
+                tempY += 0.001;
+                cout << "Y: " << tempY << endl;
+            }else if(KbMs->isKeyPressed(VK_DOWN)){// up
+                tempY -= 0.001;
+                cout << "Y: " << tempY << endl;
+            }else if(KbMs->isKeyPressed(VK_LEFT)){// up
+                tempX -= 0.001;
+                cout << "X: " << tempX << endl;
+            }else if(KbMs->isKeyPressed(VK_RIGHT)){// up
+                tempX += 0.001;
+                cout << "X: " << tempX << endl;
             }
             break;
 		}
