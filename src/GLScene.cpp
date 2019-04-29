@@ -66,7 +66,7 @@ GLint GLScene::drawGLScene()
         //glVertex3d(0.5,0,-1.0);
     glEnd();
 
-    if(menu->inMenu == true)
+    if(menu->inMenu)
     {
         glPushMatrix();
         menu->drawMenus(screenWidth, screenHeight);
@@ -75,14 +75,15 @@ GLint GLScene::drawGLScene()
 
     else
     {
-        if(Timer::isPaused() == false)
+        if(!Timer::isPaused())
         {
             glPushMatrix(); // draw the background object
-            Plx->drawSquare(screenWidth,screenHeight);
+                Plx->drawSquare(screenWidth,screenHeight);
             glPopMatrix();
+
             player->drawPlayer();
             objectList->draw();
-            //glPopMatrix();
+
         }
 
     }
@@ -91,17 +92,16 @@ GLint GLScene::drawGLScene()
     Plx->drawSquare(screenWidth,screenHeight);
     glPopMatrix();*/
 
-    //player->drawPlayer();
-
-    //objectList->draw();
-
 }
 
 GLint GLScene::idleGLScene()
 {
     menu->menuInputs(KbMs,closeGame);
-    player->playerInput(KbMs);
-    objectList->runPerFrame();
+
+    if(menu->inMenu == false){ // if the game is running
+        player->playerInput(KbMs);
+        objectList->runPerFrame();
+    }
 }
 
 
