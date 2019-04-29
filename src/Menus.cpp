@@ -120,7 +120,7 @@ void Menus::menuInputs(Inputs *KbMs, bool* exitGame)
         if(KbMs->isKeyPressed(0x4E))
         {
             inMenu = false;
-            Timer::unpause();
+            Timer::unpause(); // unpause timers now that the game is running
             menuName = "in game";
         }
         else if(KbMs->isKeyPressed(0x48))

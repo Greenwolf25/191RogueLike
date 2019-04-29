@@ -2,6 +2,7 @@
 #include <iostream>
 using namespace std;
 
+/// Game Object is for other Game objects to inherent
 GameObject::GameObject()
 {
     //ctor
@@ -65,6 +66,8 @@ void GameObject::deleteSelf()
 {
     objList->deleteObject(objListIndex);
 }
+
+/// Start of Projectile Object -------------------------------
 
 Projectile::Projectile()
 {
@@ -135,6 +138,8 @@ void Projectile::drawObject()
     glPopMatrix();
 }
 
+/// Start of Mine Object -----------------------------------------------
+
 Mine::Mine()
 {
     //ctor
@@ -144,9 +149,6 @@ Mine::Mine()
     xScale = 0.1;
     yScale = 0.1;
     zScale = 1.0;
-    //xMscale = 0.02;
-    //yMscale = 0.05;
-    //zMscale = 1.0;
     rotation = 0;
     xMax = 0.5; //
     yMax = 0.5;

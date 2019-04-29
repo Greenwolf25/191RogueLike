@@ -18,20 +18,18 @@ class GameObject
 
         double rotation; // current angle from default
 
-        virtual void drawObject();
-        virtual void runPerFrame();
-        virtual void Init(TextureLoader*);
+        /// VIRTUAL CAN BE OVER WRITTEN FOR INHERITANCE but still called when assuming the object is a GameObject
+        virtual void drawObject(); // draw the object to screen
+        virtual void runPerFrame(); // tasks to run each frame (Animation, AI, ETC)
+        virtual void Init(TextureLoader*);// initiate object and textures
 
         ObjList* objList; // the object list that the object is a member (for self deletion)
         int objListIndex; // index of self for above
 
-        Timer lifetime;
-        Timer animationTimer;
+        Timer lifetime; // time since object creation  ------------ DO NOT RESET ULESS NEEDED (if you need a new timer create one)
+        Timer animationTimer;// timer for animations
 
         void deleteSelf();
-        //void Gtimer();
-        //string gAction = " "; // these 3 won't be needed, only used with grenade
-        //void gExplode();
 
 
         TextureLoader *defaultTex;
