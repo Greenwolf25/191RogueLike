@@ -54,6 +54,15 @@ GLint GLScene::initGL(bool* quit)
     player->playerInit(objectList);
     objectList->initTextures();
 
+    level->generateLevels();
+
+    for(int y=0; y < y_tiles; y++){
+        for(int x=0; x < x_tiles; x++){
+                cout << level->getWallMatrix()[(x_tiles)*y + x] << " ";
+        }
+        cout << endl;
+    }
+
     return true;
 }
 
@@ -141,15 +150,8 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             KbMs->wParam = wParam;
             KbMs->keyPressed();
             KbMs->keyEnv(Plx,0.001);
-            if(KbMs->isKeyPressed(0x50)){// p key
-                if(Timer::isPaused()){
-                    Timer::unpause();
-                }else{
-                    Timer::pause();
-                }
-            }
 
-            if(KbMs->isKeyPressed(VK_UP)){// up
+            /* if(KbMs->isKeyPressed(VK_UP)){// up
                 tempY += 0.001;
                 cout << "Y: " << tempY << endl;
             }else if(KbMs->isKeyPressed(VK_DOWN)){// up
@@ -161,7 +163,7 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             }else if(KbMs->isKeyPressed(VK_RIGHT)){// up
                 tempX += 0.001;
                 cout << "X: " << tempX << endl;
-            }
+            }*/
             break;
 		}
 

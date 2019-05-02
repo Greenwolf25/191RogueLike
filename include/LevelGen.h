@@ -4,6 +4,7 @@
 #include <Player.h>
 #include <math.h>
 #include <stdlib.h>
+#include <iostream>
 #include <TextureLoader.h>
 using namespace std;
 
@@ -63,6 +64,7 @@ class LevelNode
         bool* getDoors();
         bool* getOpenDoors();
         LevelNode* getNextRoom(int);
+        LevelTemplate getLevelTemplate();
 
         bool isRoomBeat();
         bool isEnemiesCleared();
@@ -139,6 +141,11 @@ class LevelGen
 
         int getTileX(int tile);
         int getTileY(int tile);
+
+        int getDoorX(int door);
+        int getDoorY(int door);
+
+        void setWallMatrix();
 
     private:
 };

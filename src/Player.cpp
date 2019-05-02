@@ -83,7 +83,7 @@ void Player::playerInput(Inputs *KbMs)
     if(KbMs->isKeyPressed(0x57)){// w key
         y += speed;
         rotation = 0;
-        cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
+        //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
         if(animationTimer.getTicks() > 100)
         {
             xMin += .25;
@@ -94,7 +94,7 @@ void Player::playerInput(Inputs *KbMs)
     }else if(KbMs->isKeyPressed(0x41)){// a key
         x -= speed;
         rotation = 90.0;
-        cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
+        //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
         if(animationTimer.getTicks() > 100)
         {
             xMin += .25;
@@ -104,7 +104,7 @@ void Player::playerInput(Inputs *KbMs)
     }else if(KbMs->isKeyPressed(0x53)){// s key
         y -= speed;
         rotation = 180.0;
-        cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
+        //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
         if(animationTimer.getTicks() > 100)
         {
             xMin += .25;
@@ -114,7 +114,7 @@ void Player::playerInput(Inputs *KbMs)
     }else if(KbMs->isKeyPressed(0x44)){// d key
         x += speed;
         rotation = -90.0;
-        cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
+        //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
         if(animationTimer.getTicks() > 100)
         {
             xMin += .25;
