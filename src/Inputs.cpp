@@ -1,6 +1,7 @@
 #include "Inputs.h"
 #include <iostream>
 
+
 Inputs::Inputs()
 {
     //ctor
@@ -128,5 +129,16 @@ void Inputs::keyEnv(Parallax* Plx, float speed)
 bool Inputs::isKeyPressed(int keyCode)
 {
     return keys[keyCode];
+}
+void Inputs::keySounds(sound* snds)
+{
+    /*
+    switch(wParam)
+    {
+        case isKeyPressed(16):
+            snds->playSound("sounds/equip.wav");
+
+    }
+    */
 }
 

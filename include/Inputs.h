@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <Model.h>
 #include <Parallax.h>
+#include <sound.h>
 
 class Inputs
 {
@@ -13,6 +14,7 @@ class Inputs
         void keyPressed();
         void keyUp();
         bool isKeyPressed(int);
+        void keySounds(sound*);
 
         void mouseEventDown(double, double);
         void mouseEventUp();

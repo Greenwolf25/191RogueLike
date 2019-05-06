@@ -9,6 +9,8 @@ using namespace std;
 
 #define PI 3.14159265
 
+sound* PS = new sound();
+
 
 Player::Player()
 {
@@ -141,10 +143,13 @@ void Player::playerInput(Inputs *KbMs)
         }
 
         spawnTimer.reset();
+        PS->playSound("sounds/fire.wav");
     }
     if(KbMs->isKeyPressed(16)&& mineSpawnTimer.getTicks() > 1000){// L shift (hold shift to place mine)
+
         objectList->createMine(x, y);
         mineSpawnTimer.reset();
+        PS->playSound("sounds/setmine.wav");
     }
 }
 

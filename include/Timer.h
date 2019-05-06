@@ -21,6 +21,7 @@ class Timer
         clock_t getTicks();
 
 
+
     protected:
         clock_t startingOffset; // total time paused from before timer creation
         static clock_t pausedAt;

@@ -9,12 +9,14 @@
 #include <Timer.h>
 #include <Menus.h>
 #include <LevelGen.h>
+#include <sound.h>
 
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
 Player *player = new Player();
 Menus *menu = new Menus();
 LevelGen *level = new LevelGen();
+sound* SND = new sound();
 
 double tempX, tempY = 0.0;
 
@@ -150,6 +152,7 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             KbMs->wParam = wParam;
             KbMs->keyPressed();
             KbMs->keyEnv(Plx,0.001);
+            KbMs->keySounds(SND);
 
             /* if(KbMs->isKeyPressed(VK_UP)){// up
                 tempY += 0.001;
