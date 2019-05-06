@@ -60,7 +60,7 @@ GLint GLScene::initGL(bool* quit)
 
     for(int y=0; y < y_tiles; y++){
         for(int x=0; x < x_tiles; x++){
-                cout << level->getWallMatrix()[(x_tiles)*y + x] << " ";
+                cout << level->getWallMatrix((x_tiles)*y + x) << " ";
         }
         cout << endl;
     }
@@ -84,7 +84,7 @@ GLint GLScene::drawGLScene()
         glVertex3d(0,0,-1.05);
     glEnd();
 
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
     glPopMatrix();
 
