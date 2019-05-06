@@ -1,7 +1,11 @@
 #include "GameObject.h"
 #include <iostream>
+#include <ObjList.h>
+
 using namespace std;
 
+sound *SNDS = new sound();
+ObjList* test = new ObjList(100);
 /// Game Object is for other Game objects to inherent
 GameObject::GameObject()
 {
@@ -155,8 +159,10 @@ Mine::Mine()
     xMin = 0.0;
     yMin = 0.0;
 
+
     lifetime.start();
     animationTimer.start();
+
 }
 
 Mine::~Mine()
@@ -196,10 +202,110 @@ void Mine::runPerFrame() //makes mine blink
         xMin += 0.5;
         xMax += 0.5;
         animationTimer.reset();
+        if(lifetime.getTicks() > 7500)
+        {
+            deleteSelf();
+            //S->playSound();
+            //test->createExplosion(x,y);
+        }
+
     }
 }
 
 void Mine::Init(TextureLoader* newTex)
+{
+    defaultTex = newTex;
+}
+
+
+
+
+/// Start of Explosion Object
+
+Explode::Explode()
+{
+    //ctor
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.2;
+    yScale = 0.2;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 0.25; //
+    yMax = 0.5;
+    xMin = 0.0;
+    yMin = 0.0;
+
+    lifetime.start();
+    animationTimer.start();
+}
+
+Explode::~Explode()
+{
+    //dtor
+}
+
+void Explode::runPerFrame()
+{
+    if(animationTimer.getTicks() > 60) //adjust later
+    {
+        xMin += 0.25;
+        xMax += 0.25;
+
+        if(xMax+xMin >= 2.0)
+        {
+            yMax = .5;
+            yMin = 1.0;
+            xMax = 0.25;
+            xMin = 0.0;
+        }
+
+        animationTimer.reset();
+        if(lifetime.getTicks() > 7500)
+        {
+
+            sfx(SNDS);
+        }
+        if(lifetime.getTicks() > 7980) deleteSelf();
+
+    }
+
+}
+
+void Explode::sfx(sound* snds)
+{
+    snds->playSound("sounds/explode.wav");
+}
+
+
+void Explode::drawObject()
+{
+    if(lifetime.getTicks() > 7500){
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();}
+}
+
+void Explode::Init(TextureLoader* newTex)
 {
     defaultTex = newTex;
 }

@@ -136,7 +136,7 @@ void Inputs::keySounds(sound* snds)
     switch(wParam)
     {
         case isKeyPressed(16):
-            snds->playSound("sounds/equip.wav");
+            snds->playSound("sounds/explode.wav");
 
     }
     */

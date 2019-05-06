@@ -200,8 +200,36 @@ int ObjList::createMine(double inputX, double inputY)
     temp->Init(&textures[0]);
     objectList[index] = temp;
 
+    //createExplosion(inputX, inputY);
+
+
     return index;
 }
+
+int ObjList::createExplosion(double inputX, double inputY)
+{
+    int index = -1;
+    for(int i = 0; i < size; i++){
+        if(objectList[i] == NULL){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) return -1; // if no free space return -1
+
+    Explode *temp = new Explode();
+    temp->z += (zOffput * index); // to avoid z fighting
+    temp->x = inputX;
+    temp->y = inputY;
+    temp->objList = this;
+    temp->objListIndex = index;
+    temp->Init(&textures[2]);
+    objectList[index] = temp;
+
+    return index;
+}
+
 
 bool ObjList::deleteObject(int index)
 {
@@ -247,6 +275,6 @@ void ObjList::initTextures()
     textures = new TextureLoader[2];
     textures[0].LoadTexture("images/mine.png");
     textures[1].LoadTexture("images/bullet.png");
-    //textures[2].LoadTexture("images/boom.png")
+    textures[2].LoadTexture("images/boom.png");
 }
 

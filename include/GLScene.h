@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <GL/glut.h>
+#include <sound.h>
 
 class GLScene
 {
@@ -14,6 +15,7 @@ class GLScene
         GLint drawGLScene();//Draw Scene
         GLint idleGLScene();//run idle process
         GLvoid resizeGLScene(GLsizei,GLsizei); //Window resize function
+
 
         int winMsg(HWND,UINT,WPARAM,LPARAM);
         float screenWidth, screenHeight;

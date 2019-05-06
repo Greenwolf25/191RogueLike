@@ -147,9 +147,27 @@ void Player::playerInput(Inputs *KbMs)
     }
     if(KbMs->isKeyPressed(16)&& mineSpawnTimer.getTicks() > 1000){// L shift (hold shift to place mine)
 
+
         objectList->createMine(x, y);
+
+
+        //test
         mineSpawnTimer.reset();
         PS->playSound("sounds/setmine.wav");
+
+        Explo(x,y);
     }
 }
+void Player::Explo(double x1, double y1)
+{
+    if(explosionTimer.getTicks() > 1000)
+        {
+            objectList->createExplosion(x1,y1);
+
+
+            //PS->playSound("sounds/explode.wav");
+             explosionTimer.reset();
+        }
+}
+
 

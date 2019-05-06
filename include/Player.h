@@ -25,12 +25,15 @@ class Player
         void lookAt(double,double);
         void playerInit(ObjList*);
         void playerInput(Inputs*);
+        void Explo(double, double);
+
 
 
     protected:
         ObjList* objectList;
         Timer spawnTimer;
         Timer mineSpawnTimer;
+        Timer explosionTimer;
         Timer animationTimer;
 
     private:

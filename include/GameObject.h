@@ -3,6 +3,11 @@
 #include <TextureLoader.h>
 #include <ObjList.h>
 #include <Timer.h>
+#include <sound.h>
+
+//#define TiMeR 5480
+
+
 
 class GameObject
 {
@@ -59,6 +64,23 @@ class Mine: public GameObject{
             void runPerFrame();
             void drawObject();
             void Init(TextureLoader*);
+
+
+        protected:
+        private:
+};
+
+class Explode: public GameObject{
+        public:
+            Explode();
+            virtual ~Explode();
+
+            void runPerFrame();
+            void sfx(sound*);
+            void drawObject();
+            void Init(TextureLoader*);
+
+//            WPARAM wParam;
         protected:
         private:
 };

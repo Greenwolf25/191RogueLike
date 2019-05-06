@@ -20,6 +20,8 @@ class ObjList
         int createMine(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
         int createMine(double, double); // X,Y (return index) if no free space return -1
 
+        int createExplosion(double, double);
+
         bool deleteObject(int); // delete index (return false if NULL)
         GameObject* getObj(int);
         void draw();

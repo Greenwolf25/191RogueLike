@@ -10,6 +10,7 @@
 #include <Menus.h>
 #include <LevelGen.h>
 #include <sound.h>
+#include <particles.h>
 
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
@@ -17,6 +18,7 @@ Player *player = new Player();
 Menus *menu = new Menus();
 LevelGen *level = new LevelGen();
 sound* SND = new sound();
+particles* p = new particles();
 
 double tempX, tempY = 0.0;
 
@@ -116,7 +118,16 @@ GLint GLScene::drawGLScene()
     Plx->drawSquare(screenWidth,screenHeight);
     glPopMatrix();*/
 
+    //glPushMatrix();
+    //p->generateParticles(1,1);
+    //p->drawParticles();
+    //p->lifeTime();
+    //glPopMatrix();
+
 }
+
+
+
 
 GLint GLScene::idleGLScene()
 {
