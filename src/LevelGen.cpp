@@ -57,7 +57,7 @@ void LevelTemplate::setPossibleDoors(bool* PD)
      }
      possibleDoors.reserve(maximum_doors_per_room);
      for(int i=0; i < maximum_doors_per_room ; i++){
-        tileInfo.push_back(PD[i]);
+        possibleDoors.push_back(PD[i]);
     }
 
     delete PD;
@@ -121,34 +121,313 @@ int LevelTemplate::getTorchLocationsSize()
     return torchLocations.size();
 }
 
+/// LELEL LIST ------------------------------------------------------------------------------
 
-
-/// LEVEL NODE ------------------------------------------------------------------------------
-
-LevelNode::LevelNode()
+templateList::templateList()
 {
-    levels = new LevelTemplate[number_of_level_templates]; /// CHANGE DEFINE WHEN ADDING TEMPATES
+    levelList = new LevelTemplate[number_of_level_templates]; /// CHANGE DEFINE WHEN ADDING TEMPATES
         // template 0 default room
-        levels[0].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+        levelList[0].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
                               {
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 63, 64, 65,  0,  0,  0,  0,
-                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 69,  0, 71,  0,  0,  0,  0,
-                                 0,  0, 43, 44, 45,  0,  0,  0,  0,  0,  0,  0, 75, 76, 77,  0,  0,  0,  0,
-                                 0,  0, 49, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-                                 0,  0, 55, 56, 57,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 
                               }, ((x_tiles-2) * (y_tiles-2)));
-        levels[0].setEnemyLocations(NULL,0);
-        levels[0].setItemLocations(NULL,0);
-        levels[0].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[0].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 1
+        levelList[1].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                43, 44, 44, 45,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 44, 44, 45,
+                                49, 50, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 50, 51,
+                                49, 50, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 50, 51,
+                                55, 56, 56, 57,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 55, 56, 56, 57,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                43, 44, 44, 45,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 44, 44, 45,
+                                49, 50, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 50, 51,
+                                55, 56, 56, 57,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 55, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[1].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 2
+        levelList[2].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                55, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 57,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45,
+                                49, 50, 33, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                55, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[2].setPossibleDoors(new bool[maximum_doors_per_room]{1,0,0,0,1,0,0,0});
+
+        // template 3
+        levelList[3].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45,
+                                49, 50, 50, 50, 50, 50, 33, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                55, 56, 56, 56, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                 0,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 33, 51,
+                                 0,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                 0,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                 0,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                 0,  0,  0,  0, 49, 50, 50, 50, 50, 50, 33, 50, 50, 50, 50, 50, 50, 50, 51,
+                                43, 44, 44, 44, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                55, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[3].setItemLocations(new int[3]{3,6,1},3); // item one (key) at (3,6)
+        levelList[3].setPossibleDoors(new bool[maximum_doors_per_room]{1,0,0,0,0,0,0,0});
+
+         // template 4
+        levelList[4].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 56, 56, 56, 57,
+                                49, 50, 50, 50, 50, 50, 33, 50, 50, 50, 50, 50, 50, 50, 51,  0,  0,  0,  0,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,  0,  0,  0,  0,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,  0,  0,  0,  0,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 51,  0,  0,  0,  0,
+                                49, 50, 50, 50, 50, 50, 50, 50, 50, 33, 50, 50, 50, 50, 51,  0,  0,  0,  0,
+                                49, 33, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 44, 44, 44, 45,
+                                55, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[4].setItemLocations(new int[3]{17,6,1},3); // item one (key) at (17,6)
+        levelList[4].setPossibleDoors(new bool[maximum_doors_per_room]{0,0,0,0,1,0,0,0});
+
+        // template 5
+        levelList[5].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                43, 44, 44, 44, 44, 44, 44, 45,  0,  0,  0, 43, 44, 44, 44, 44, 44, 44, 45,
+                                49, 50, 56, 56, 56, 56, 56, 57,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                49, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 50, 50, 50, 50, 33, 51,
+                                49, 50, 44, 44, 44, 44, 44, 45,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                49, 50, 56, 50, 50, 50, 50, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                49, 51,  0, 49, 50, 63, 65, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                55, 56, 44, 50, 50, 75, 77, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                 0,  0, 49, 50, 50, 50, 50, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                43, 44, 50, 50, 50, 50, 50, 51,  0,  0,  0, 49, 50, 50, 56, 50, 50, 50, 51,
+                                55, 56, 56, 56, 56, 56, 56, 57,  0,  0,  0, 55, 56, 57,  0, 55, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[5].setTorchLocations(new int[8]{2,8, 3,3, 15,10, 18,3},8);
+        levelList[5].setPossibleDoors(new bool[maximum_doors_per_room]{0,0,1,0,0,0,1,0});
+
+        // template 6
+        levelList[6].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                43, 44, 45,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 44, 44, 45,
+                                49, 50, 51,  0,  0,  0, 43, 44, 44, 44, 44, 44, 44, 45,  0, 49, 50, 50, 51,
+                                49, 50, 56, 39, 39, 39, 50, 50, 50, 56, 56, 56, 50, 51,  0, 49, 50, 50, 51,
+                                55, 57,  0,  0,  0,  0, 49, 50, 51,  0,  0,  0, 49, 51,  0, 49, 50, 56, 57,
+                                 0,  0,  0, 43, 45,  0, 49, 50, 51,  0,  0,  0, 55, 57,  0, 55, 57,  0,  0,
+                                 0,  0, 43, 50, 51,  0, 49, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0, 49, 50, 51,  0, 49, 50, 51,  0, 43, 44, 44, 44, 44, 44, 45,  0,  0,
+                                43, 44, 50, 50, 51,  0, 49, 50, 57,  0, 55, 50, 50, 50, 50, 50, 50, 44, 45,
+                                49, 33, 50, 50, 51,  0, 55, 57,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                55, 56, 56, 56, 57,  0,  0,  0,  0,  0,  0, 55, 56, 56, 56, 56, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[6].setItemLocations(new int[3]{11,5,1},3); // item one (key) at (17,6)
+        levelList[6].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,0,0,1,0,1,0});
+
+        // template 7
+        levelList[7].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0, 63, 64, 64, 64, 64, 64, 64, 64, 64, 64, 65,  0,  0,  0,  0,
+                                 0,  0,  0,  0, 69,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71,  0,  0,  0,  0,
+                                 0,  0,  0,  0, 69,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71,  0,  0,  0,  0,
+                                 0,  0,  0,  0, 69,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71,  0,  0,  0,  0,
+                                 0,  0,  0,  0, 75, 76, 76, 76, 76, 54, 76, 76, 76, 76, 77,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[7].setItemLocations(new int[6]{6,5,1,14,5,1},6);
+        levelList[7].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 8
+        levelList[8].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0, 63,  0, 65,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0, 75,  0, 77,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[8].setItemLocations(new int[3]{10,6,1},3);
+        levelList[8].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 9
+        levelList[9].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  1,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  3,  0,  0,
+                                 0,  0, 13, 15,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 13, 15,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  1,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  3,  0,  0,
+                                 0,  0, 13, 15,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 13, 15,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[9].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 10
+        levelList[10].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  1,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  3,  0,  0,
+                                 0,  0, 13, 15,  0,  0,  0,  0, 43, 44, 45,  0,  0,  0,  0, 13, 15,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  1,  3,  0,  0,  0,  0, 55, 56, 57,  0,  0,  0,  0,  1,  3,  0,  0,
+                                 0,  0, 13, 15,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 13, 15,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[10].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 11
+        levelList[11].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0, 43, 44, 45,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0, 43, 50, 50, 50, 45,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0, 43, 50, 50, 33, 50, 50, 45,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0, 55, 50, 50, 33, 50, 50, 57,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0, 55, 50, 50, 50, 57,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0, 55, 56, 57,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[11].setTorchLocations(new int[4]{10,6, 10,5},4);
+        levelList[11].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 12
+        levelList[12].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 45,  0, 43, 45,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49, 56, 44, 50, 51,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 51,  0, 49, 50, 51,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 44, 50, 50, 44, 50, 50, 51,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 55, 56, 56, 56, 56, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[12].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 13
+        levelList[13].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 44, 44, 44, 44, 45,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71, 56, 50, 50, 50, 51,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71,  0, 55, 50, 50, 51,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71,  0,  0, 49, 50, 57,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71,  0,  0, 55, 57,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 71,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0, 43, 82, 76, 76,  0, 76, 76, 76, 77,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0, 55, 56, 57,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[13].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,0,1,1,1,1});
+
+         // template 14
+        levelList[14].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0, 11, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  9,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  9,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  9,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  9, 13, 14, 14, 14, 10, 54, 11, 14, 14, 14, 10,  0,  0,  0,  0,
+                                 0,  0,  0,  5,  2,  2,  2,  2,  4, 54,  5,  2,  2,  2,  4,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[14].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+          // template 14
+        levelList[15].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 43, 44, 44, 45,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 56, 57,  0,  0,  0,
+                                 0,  0, 43, 44, 44, 44, 44, 44, 44, 54, 44, 44, 50, 51,  0,  0,  0,  0,  0,
+                                 0,  0, 55, 56, 56, 56, 56, 56, 56, 54, 56, 56, 56, 57,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[15].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
     // end level templates
 
 
+    /// for loading levels REMEBER THAT THE TEMPLATE IS FOR TILES 1-19 not 0-20
+    /// left and right door y = 6
+    /// top and bottom door x = 5, 10, 15
+}
+
+templateList::~templateList()
+{
+    delete[] levelList;
+}
+
+LevelTemplate& templateList::operator[](int x)
+{
+    return levelList[x];
+}
+
+
+/// LEVEL NODE ------------------------------------------------------------------------------
+templateList LevelNode::levels;
+
+LevelNode::LevelNode()
+{
     doors = new bool[maximum_doors_per_room]{};
     openDoors = new bool[maximum_doors_per_room]{};
 
@@ -177,7 +456,6 @@ LevelNode::~LevelNode()
 {
     delete[] doors;
     delete[] openDoors;
-    delete[] levels;
     delete[] torchStatusTracker;
 
     for(int i=0; i < maximum_doors_per_room; i++){
@@ -198,6 +476,7 @@ void LevelNode::setRoom(int input)
 
 void LevelNode::addDoor(int newDoorIndex, LevelNode* newRoom, bool open)
 {
+    if(!levels[levelTemplateIndex].getPossibleDoors(newDoorIndex)) return;// if not a possible door don't do anything
     // creates a door from this room to newRoom at the door locations of newDoorIndex
     doors[newDoorIndex] = true;
     if(doorLinks[newDoorIndex] != NULL){
@@ -292,11 +571,14 @@ void LevelGen::generateLevels()
     tileSet->LoadTexture("images/tileset.png"); // generate functions as init in this case
 
     startingRoom = new LevelNode();
+    startingRoom->setRoom(0);
     startingRoom->addDoor(0, startingRoom, 0);
     startingRoom->addDoor(1, startingRoom, 1);
     startingRoom->addDoor(2, startingRoom, 1);
     startingRoom->addDoor(3, startingRoom, 0);
     startingRoom->addDoor(4, startingRoom, 1);
+    startingRoom->addDoor(5, startingRoom, 1);
+    startingRoom->addDoor(6, startingRoom, 1);
     startingRoom->addDoor(7, startingRoom, 1);
 
     currentRoom = startingRoom;
@@ -791,7 +1073,6 @@ void LevelGen::setWallMatrix()
                     case 13:
                     case 14:
                     case 15:
-                    case 33:
                     case 63:
                     case 64:
                     case 65:
@@ -829,6 +1110,7 @@ void LevelGen::setPitMatrix()
                 switch (currentRoom->getLevelTemplate().getTileInfo((gridX-2)*(y-1) + (x-1))){ // the subtractions are because tile info does not include the outer walls
                     case 6: // list of solid tiles types
                     case 34: // see tile set debug for numbering
+                    case 39:
                     case 43:
                     case 44:
                     case 45:
@@ -848,4 +1130,3 @@ void LevelGen::setPitMatrix()
         }
     }
 }
-

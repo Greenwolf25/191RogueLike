@@ -9,7 +9,7 @@
 using namespace std;
 
 
-#define number_of_level_templates 1 /// CHANGE ME WHEN ADDING TEMPLATES
+#define number_of_level_templates 16 /// CHANGE ME WHEN ADDING TEMPLATES
 #define maximum_doors_per_room 8
 
 #define x_tiles 21
@@ -48,6 +48,15 @@ class LevelTemplate{
 
 };
 
+class templateList{
+    public:
+        templateList();
+        virtual ~templateList();
+        LevelTemplate& operator[] (int x);
+    private:
+        LevelTemplate* levelList;
+};
+
 class LevelNode
 {
     public:
@@ -72,7 +81,7 @@ class LevelNode
 
     protected:
         int levelTemplateIndex;
-        LevelTemplate* levels;
+        static templateList levels;
 
         bool* doors;
         bool* openDoors;
