@@ -25,6 +25,7 @@ Player::Player()
     xMax = yMax = 1.0;
     rotation = 0;
     speed = 0.004;
+    flag = false;
 }
 
 Player::~Player()
@@ -72,6 +73,7 @@ void Player::playerInit(ObjList* newObjectList)
     yMin = 0.0;
     xMax = 1.0/8.0;
     yMax = .18;
+
 
     /*xMin = 0.06;
     yMin = 0.21258;
@@ -145,29 +147,66 @@ void Player::playerInput(Inputs *KbMs)
         spawnTimer.reset();
         PS->playSound("sounds/fire.wav");
     }
-    if(KbMs->isKeyPressed(16)&& mineSpawnTimer.getTicks() > 1000){// L shift (hold shift to place mine)
-
-
-        objectList->createMine(x, y);
-
-
-        //test
+    if(KbMs->isKeyPressed(16) && mineSpawnTimer.getTicks() > 1000)//&& mineSpawnTimer.getTicks() > 1000)// L shift (hold shift to place mine)
+    {
         mineSpawnTimer.reset();
-        PS->playSound("sounds/setmine.wav");
+        xM = x; //adjusted for testing mine collision
+        yM = y; //just remove the .1s
+        objectList->createMine(xM, yM);
 
-        Explo(x,y);
+        PS->playSound("sounds/setmine.wav");
     }
 }
 void Player::Explo(double x1, double y1)
 {
-    if(explosionTimer.getTicks() > 1000)
+    if(explosionTimer.getTicks() > 7500)
         {
             objectList->createExplosion(x1,y1);
-
-
-            //PS->playSound("sounds/explode.wav");
-             explosionTimer.reset();
+            explosionTimer.reset();
         }
 }
+void Player::runperframe()
+{
+    //if(objectList->collisioncheck(x,y)) //if collision happened (change to EM ver later)
+    //{
+        //PS->playSound("sounds/test.wav"); // for the test //looks like it's playing for the bullet too. oh well
+    //}
+    //else
+    //{
+        objectList->mineRuntimeCheck();
+
+    //}
+    //objectList->mineRuntimeCheck();
+    //call runtime check function from objectlist
+    /*
+    for(int i = 0; i < objectList->Size(); i++)
+    {
+
+        if( objectList->getObj(i)->typeCheck == 'm')
+        {
+            double ax = objectList->getObj(i)->x;
+            double bx = objectList->getObj(i)->y;
+            if(objectList->getObj(i)->activ == false)
+            {
+                Explo(x,y);
+            }
+        }
+    }*/
+    /*
+    if(objectList->collisioncheck(x,y) && flag) //if collision happened while mine is n screen
+    {
+        PS->playSound("sounds/test.wav"); // for the test
+        Explo(xM,yM); //explosion is spawned
+        flag = false; // no mine on screen
+    }
+    else if(flag && mineDurationTimer.getTicks() > 8500 ) // if mine is on screen
+    {
+            Explo(xM,yM); // explosion is spawned
+            flag = false; // no mine on screen
+            mineDurationTimer.reset(); // resets timer
+    }
+    */
+}
+
 
 

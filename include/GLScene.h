@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <GL/glut.h>
 #include <sound.h>
+#include <time.h>
 
 class GLScene
 {
@@ -16,6 +17,8 @@ class GLScene
         GLint idleGLScene();//run idle process
         GLvoid resizeGLScene(GLsizei,GLsizei); //Window resize function
 
+        bool enemyPlayerCollision(double, double, double, double); //for later
+        bool bossPlayerCollision(double,double,double,double); // for later
 
         int winMsg(HWND,UINT,WPARAM,LPARAM);
         float screenWidth, screenHeight;

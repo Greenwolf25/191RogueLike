@@ -19,6 +19,7 @@ Menus *menu = new Menus();
 LevelGen *level = new LevelGen();
 sound* SND = new sound();
 particles* p = new particles();
+Timer* T = new Timer();
 
 double tempX, tempY = 0.0;
 
@@ -135,6 +136,7 @@ GLint GLScene::idleGLScene()
 
     if(menu->inMenu == false){ // if the game is running
         player->playerInput(KbMs);
+        player->runperframe();
         objectList->runPerFrame();
     }
 }
@@ -224,4 +226,46 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;								// Jump Back
         }
     }
+}
+
+bool GLScene::enemyPlayerCollision(double pX, double pY, double eX, double eY)
+{
+    for(int i = 0; i < objectList->Size(); i++)
+    {
+        double var = .05; //enemy and player
+        if(objectList->getObj(i) == NULL){}
+        //else if( fabs((pX-eX) ) && fabs() )
+        //{
+            //player hurt sound
+            //increase player hit count (player's life status is checked in player's run per frame)
+            //SND->playSound()
+        //}
+
+    }
+    return false;
+    /*
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and gunfire (placeholder) //adjust later
+
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'f')
+            {
+                double ax = getObj(i)->x;
+                double by = getObj(i)->y;
+                getObj(i)->deleteSelf();
+                //createExplosion(ax, by);
+                return true;
+            }
+        }
+    }
+    return false;
+    */
+}
+
+bool GLScene::bossPlayerCollision(double, double, double, double)
+{
+    //
 }

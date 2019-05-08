@@ -2,6 +2,9 @@
 #define OBJLIST_H
 #include <TextureLoader.h>
 
+//#include <sound.h>
+using namespace std;
+
 class GameObject;
 
 class ObjList
@@ -30,6 +33,34 @@ class ObjList
 
         void initTextures();
 
+        //called in an entities runperframe, and given the object type, returns true upon
+        //collision between entity and certain object
+        //for enemy and plaer (two entities), create the functn n glscene
+        bool collisioncheck(double, double); // x y //call jn enemes rnperframe, passng enemes vale
+
+        //functon that checks for collsion between enemy and mine called in
+        //enemies runperframe, inputs are enemies xpos,ypos
+        bool collisioncheckEM(double,double);
+
+        //funtion that checks for collision between enemy and projectile
+        //called in enemies runperdframe, npts are enemies xpos, ypos
+        bool collisioncheckEF(double,double);
+
+        //collision check for mine and boss
+        bool collisioncheckBM(double,double);
+
+        //collision check for gunfire and boss
+        bool collisioncheckBF(double,double);
+
+        //for collision sound, call it where this function is called
+        //don't know if I'll use these
+        //void setXpos(double); // called in the area object is spawned so it can give xPos a value
+        //void setYpos(double); // called in the area object is spawned so it can give yPos a value
+        //double getXpos(); //
+        //double getYpos();
+        //void soundT(sound*);
+        bool mineRuntimeCheck();
+
 
     protected:
 
@@ -41,6 +72,8 @@ class ObjList
         const double zOffput = 0.00015;
 
     private:
+        //double xPos;
+        //double yPos;
 };
 
 #endif // OBJLIST_H

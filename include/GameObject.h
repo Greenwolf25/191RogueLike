@@ -5,7 +5,7 @@
 #include <Timer.h>
 #include <sound.h>
 
-//#define TiMeR 5480
+
 
 
 
@@ -18,6 +18,11 @@ class GameObject
         double x, y, z;
         double xScale, yScale, zScale;
         double xMin, xMax, yMin, yMax; //for mine animation
+        //check
+        char typeCheck;
+        bool activ;
+        int  timecheck;
+
 
 
 
@@ -64,6 +69,9 @@ class Mine: public GameObject{
             void runPerFrame();
             void drawObject();
             void Init(TextureLoader*);
+            //int  runtime;
+            //test
+            //bool acting;
 
 
         protected:

@@ -83,6 +83,8 @@ Projectile::Projectile()
     xScale = 0.15;
     yScale = 0.15;
     zScale = 1.0;
+    typeCheck = 'f';
+    activ = true;
 
     // default ctor
     x = 0.0;
@@ -158,6 +160,9 @@ Mine::Mine()
     yMax = 0.5;
     xMin = 0.0;
     yMin = 0.0;
+    typeCheck = 'm';
+    activ = true;
+    timecheck = 7500;
 
 
     lifetime.start();
@@ -197,18 +202,18 @@ void Mine::drawObject()
 
 void Mine::runPerFrame() //makes mine blink
 {
+    //timecheck -= 1;
     if(animationTimer.getTicks() > 600)
     {
         xMin += 0.5;
         xMax += 0.5;
         animationTimer.reset();
-        if(lifetime.getTicks() > 7500)
+        //Explode* E = new Explode();
+        if(lifetime.getTicks()> 7501) //|| activ == false)
+        //if(timecheck <= 0)
         {
             deleteSelf();
-            //S->playSound();
-            //test->createExplosion(x,y);
         }
-
     }
 }
 
@@ -217,7 +222,13 @@ void Mine::Init(TextureLoader* newTex)
     defaultTex = newTex;
 }
 
-
+/*void Mine::Lifecheck()
+{
+    if(activ == false)
+    {
+        deleteSelf();
+    }
+}*/
 
 
 /// Start of Explosion Object
@@ -236,6 +247,8 @@ Explode::Explode()
     yMax = 0.5;
     xMin = 0.0;
     yMin = 0.0;
+    typeCheck = 's';
+    activ = false;
 
     lifetime.start();
     animationTimer.start();
@@ -248,7 +261,11 @@ Explode::~Explode()
 
 void Explode::runPerFrame()
 {
-    if(animationTimer.getTicks() > 60) //adjust later
+    if(lifetime.getTicks() == 1)
+    {
+        sfx(SNDS); // plays sound???
+    }
+    if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
         xMin += 0.25;
         xMax += 0.25;
@@ -262,12 +279,9 @@ void Explode::runPerFrame()
         }
 
         animationTimer.reset();
-        if(lifetime.getTicks() > 7500)
-        {
 
-            sfx(SNDS);
-        }
-        if(lifetime.getTicks() > 7980) deleteSelf();
+
+        if(lifetime.getTicks() > 480) deleteSelf(); // deletes itself once explosion is over
 
     }
 
@@ -281,7 +295,7 @@ void Explode::sfx(sound* snds)
 
 void Explode::drawObject()
 {
-    if(lifetime.getTicks() > 7500){
+    //if(lifetime.getTicks() > 7500 || activ == true){ //restriction in draw sene
     glPushMatrix();
     defaultTex->binder();
     glTranslated(x,y,z);
@@ -302,7 +316,9 @@ void Explode::drawObject()
     glVertex3f(-0.5, 0.5, 0.0);
 
     glEnd();
-    glPopMatrix();}
+    glPopMatrix();
+
+    sfx(SNDS);
 }
 
 void Explode::Init(TextureLoader* newTex)

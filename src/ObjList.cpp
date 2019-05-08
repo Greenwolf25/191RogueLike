@@ -1,6 +1,9 @@
 #include "ObjList.h"
 #include <cstddef>
 #include <GameObject.h>
+#include <Timer.h>
+
+//sound* sfx = new sound(); // causes an error: skips menue and takes away control from player, moving up forever while activating all actions
 
 ObjList::ObjList(int input)
 {
@@ -155,7 +158,7 @@ int ObjList::createMine(double inputX, double inputY, double inputZ, double scal
 {
     int index = -1;
     for(int i = 0; i < size; i++){
-        if(objectList[i] == NULL){
+        if(objectList[i] == NULL){ //
             index = i;
             break;
         }
@@ -276,5 +279,106 @@ void ObjList::initTextures()
     textures[0].LoadTexture("images/mine.png");
     textures[1].LoadTexture("images/bullet.png");
     textures[2].LoadTexture("images/boom.png");
+}
+ /// (placeholder) for testing if this function works
+bool ObjList::collisioncheck(double Ex, double Ey)
+{
+    for(int i = 0; i < size; i++)
+    {
+
+        double var = .05; //player and mine combined radius (/2 to compensate for empty space in the images)
+
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'm')
+            {
+                cout << "hit" << endl;
+                getObj(i)->deleteSelf();
+                createExplosion(Ex, Ey);
+                return true;
+            }
+
+        }
+    }
+    return false;
+}
+
+bool ObjList::mineRuntimeCheck() //checks if any mine has been active for too long
+{
+    for(int i = 0; i < size; i++)
+    {
+        if(getObj(i) == NULL){}
+        else if(getObj(i)->lifetime.getTicks() > 7500)
+        {
+            if(getObj(i)->typeCheck == 'm') // type mine
+            {
+                double ax = getObj(i)->x;
+                double by = getObj(i)->y;
+                getObj(i)->deleteSelf();
+                createExplosion(ax, by);
+                return true;
+            }
+
+        }
+    }
+    return false;
+}
+
+
+bool ObjList::collisioncheckEM(double Ex, double Ey) // play enemy's sound somehow
+//still need: enemy class/ enemy hurt sound/
+//explo sound to play upon it's draw-(call the sound in enemy class?)
+{
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and mine (placeholder) //adjust later
+        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'm')
+            {
+                double ax = getObj(i)->x;
+                double by = getObj(i)->y;
+                getObj(i)->deleteSelf();
+                createExplosion(ax, by);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool ObjList::collisioncheckEF(double Ex, double Ey) // remember to play sound in enemy class if true
+{
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and gunfire (placeholder) //adjust later
+
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'f')
+            {
+                double ax = getObj(i)->x;
+                double by = getObj(i)->y;
+                getObj(i)->deleteSelf();
+                //createExplosion(ax, by);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool ObjList::collisioncheckBM(double, double)
+{
+    // just in case enemy - mine does not work
+}
+
+bool ObjList::collisioncheckBF(double, double)
+{
+    // just in case enemy - gunfire does not work
 }
 
