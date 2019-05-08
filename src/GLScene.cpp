@@ -53,14 +53,14 @@ GLint GLScene::initGL(bool* quit)
     menu->helpMenuInit("images/helpMenu.png");
     menu->pauseMenuInit("images/pauseMenu.png");
     Plx->parallaxInit("images/test2.png");
-    player->playerInit(objectList);
-    objectList->initTextures();
+    player->playerInit(objectList, level);
+    objectList->objListInit(level);
 
     level->generateLevels();
 
     for(int y=0; y < y_tiles; y++){
         for(int x=0; x < x_tiles; x++){
-                cout << level->getWallMatrix((x_tiles)*y + x) << " ";
+                cout << level->getWallMatrix(level->getTileIndex(x,y)) << " ";
         }
         cout << endl;
     }
@@ -126,6 +126,7 @@ GLint GLScene::idleGLScene()
         player->playerInput(KbMs);
         objectList->runPerFrame();
     }
+
 }
 
 

@@ -1,7 +1,6 @@
 #ifndef LEVELGEN_H
 #define LEVELGEN_H
 #include <ObjList.h>
-#include <Player.h>
 #include <math.h>
 #include <stdlib.h>
 #include <iostream>
@@ -15,6 +14,8 @@ using namespace std;
 
 #define x_tiles 21
 #define y_tiles 12
+
+class ObjList;
 
 class LevelTemplate{
     public:
@@ -97,7 +98,7 @@ class LevelGen
         LevelGen();
         virtual ~LevelGen();
 
-        InitLevelGen(ObjList* objectList, Player* player); // uses Objlist to spawn and clear objects and uses player to move player when changing levels and to figure out when to change levels
+        InitLevelGen(ObjList* objectList); // uses Objlist to spawn and clear objects and uses player to move player when changing levels and to figure out when to change levels
         void generateLevels();
 
         void drawLevel();
@@ -105,15 +106,26 @@ class LevelGen
 
         bool getWallMatrix(int);// get the list of wall locations as a list (with every gridX being a new row)
         bool getPitMatrix(int);
+
+
         int getGridX();
         int getGridY();
-
         double getMaxY();
         double getMaxX();
-
         double getOffsetX();
         double getOffsetY();
 
+        double gridToCoordX(int);
+        double gridToCoordY(int);
+
+        int coordToGridX(double);
+        int coordToGridY(double);
+
+        int getTileIndex(int x, int y); // return the index value for a tile in wall or pit matrix;
+
+        int gridToDoorNum(int x, int y); // returns the door number of a door given x and y or -1 if not door
+
+        bool openDoor(int); // returns true if door is opened. returns false if door is already open or is not able to be opened by key.
 
         bool inTransition; // true if the level gen is transitioning between levels
 
@@ -139,11 +151,11 @@ class LevelGen
 
         TextureLoader* tileSet;
 
-        int getTileX(int tile);
-        int getTileY(int tile);
-
         int getDoorX(int door);
         int getDoorY(int door);
+
+        int getTileX(int tile);
+        int getTileY(int tile);
 
         void setWallMatrix();
         void setPitMatrix();

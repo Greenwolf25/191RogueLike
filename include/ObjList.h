@@ -1,14 +1,21 @@
 #ifndef OBJLIST_H
 #define OBJLIST_H
 #include <TextureLoader.h>
+#include <LevelGen.h>
 
 class GameObject;
+
+class LevelGen;
 
 class ObjList
 {
     public:
         ObjList(int);
         virtual ~ObjList();
+
+        void objListInit(LevelGen*);
+
+        LevelGen* levelGenerator;
 
         //int createObj(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
         //int createObj(double, double); // X,Y (return index) if no free space return -1
@@ -25,8 +32,6 @@ class ObjList
         void draw();
         void runPerFrame();
         int Size();
-
-        void initTextures();
 
 
     protected:

@@ -320,10 +320,10 @@ void LevelGen::drawLevel()
 
         glBegin(GL_QUADS);
 
-        glVertex3d(-maxX, -maxY, -1.0501); // background for debug reasons
-        glVertex3d(maxX, -maxY, -1.0501);
-        glVertex3d(maxX, maxY, -1.0501);
-        glVertex3d(-maxX, maxY, -1.0501);
+        glVertex3d(-maxX, -maxY, -1.0201); // background for debug reasons
+        glVertex3d(maxX, -maxY, -1.0201);
+        glVertex3d(maxX, maxY, -1.0201);
+        glVertex3d(-maxX, maxY, -1.0201);
 
         glEnd();
 
@@ -398,16 +398,16 @@ void LevelGen::drawLevel()
                 glBegin(GL_QUADS);
 
                     glTexCoord2d(textureX * (1.0/6.0), textureY * (1.0/17.0) + (1.0/17.0));// bottom left
-                    glVertex3d(tileX, (tileY - tileSizeY), -1.05);
+                    glVertex3d(tileX, (tileY - tileSizeY), -1.02);
 
                     glTexCoord2d(textureX * (1.0/6.0) + (1.0/6.0), textureY * (1.0/17.0) + (1.0/17.0));// bottom right
-                    glVertex3d((tileX + tileSizeX),(tileY - tileSizeY), -1.05);
+                    glVertex3d((tileX + tileSizeX),(tileY - tileSizeY), -1.02);
 
                     glTexCoord2d(textureX * (1.0/6.0) + (1.0/6.0), textureY * (1.0/17.0));// top right
-                    glVertex3d((tileX + tileSizeX), tileY, -1.05);
+                    glVertex3d((tileX + tileSizeX), tileY, -1.02);
 
                     glTexCoord2d(textureX * (1.0/6.0), textureY * (1.0/17.0));// top left
-                    glVertex3d(tileX,tileY, -1.05);
+                    glVertex3d(tileX,tileY, -1.02);
 
                 glEnd();
 
@@ -422,31 +422,31 @@ void LevelGen::drawLevel()
                     case 0:
                         glBegin(GL_QUADS);
                         glTexCoord2d(3 * (1.0/6.0), 5 * (1.0/17.0));// bottom left
-                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.049);
+                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.019);
 
                         glTexCoord2d(4 * (1.0/6.0), 5 * (1.0/17.0));// bottom right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.019);
 
                         glTexCoord2d(4 * (1.0/6.0), 2 * (1.0/17.0));// top right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY) + tileSizeY, -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY) + tileSizeY, -1.019);
 
                         glTexCoord2d(3 * (1.0/6.0), 2 * (1.0/17.0));// top left
-                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY)  + tileSizeY, -1.049);
+                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY)  + tileSizeY, -1.019);
                         glEnd();
 
                         if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(68) * (1.0/6.0), getTileY(68) * (1.0/17.0) + (1.0/17.0));// bottom left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(68) * (1.0/6.0) + (1.0/6.0), getTileY(68) * (1.0/17.0) + (1.0/17.0));// bottom right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(68) * (1.0/6.0) + (1.0/6.0), getTileY(68) * (1.0/17.0));// top right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY), -1.018);
 
                             glTexCoord2d(getTileX(68) * (1.0/6.0), getTileY(68) * (1.0/17.0));// top left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.018);
                             glEnd();
                         }
                         break;
@@ -455,62 +455,62 @@ void LevelGen::drawLevel()
                     case 3:
                         glBegin(GL_QUADS);
                         glTexCoord2d(0 * (1.0/6.0), 4 * (1.0/17.0));// bottom left
-                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, (((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.049);
+                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, (((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.019);
 
                         glTexCoord2d(3 * (1.0/6.0), 4 * (1.0/17.0));// bottom right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX,(((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX,(((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.019);
 
                         glTexCoord2d(3 * (1.0/6.0), 3 * (1.0/17.0));// top right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX, ((getDoorY(i)*tileSizeY)+maxY), -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX, ((getDoorY(i)*tileSizeY)+maxY), -1.019);
 
                         glTexCoord2d(0 * (1.0/6.0), 3 * (1.0/17.0));// top left
-                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, ((getDoorY(i)*tileSizeY)+maxY), -1.049);
+                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, ((getDoorY(i)*tileSizeY)+maxY), -1.019);
                         glEnd();
 
                         if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(41) * (1.0/6.0), getTileY(41) * (1.0/17.0) + (1.0/17.0));// bottom left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(41) * (1.0/6.0) + (1.0/6.0), getTileY(41) * (1.0/17.0) + (1.0/17.0));// bottom right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(41) * (1.0/6.0) + (1.0/6.0), getTileY(41) * (1.0/17.0));// top right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)+maxY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)+maxY), -1.018);
 
                             glTexCoord2d(getTileX(41) * (1.0/6.0), getTileY(41) * (1.0/17.0));// top left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)+maxY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)+maxY), -1.018);
                             glEnd();
                         }
                         break;
                     case 4:
                         glBegin(GL_QUADS);
                         glTexCoord2d(4 * (1.0/6.0), 5 * (1.0/17.0));// bottom left
-                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.049);
+                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.019);
 
                         glTexCoord2d(5 * (1.0/6.0), 5 * (1.0/17.0));// bottom right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY) - tileSizeY, -1.019);
 
                         glTexCoord2d(5 * (1.0/6.0), 2 * (1.0/17.0));// top right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY) + tileSizeY, -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY) + tileSizeY, -1.019);
 
                         glTexCoord2d(4 * (1.0/6.0), 2 * (1.0/17.0));// top left
-                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY)  + tileSizeY, -1.049);
+                        glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY)  + tileSizeY, -1.019);
                         glEnd();
 
                         if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(67) * (1.0/6.0), getTileY(67) * (1.0/17.0) + (1.0/17.0));// bottom left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(67) * (1.0/6.0) + (1.0/6.0), getTileY(67) * (1.0/17.0) + (1.0/17.0));// bottom right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(67) * (1.0/6.0) + (1.0/6.0), getTileY(67) * (1.0/17.0));// top right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY), -1.018);
 
                             glTexCoord2d(getTileX(67) * (1.0/6.0), getTileY(67) * (1.0/17.0));// top left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.018);
                             glEnd();
                         }
                         break;
@@ -519,31 +519,31 @@ void LevelGen::drawLevel()
                     case 7:
                         glBegin(GL_QUADS);
                         glTexCoord2d(0 * (1.0/6.0), 5 * (1.0/17.0));// bottom left
-                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, ((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.049);
+                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, ((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.019);
 
                         glTexCoord2d(3 * (1.0/6.0), 5 * (1.0/17.0));// bottom right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX,((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX,((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.019);
 
                         glTexCoord2d(3 * (1.0/6.0), 4 * (1.0/17.0));// top right
-                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX, (-(getDoorY(i)*tileSizeY)+maxY), -1.049);
+                        glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX) + tileSizeX, (-(getDoorY(i)*tileSizeY)+maxY), -1.019);
 
                         glTexCoord2d(0 * (1.0/6.0), 4 * (1.0/17.0));// top left
-                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, (-(getDoorY(i)*tileSizeY)+maxY), -1.049);
+                        glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, (-(getDoorY(i)*tileSizeY)+maxY), -1.019);
                         glEnd();
 
                         if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(47) * (1.0/6.0), getTileY(47) * (1.0/17.0) + (1.0/17.0));// bottom left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(47) * (1.0/6.0) + (1.0/6.0), getTileY(47) * (1.0/17.0) + (1.0/17.0));// bottom right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
 
                             glTexCoord2d(getTileX(47) * (1.0/6.0) + (1.0/6.0), getTileY(47) * (1.0/17.0));// top right
-                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), (-(getDoorY(i)*tileSizeY)+maxY), -1.048);
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), (-(getDoorY(i)*tileSizeY)+maxY), -1.018);
 
                             glTexCoord2d(getTileX(47) * (1.0/6.0), getTileY(47) * (1.0/17.0));// top left
-                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (-(getDoorY(i)*tileSizeY)+maxY), -1.048);
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (-(getDoorY(i)*tileSizeY)+maxY), -1.018);
                             glEnd();
                         }
                         break;
@@ -598,6 +598,89 @@ double LevelGen::getOffsetY()
 {
     return tileSizeY;
 }
+
+double LevelGen::gridToCoordX(int tileX)
+{
+    return (-maxX + tileSizeX * tileX) + tileSizeX/2;
+}
+
+double LevelGen::gridToCoordY(int tileY)
+{
+    return (maxY - tileSizeY * tileY) - tileSizeY/2;
+}
+
+int LevelGen::coordToGridX(double coordX)
+{
+    if(coordX+maxX < 0) return 0;
+    if((coordX+maxX) > maxX*2) return gridX-1;
+    int quotient = 1;
+    while(quotient*tileSizeX < (coordX+maxX)){
+        quotient++;
+    }
+
+    return quotient-1;
+}
+
+int LevelGen::coordToGridY(double coordY)
+{
+    if(maxY-coordY < 0) return 0;
+    if((maxY-coordY) > maxY*2) return gridY-1;
+    int quotient = 1;
+    while(quotient*tileSizeY < (maxY-coordY)){
+        quotient++;
+    }
+
+    return (quotient-1);
+}
+
+int LevelGen::getTileIndex(int x, int y)
+{
+    return (gridX)*y + x;
+}
+
+int LevelGen::gridToDoorNum(int x, int y)
+{
+    if(x == 0){
+        if(x == getDoorX(0)){
+            return 0;
+        }else{
+            return -1;
+        }
+
+    }else if(x == gridX-1){
+        if(x == getDoorX(4)){
+            return 4;
+        }else{
+            return -1;
+        }
+
+    }else if(y == 0){
+        if(y == getDoorY(1)){
+            return 1;
+        }else if(y == getDoorY(2)){
+            return 2;
+        }else if (y == getDoorY(3)){
+            return 3;
+        }else{
+            return -1;
+        }
+
+    }else if(y == gridY-1){
+        if(y == getDoorY(5)){
+            return 5;
+        }else if(y == getDoorY(6)){
+            return 6;
+        }else if (y == getDoorY(7)){
+            return 7;
+        }else{
+            return -1;
+        }
+    }else{
+        return -1; // not a door
+    }
+}
+
+
 
 int LevelGen::getTileX(int tile) // return 0-5 for tile location in tile sheet
 {
