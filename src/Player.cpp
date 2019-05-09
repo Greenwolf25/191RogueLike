@@ -56,6 +56,7 @@ void Player::drawPlayer()
 
     glEnd();
     glPopMatrix();
+
 }
 
 void Player::lookAt(double x3, double y3)
@@ -63,9 +64,10 @@ void Player::lookAt(double x3, double y3)
 
 }
 
-void Player::playerInit(ObjList* newObjectList)
+void Player::playerInit(ObjList* newObjectList, LevelGen* newLevelGen)
 {
     objectList = newObjectList;
+    levelGenerator = newLevelGen;
     spawnTimer.start();
     idle = new TextureLoader();
     idle->LoadTexture("images/playerT.png");
@@ -85,46 +87,65 @@ void Player::playerInit(ObjList* newObjectList)
 void Player::playerInput(Inputs *KbMs)
 {
     if(KbMs->isKeyPressed(0x57)){// w key
-        y += speed;
+        tempY = y + speed;
+        if(!(levelGenerator->getWallMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY)))) && !(levelGenerator->getPitMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY))))){
+                // if coord is not in solid or pit tile then
+            y = tempY;
+            if(animationTimer.getTicks() > 100)
+            {
+                xMin += .25;
+                xMax += .25;
+                animationTimer.reset();
+            }
+        } // otherwise do not move
         rotation = 0;
         //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
-        if(animationTimer.getTicks() > 100)
-        {
-            xMin += .25;
-            xMax += .25;
-            animationTimer.reset();
-        }
 
     }else if(KbMs->isKeyPressed(0x41)){// a key
-        x -= speed;
+         tempX = x - speed;
+         if(!(levelGenerator->getWallMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y)))) && !(levelGenerator->getPitMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y))))){
+                // if coord is not in solid or pit tile then
+            x = tempX;
+            if(animationTimer.getTicks() > 100)
+            {
+                xMin += .25;
+                xMax += .25;
+                animationTimer.reset();
+            }
+        }
         rotation = 90.0;
         //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
-        if(animationTimer.getTicks() > 100)
-        {
-            xMin += .25;
-            xMax += .25;
-            animationTimer.reset();
-        }
+
     }else if(KbMs->isKeyPressed(0x53)){// s key
-        y -= speed;
+        tempY = y - speed;
+        if(!(levelGenerator->getWallMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY)))) && !(levelGenerator->getPitMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY))))){
+                // if coord is not in solid or pit tile then
+            y = tempY;
+            if(animationTimer.getTicks() > 100)
+            {
+                xMin += .25;
+                xMax += .25;
+                animationTimer.reset();
+            }
+        } // otherwise do not move
         rotation = 180.0;
         //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
-        if(animationTimer.getTicks() > 100)
-        {
-            xMin += .25;
-            xMax += .25;
-            animationTimer.reset();
-        }
+
     }else if(KbMs->isKeyPressed(0x44)){// d key
-        x += speed;
+        tempX = x + speed;
+         if(!(levelGenerator->getWallMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y)))) && !(levelGenerator->getPitMatrix(levelGenerator->getTileIndex(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y))))){
+                // if coord is not in a solid or pit tile then
+            x = tempX;
+            if(animationTimer.getTicks() > 100)
+            {
+                xMin += .25;
+                xMax += .25;
+                animationTimer.reset();
+            }
+        }
         rotation = -90.0;
         //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
-        if(animationTimer.getTicks() > 100)
-        {
-            xMin += .25;
-            xMax += .25;
-            animationTimer.reset();
-        }
+
     }else{
         xMin = 0.0;
         xMax = 1.0/8.0;

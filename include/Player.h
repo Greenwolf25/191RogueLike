@@ -5,6 +5,7 @@
 #include <Inputs.h>
 #include <Timer.h>
 #include <ObjList.h>
+#include <LevelGen.h>
 #include <sound.h>
 
 
@@ -24,7 +25,7 @@ class Player
 
         void drawPlayer();
         void lookAt(double,double);
-        void playerInit(ObjList*);
+        void playerInit(ObjList*, LevelGen*);
         void playerInput(Inputs*);
         void Explo(double, double);
         void runperframe();
@@ -38,11 +39,15 @@ class Player
 
     protected:
         ObjList* objectList;
+        LevelGen* levelGenerator;
         Timer spawnTimer;
         Timer mineSpawnTimer;
         Timer explosionTimer;
         Timer mineDurationTimer;
         Timer animationTimer;
+
+        double tempX; // used for calculations to avoid variable decelerations
+        double tempY;
 
     private:
         TextureLoader *idle;

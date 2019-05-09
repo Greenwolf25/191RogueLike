@@ -17,6 +17,7 @@ Inputs::Inputs()
 Inputs::~Inputs()
 {
     //dtor
+    delete keys;
 }
 
 void Inputs::keyPressed()

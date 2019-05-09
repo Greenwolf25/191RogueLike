@@ -1,17 +1,24 @@
 #ifndef OBJLIST_H
 #define OBJLIST_H
 #include <TextureLoader.h>
+#include <LevelGen.h>
 
 //#include <sound.h>
 using namespace std;
 
 class GameObject;
 
+class LevelGen;
+
 class ObjList
 {
     public:
         ObjList(int);
         virtual ~ObjList();
+
+        void objListInit(LevelGen*);
+
+        LevelGen* levelGenerator;
 
         //int createObj(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
         //int createObj(double, double); // X,Y (return index) if no free space return -1
@@ -60,7 +67,6 @@ class ObjList
         //double getYpos();
         //void soundT(sound*);
         bool mineRuntimeCheck();
-
 
     protected:
 
