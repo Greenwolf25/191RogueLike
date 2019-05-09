@@ -38,8 +38,6 @@ class ObjList
         void runPerFrame();
         int Size();
 
-        void initTextures();
-
         //called in an entities runperframe, and given the object type, returns true upon
         //collision between entity and certain object
         //for enemy and plaer (two entities), create the functn n glscene

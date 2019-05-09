@@ -15,8 +15,23 @@ ObjList::ObjList(int input)
 ObjList::~ObjList()
 {
     //dtor
+	 for(int i = 0; i < size; i++){
+        if(objectList[i]){
+            delete objectList[i];
+        }
+    }
     delete[] objectList;
     delete[] textures;
+}
+
+
+void ObjList::objListInit(LevelGen* newLevelGen)
+{
+    levelGenerator = newLevelGen;
+    textures = new TextureLoader[3];
+    textures[0].LoadTexture("images/mine.png");
+    textures[1].LoadTexture("images/bullet.png");
+    textures[2].LoadTexture("images/boom.png");
 }
 /*
 int ObjList::createObj(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation)
@@ -273,13 +288,6 @@ int ObjList::Size()
     return size;
 }
 
-void ObjList::initTextures()
-{
-    textures = new TextureLoader[2];
-    textures[0].LoadTexture("images/mine.png");
-    textures[1].LoadTexture("images/bullet.png");
-    textures[2].LoadTexture("images/boom.png");
-}
  /// (placeholder) for testing if this function works
 bool ObjList::collisioncheck(double Ex, double Ey)
 {

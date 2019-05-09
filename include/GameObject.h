@@ -90,6 +90,7 @@ class Explode: public GameObject{
 
 //            WPARAM wParam;
         protected:
+            bool playedSound;
         private:
 };
 #endif // GAMEOBJECT_H

@@ -249,6 +249,7 @@ Explode::Explode()
     yMin = 0.0;
     typeCheck = 's';
     activ = false;
+    playedSound = false;
 
     lifetime.start();
     animationTimer.start();
@@ -261,9 +262,11 @@ Explode::~Explode()
 
 void Explode::runPerFrame()
 {
-    if(lifetime.getTicks() == 1)
+    if(!playedSound)
     {
         sfx(SNDS); // plays sound???
+        playedSound = true;
+        cout << "test" << endl;
     }
     if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
