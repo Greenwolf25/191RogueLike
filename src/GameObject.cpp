@@ -231,7 +231,7 @@ void Mine::Init(TextureLoader* newTex)
 }*/
 
 
-/// Start of Explosion Object
+/// Start of Explosion Object --------------------------------
 
 Explode::Explode()
 {
@@ -320,8 +320,6 @@ void Explode::drawObject()
 
     glEnd();
     glPopMatrix();
-
-    sfx(SNDS);
 }
 
 void Explode::Init(TextureLoader* newTex)
@@ -329,4 +327,277 @@ void Explode::Init(TextureLoader* newTex)
     defaultTex = newTex;
 }
 
+/// KEY OBJECT CLASS ------------------------------------------------------
 
+Key::Key()
+{
+    //ctor
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.05;
+    yScale = 0.05;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 1.0;
+    yMax = 1.0;
+    xMin = 0.0;
+    yMin = 0.0;
+    typeCheck = 'k';
+    activ = true;
+    timecheck = -1;
+
+
+    lifetime.start();
+    animationTimer.start();
+}
+
+Key::~Key()
+{
+    //dtor
+}
+
+void Key::runPerFrame()
+{
+
+}
+
+void Key::drawObject()
+{
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
+}
+
+void Key::Init(TextureLoader* newTex)
+{
+    defaultTex = newTex;
+}
+
+/// BOSS KEY OBJECT CLASS ------------------------------------------------------
+
+BossKey::BossKey()
+{
+    //ctor
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.05;
+    yScale = 0.05;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 1.0;
+    yMax = 1.0;
+    xMin = 0.0;
+    yMin = 0.0;
+    typeCheck = 'b';
+    activ = true;
+    timecheck = -1;
+
+
+    lifetime.start();
+    animationTimer.start();
+}
+
+BossKey::~BossKey()
+{
+    //dtor
+}
+
+void BossKey::runPerFrame()
+{
+
+}
+
+void BossKey::drawObject()
+{
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
+}
+
+void BossKey::Init(TextureLoader* newTex)
+{
+    defaultTex = newTex;
+}
+
+/// HEALTH KIT OBJECT CLASS ------------------------------------------------------
+
+HealthKit::HealthKit()
+{
+    //ctor
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.05;
+    yScale = 0.05;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 1.0;
+    yMax = 1.0;
+    xMin = 0.0;
+    yMin = 0.0;
+    typeCheck = 'h';
+    activ = true;
+    timecheck = -1;
+
+
+    lifetime.start();
+    animationTimer.start();
+}
+
+HealthKit::~HealthKit()
+{
+    //dtor
+}
+
+void HealthKit::runPerFrame()
+{
+
+}
+
+void HealthKit::drawObject()
+{
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
+}
+
+void HealthKit::Init(TextureLoader* newTex)
+{
+    defaultTex = newTex;
+}
+
+/// TORCH OBJECT CLASS --------------------------------------------------
+
+Torch::Torch()
+{
+    //ctor
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.05;
+    yScale = 0.05;
+    zScale = 1.0;
+    rotation = 0;
+    tileSizeY = 1.0/17.0;
+    xMax = (1.0/6.0)* 6.0;
+    yMax = tileSizeY * 11.0;
+    xMin = (1.0/6.0)* 5.0;
+    yMin = tileSizeY * 10.0;
+    typeCheck = 't';
+    activ = true;
+    timecheck = -1;
+}
+
+Torch::~Torch()
+{
+    //dtor
+}
+
+void Torch::runPerFrame()
+{
+    if((!*lit) && xMax == ((1.0/6.0)* 6.0)){
+        xMax = (1.0/6.0)* 4.0;
+        yMax = tileSizeY * 12.0;
+        xMin = (1.0/6.0)* 3.0;
+        yMin = tileSizeY * 11.0;
+    }
+
+    if( *lit && animationTimer.getTicks() > 200)
+    {
+        xMax = (1.0/6.0)* 6.0;
+        xMin = (1.0/6.0)* 5.0;
+        yMin += tileSizeY;
+        yMax += tileSizeY;
+        if(yMax > tileSizeY* 14){
+            yMax = tileSizeY * 11.0;
+            yMin = tileSizeY * 10.0;
+        }
+        animationTimer.reset();
+    }
+}
+
+void Torch::drawObject()
+{
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
+}
+
+void Torch::Init(TextureLoader* newTex)
+{
+    defaultTex = newTex;
+}

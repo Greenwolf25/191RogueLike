@@ -19,7 +19,7 @@ class GameObject
         double xScale, yScale, zScale;
         double xMin, xMax, yMin, yMax; //for mine animation
         //check
-        char typeCheck;
+        char typeCheck; // current used: f, m, s, k, b, h, t
         bool activ;
         int  timecheck;
 
@@ -92,5 +92,53 @@ class Explode: public GameObject{
         protected:
             bool playedSound;
         private:
+};
+
+class Key: public GameObject{
+        public:
+            Key();
+            virtual ~Key();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+
+};
+
+class BossKey: public GameObject{
+        public:
+            BossKey();
+            virtual ~BossKey();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+
+};
+
+class HealthKit: public GameObject{
+        public:
+            HealthKit();
+            virtual ~HealthKit();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+
+};
+
+class Torch: public GameObject{
+        public:
+            Torch();
+            virtual ~Torch();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+            bool* lit;
+
+        protected:
+            double tileSizeY;
+
 };
 #endif // GAMEOBJECT_H

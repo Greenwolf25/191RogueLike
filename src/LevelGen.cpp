@@ -980,7 +980,7 @@ int LevelGen::getTileY(int tile) // 0-16
         return 1;
     }
 
-    return (tile-1)/6; // dived by the number of tile per row
+    return (tile-1)/6; // dived by the number of tile per column
 }
 
 int LevelGen::getDoorX(int door)

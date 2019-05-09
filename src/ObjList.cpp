@@ -28,10 +28,14 @@ ObjList::~ObjList()
 void ObjList::objListInit(LevelGen* newLevelGen)
 {
     levelGenerator = newLevelGen;
-    textures = new TextureLoader[3];
+    textures = new TextureLoader[7];
     textures[0].LoadTexture("images/mine.png");
     textures[1].LoadTexture("images/bullet.png");
     textures[2].LoadTexture("images/boom.png");
+    textures[3].LoadTexture("images/health.png");
+    textures[4].LoadTexture("images/key.png");
+    textures[5].LoadTexture("images/BossKey.png");
+    textures[6].LoadTexture("images/tilesetdebug.png");
 }
 /*
 int ObjList::createObj(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation)
@@ -248,6 +252,76 @@ int ObjList::createExplosion(double inputX, double inputY)
     return index;
 }
 
+int ObjList::createItem(char type, double inputX, double inputY)
+{
+    int index = -1;
+    for(int i = 0; i < size; i++){
+        if(objectList[i] == NULL){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) return -1; // if no free space return -1
+
+    if (type == 'k'){
+        Key *temp = new Key();
+        temp->Init(&textures[4]);
+        temp->z += (zOffput * index); // to avoid z fighting
+        temp->x = inputX;
+        temp->y = inputY;
+        temp->objList = this;
+        temp->objListIndex = index;
+        objectList[index] = temp;
+
+    }else if(type == 'b'){
+        BossKey *temp = new BossKey();
+        temp->Init(&textures[5]);
+        temp->z += (zOffput * index); // to avoid z fighting
+        temp->x = inputX;
+        temp->y = inputY;
+        temp->objList = this;
+        temp->objListIndex = index;
+        objectList[index] = temp;
+
+    }else{
+        HealthKit *temp = new HealthKit();
+        temp->Init(&textures[3]);
+        temp->z += (zOffput * index); // to avoid z fighting
+        temp->x = inputX;
+        temp->y = inputY;
+        temp->objList = this;
+        temp->objListIndex = index;
+        objectList[index] = temp;
+
+    }
+    return index;
+}
+
+int ObjList::createTorch(double inputX, double inputY, bool* litStatusBool)
+{
+    int index = -1;
+    for(int i = 0; i < size; i++){
+        if(objectList[i] == NULL){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) return -1; // if no free space return -1
+
+    Torch *temp = new Torch();
+    temp->lit = litStatusBool;
+    temp->z += (zOffput * index); // to avoid z fighting
+    temp->x = inputX;
+    temp->y = inputY;
+    temp->objList = this;
+    temp->objListIndex = index;
+    temp->Init(&textures[6]);
+    objectList[index] = temp;
+
+    return index;
+}
 
 bool ObjList::deleteObject(int index)
 {
@@ -257,6 +331,11 @@ bool ObjList::deleteObject(int index)
     delete objectList[index];
     objectList[index] = NULL;
     return true;
+}
+
+void ObjList::clearObjList()
+{
+
 }
 
 GameObject* ObjList::getObj(int index)

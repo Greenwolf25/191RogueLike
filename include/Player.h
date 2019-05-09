@@ -29,11 +29,11 @@ class Player
         void playerInput(Inputs*);
         void Explo(double, double);
         void runperframe();
-        bool  flag; // mine on screen?
-        void HitCounter(); // checks if hit counter has reached a certain amount, if so then "stillAlive" is set to false
 
-        bool stillAlive; // used in HitCounter
-        int  HitCount; // keeps track of the number of hits player has taken
+        bool stillAlive;
+        int  healthPoints; // keeps track of the number of hits player has taken
+        int numberOfKeys;
+        bool BossKey; // Does the player have the boss key?
 
 
 

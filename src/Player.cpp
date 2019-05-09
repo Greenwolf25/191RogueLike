@@ -25,7 +25,9 @@ Player::Player()
     xMax = yMax = 1.0;
     rotation = 0;
     speed = 0.004;
-    flag = false;
+    healthPoints = 100;
+    numberOfKeys = 10;
+    BossKey = false;
 }
 
 Player::~Player()

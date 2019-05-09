@@ -32,7 +32,13 @@ class ObjList
 
         int createExplosion(double, double);
 
+        int createItem(char, double, double); // type, X, Y
+
+        int createTorch(double, double, bool*); // X, Y, Lit/Unlit (pointer as it will be give by level Gen so it knows when the torch is lit)
+
         bool deleteObject(int); // delete index (return false if NULL)
+        void clearObjList(); // empty the ObjList and delete all objects
+
         GameObject* getObj(int);
         void draw();
         void runPerFrame();
