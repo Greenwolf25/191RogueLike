@@ -63,6 +63,9 @@ class ObjList
         //collision check for gunfire and boss
         bool collisioncheckBF(double,double);
 
+        //collision Check for gunFire and Torch
+        bool collisioncheckTF(double,double);
+
         //for collision sound, call it where this function is called
         //don't know if I'll use these
         //void setXpos(double); // called in the area object is spawned so it can give xPos a value

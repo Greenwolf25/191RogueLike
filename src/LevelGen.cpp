@@ -228,7 +228,7 @@ templateList::templateList()
                                 55, 56, 56, 56, 56, 56, 56, 57,  0,  0,  0, 55, 56, 57,  0, 55, 56, 56, 57
 
                               }, ((x_tiles-2) * (y_tiles-2)));
-        levelList[5].setTorchLocations(new int[8]{2,8, 3,3, 15,10, 18,3},8);
+        levelList[5].setTorchLocations(new int[8]{2,8, 3,6, 15,10, 18,3},8);
         levelList[5].setPossibleDoors(new bool[maximum_doors_per_room]{0,0,1,0,0,0,1,0});
 
         // template 6
@@ -442,6 +442,8 @@ LevelNode::LevelNode()
     itemY = 0;
     Item = 0;
     itemInChest = false;
+    isBossRoom = false;
+    bossRoomDoor = -1;
 
     torchStatusTracker = NULL;
 
@@ -538,6 +540,53 @@ bool LevelNode::isItemTaken()
     return itemTaken;
 }
 
+int LevelNode::getItemX()
+{
+    return itemX;
+}
+
+int LevelNode::getItemY()
+{
+    return itemY;
+}
+
+int LevelNode::getItemType()
+{
+    return Item;
+}
+
+
+bool LevelNode::setRoomBeat()
+{
+    roomBeat = true;
+}
+
+bool LevelNode::setEnemiesCleared()
+{
+    enemiesCleared = true;
+}
+
+bool LevelNode::setChestOpened()
+{
+    chestOpened = true;
+}
+
+bool LevelNode::setItemTaken()
+{
+    itemTaken = true;
+}
+
+void LevelNode::setItemCoord(int x, int y)
+{
+    itemX = x;
+    itemY = y;
+}
+
+void LevelNode::openDoor(int door)
+{
+    openDoors[door] = true;
+}
+
 
 /// Level generator ----------------------------------------------------------------
 
@@ -554,7 +603,10 @@ LevelGen::LevelGen()
 
     wallMatrix = new bool[gridX*gridY]{};
     pitMatrix = new bool [gridX*gridY]{};
-    tileSet = new TextureLoader;
+    tileSet = new TextureLoader();
+    bossDoor = new TextureLoader();
+
+    lockRoom = false;
 }
 
 LevelGen::~LevelGen()
@@ -564,29 +616,142 @@ LevelGen::~LevelGen()
     delete startingRoom;
     delete currentRoom;
     delete tileSet;
+    delete bossDoor;
 }
+
+void LevelGen::InitLevelGen(ObjList* newObjectList)
+{
+    tileSet->LoadTexture("images/tileset.png"); // generate functions as init in this case
+    bossDoor->LoadTexture("images/BossDoor3.png");
+    objectList = newObjectList;
+}
+
 
 void LevelGen::generateLevels()
 {
-    tileSet->LoadTexture("images/tileset.png"); // generate functions as init in this case
-
     startingRoom = new LevelNode();
-    startingRoom->setRoom(0);
-    startingRoom->addDoor(0, startingRoom, 0);
-    startingRoom->addDoor(1, startingRoom, 1);
+    startingRoom->setRoom(5);
+    startingRoom->addDoor(0, startingRoom, 1);
+    startingRoom->addDoor(1, startingRoom, 0);
     startingRoom->addDoor(2, startingRoom, 1);
-    startingRoom->addDoor(3, startingRoom, 0);
+    startingRoom->addDoor(3, startingRoom, 1);
     startingRoom->addDoor(4, startingRoom, 1);
-    startingRoom->addDoor(5, startingRoom, 1);
+    startingRoom->addDoor(5, startingRoom, 0);
     startingRoom->addDoor(6, startingRoom, 1);
     startingRoom->addDoor(7, startingRoom, 1);
+    startingRoom->bossRoomDoor = -1;
 
     currentRoom = startingRoom;
+    //SET UP ROOM
+
+    //spawn item
+    if(!(currentRoom->isItemTaken()) && currentRoom->getItemType() != 0){ // if there is an item
+        switch (currentRoom->getItemType()){
+        case 1: // spawn key
+            objectList->createItem('k',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        case 2: // spawn boss key
+            objectList->createItem('b',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        case 3: // spawn health
+            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        default: // if item type is wrong spawn health kit
+            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        }
+    }
+
+    //spawn torches
+    for(int i = 0; i < (currentRoom->getLevelTemplate().getTorchLocationsSize()/2); i++){
+        objectList->createTorch(gridToCoordX(currentRoom->getLevelTemplate().getTorchLocations(i*2)), // get x location
+                                gridToCoordY(currentRoom->getLevelTemplate().getTorchLocations(i*2 +1)), // get y location
+                                &currentRoom->torchStatusTracker[i]
+                                );
+    }
+    //spawn enemies
+        //TODO
+
 
     setWallMatrix();
     setPitMatrix();
 
 }
+
+int LevelGen::enterDoor(int door)
+{
+    if(door < 0 || door > 7) return 0; // if error do nothing and return door 0
+    objectList->clearObjList(); // clear room
+    currentRoom = currentRoom->getNextRoom(door);
+
+    //spawn item
+    if(!(currentRoom->isItemTaken()) && currentRoom->getItemType() != 0){ // if there is an item
+        switch (currentRoom->getItemType()){
+        case 1: // spawn key
+            objectList->createItem('k',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        case 2: // spawn boss key
+            objectList->createItem('b',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        case 3: // spawn health
+            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        default: // if item type is wrong spawn health kit
+            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+            break;
+        }
+    }
+
+    //spawn torches
+    for(int i = 0; i < (currentRoom->getLevelTemplate().getTorchLocationsSize()/2); i++){
+        objectList->createTorch(gridToCoordX(currentRoom->getLevelTemplate().getTorchLocations(i*2)), // get x location
+                                gridToCoordY(currentRoom->getLevelTemplate().getTorchLocations(i*2 +1)), // get y location
+                                &currentRoom->torchStatusTracker[i]
+                                );
+    }
+    //spawn enemies
+        //TODO
+
+    setWallMatrix();
+    setPitMatrix();
+
+    switch(door){ // return opposite door (entering door)
+        case 0:
+            currentRoom->openDoor(4); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(4) + getDoorX(4)] = 0;
+            return 4;
+        case 1:
+            currentRoom->openDoor(7); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(7) + getDoorX(7)] = 0;
+            return 7;
+        case 2:
+            currentRoom->openDoor(6); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(6) + getDoorX(6)] = 0;
+            return 6;
+        case 3:
+            currentRoom->openDoor(5); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(5) + getDoorX(5)] = 0;
+            return 5;
+        case 4:
+            currentRoom->openDoor(0); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(0) + getDoorX(0)] = 0;
+            return 0;
+        case 5:
+            currentRoom->openDoor(3); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(3) + getDoorX(3)] = 0;
+            return 3;
+        case 6:
+            currentRoom->openDoor(2); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(2) + getDoorX(2)] = 0;
+            return 2;
+        case 7:
+            currentRoom->openDoor(1); // open equivalent door
+            wallMatrix[(gridX)*getDoorY(1) + getDoorX(1)] = 0;
+            return 1;
+    }
+
+}
+
 
 void LevelGen::drawLevel()
 {
@@ -716,7 +881,7 @@ void LevelGen::drawLevel()
                         glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY)  + tileSizeY, -1.019);
                         glEnd();
 
-                        if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
+                        if((!(currentRoom->getOpenDoors()[i]) && currentRoom->bossRoomDoor != i) || (lockRoom)){ // if closed render door (unless boss door, then render boss door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(68) * (1.0/6.0), getTileY(68) * (1.0/17.0) + (1.0/17.0));// bottom left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
@@ -730,6 +895,24 @@ void LevelGen::drawLevel()
                             glTexCoord2d(getTileX(68) * (1.0/6.0), getTileY(68) * (1.0/17.0));// top left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.018);
                             glEnd();
+                        } else if(currentRoom->bossRoomDoor == i){
+                            glPushMatrix();
+                            bossDoor->binder();
+                            glBegin(GL_QUADS);
+                            glTexCoord2d(0.0, 0.0);// bottom left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(0.0, 1.0);// bottom right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(1.0, 1.0);// top right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY), -1.018);
+
+                            glTexCoord2d(1.0, 0.0);// top left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.018);
+                            glEnd();
+                            glPopMatrix();
+                            tileSet->binder(); // return to tile set
                         }
                         break;
                     case 1:
@@ -749,7 +932,7 @@ void LevelGen::drawLevel()
                         glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, ((getDoorY(i)*tileSizeY)+maxY), -1.019);
                         glEnd();
 
-                        if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
+                        if((!(currentRoom->getOpenDoors()[i]) && currentRoom->bossRoomDoor != i) || (lockRoom)){ // if closed render door (unless boss door, then render boss door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(41) * (1.0/6.0), getTileY(41) * (1.0/17.0) + (1.0/17.0));// bottom left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
@@ -763,6 +946,22 @@ void LevelGen::drawLevel()
                             glTexCoord2d(getTileX(41) * (1.0/6.0), getTileY(41) * (1.0/17.0));// top left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)+maxY), -1.018);
                             glEnd();
+                        }else if(currentRoom->bossRoomDoor == i){
+                            bossDoor->binder();
+                            glBegin(GL_QUADS);
+                            glTexCoord2d(0.0, 1.0);// bottom left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(1.0, 1.0);// bottom right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(1.0, 0.0);// top right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)+maxY), -1.018);
+
+                            glTexCoord2d(0.0, 0.0);// top left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)+maxY), -1.018);
+                            glEnd();
+                            tileSet->binder(); // return to tile set
                         }
                         break;
                     case 4:
@@ -780,7 +979,7 @@ void LevelGen::drawLevel()
                         glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY)  + tileSizeY, -1.019);
                         glEnd();
 
-                        if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
+                        if((!(currentRoom->getOpenDoors()[i]) && currentRoom->bossRoomDoor != i) || (lockRoom)){ // if closed render door (unless boss door, then render boss door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(67) * (1.0/6.0), getTileY(67) * (1.0/17.0) + (1.0/17.0));// bottom left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
@@ -794,6 +993,22 @@ void LevelGen::drawLevel()
                             glTexCoord2d(getTileX(67) * (1.0/6.0), getTileY(67) * (1.0/17.0));// top left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.018);
                             glEnd();
+                        }else if(currentRoom->bossRoomDoor == i){
+                            bossDoor->binder();
+                            glBegin(GL_QUADS);
+                            glTexCoord2d(1.0, 1.0);// bottom left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(1.0, 0.0);// bottom right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),(((getDoorY(i)*tileSizeY)-maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(0.0, 0.0);// top right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), ((getDoorY(i)*tileSizeY)-maxY), -1.018);
+
+                            glTexCoord2d(0.0, 1.0);// top left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((getDoorY(i)*tileSizeY)-maxY), -1.018);
+                            glEnd();
+                            tileSet->binder(); // return to tile set
                         }
                         break;
                     case 5:
@@ -813,7 +1028,7 @@ void LevelGen::drawLevel()
                         glVertex3d(((getDoorX(i)*tileSizeX)-maxX) - tileSizeX, (-(getDoorY(i)*tileSizeY)+maxY), -1.019);
                         glEnd();
 
-                        if(!(currentRoom->getOpenDoors()[i])){ // if closed render door
+                        if((!(currentRoom->getOpenDoors()[i]) && currentRoom->bossRoomDoor != i) || (lockRoom)){ // if closed render door (unless boss door, then render boss door
                             glBegin(GL_QUADS);
                             glTexCoord2d(getTileX(47) * (1.0/6.0), getTileY(47) * (1.0/17.0) + (1.0/17.0));// bottom left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
@@ -827,6 +1042,22 @@ void LevelGen::drawLevel()
                             glTexCoord2d(getTileX(47) * (1.0/6.0), getTileY(47) * (1.0/17.0));// top left
                             glVertex3d((getDoorX(i)*tileSizeX)-maxX, (-(getDoorY(i)*tileSizeY)+maxY), -1.018);
                             glEnd();
+                        }else if(currentRoom->bossRoomDoor == i){
+                            bossDoor->binder();
+                            glBegin(GL_QUADS);
+                            glTexCoord2d(1.0, 0.0);// bottom left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, ((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(0.0, 0.0);// bottom right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX),((-(getDoorY(i)*tileSizeY)+maxY) - tileSizeY), -1.018);
+
+                            glTexCoord2d(0.0, 1.0);// top right
+                            glVertex3d((((getDoorX(i)*tileSizeX)-maxX) + tileSizeX), (-(getDoorY(i)*tileSizeY)+maxY), -1.018);
+
+                            glTexCoord2d(1.0, 1.0);// top left
+                            glVertex3d((getDoorX(i)*tileSizeX)-maxX, (-(getDoorY(i)*tileSizeY)+maxY), -1.018);
+                            glEnd();
+                            tileSet->binder(); // return to tile set
                         }
                         break;
                 }
@@ -850,6 +1081,18 @@ bool LevelGen::getPitMatrix(int index)
     return pitMatrix[index];
 }
 
+bool LevelGen::openDoor(int door)
+{
+    if(lockRoom) return false;
+
+    if(currentRoom->getOpenDoors()[door]){
+        return false; // door is open so do not use key
+    }else{
+        currentRoom->openDoor(door);
+        wallMatrix[(gridX)*getDoorY(door) + getDoorX(door)] = 0;
+        return true;
+    }
+}
 
 int LevelGen::getGridX()
 {
@@ -937,22 +1180,22 @@ int LevelGen::gridToDoorNum(int x, int y)
         }
 
     }else if(y == 0){
-        if(y == getDoorY(1)){
+        if(x == getDoorX(1)){
             return 1;
-        }else if(y == getDoorY(2)){
+        }else if(x == getDoorX(2)){
             return 2;
-        }else if (y == getDoorY(3)){
+        }else if (x == getDoorX(3)){
             return 3;
         }else{
             return -1;
         }
 
     }else if(y == gridY-1){
-        if(y == getDoorY(5)){
+        if(x == getDoorX(5)){
             return 5;
-        }else if(y == getDoorY(6)){
+        }else if(x == getDoorX(6)){
             return 6;
-        }else if (y == getDoorY(7)){
+        }else if (x == getDoorX(7)){
             return 7;
         }else{
             return -1;

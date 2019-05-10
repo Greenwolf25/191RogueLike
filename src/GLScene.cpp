@@ -58,6 +58,7 @@ GLint GLScene::initGL(bool* quit)
     Plx->parallaxInit("images/test2.png");
     player->playerInit(objectList, level);
     objectList->objListInit(level);
+    level->InitLevelGen(objectList);
 
     level->generateLevels();
 

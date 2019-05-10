@@ -75,9 +75,23 @@ class LevelNode
         bool isEnemiesCleared();
         bool isChestOpened();
         bool isItemTaken();
+        int getItemX();
+        int getItemY();
+        int getItemType();
+
+        bool setRoomBeat();
+        bool setEnemiesCleared();
+        bool setChestOpened();
+        bool setItemTaken();
+        void setItemCoord(int, int);
+
+        void openDoor(int);
 
         bool* torchStatusTracker;  // for keeping track of the states of the torches in a room (lit or unlit)
 
+        bool isBossRoom;
+
+        int bossRoomDoor;// which door is a bossRoom Door (-1 if none)
 
     protected:
         int levelTemplateIndex;
@@ -107,7 +121,7 @@ class LevelGen
         LevelGen();
         virtual ~LevelGen();
 
-        InitLevelGen(ObjList* objectList); // uses Objlist to spawn and clear objects and uses player to move player when changing levels and to figure out when to change levels
+        void InitLevelGen(ObjList*); // uses Objlist to spawn and clear objects and uses player to move player when changing levels and to figure out when to change levels
         void generateLevels();
 
         void drawLevel();
@@ -138,6 +152,11 @@ class LevelGen
 
         bool inTransition; // true if the level gen is transitioning between levels
 
+        int enterDoor(int);
+
+        int getDoorX(int door);
+        int getDoorY(int door);
+
     protected:
         int gridX;
         int gridY;
@@ -155,13 +174,15 @@ class LevelGen
         int textureX;
         int textureY;
 
+        bool lockRoom; // if true then have all doors be locked and unOpenable
+
         LevelNode* startingRoom;
         LevelNode* currentRoom;
 
         TextureLoader* tileSet;
+        TextureLoader* bossDoor;
 
-        int getDoorX(int door);
-        int getDoorY(int door);
+        ObjList* objectList;
 
         int getTileX(int tile);
         int getTileY(int tile);

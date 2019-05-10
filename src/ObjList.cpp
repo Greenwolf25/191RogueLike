@@ -35,7 +35,7 @@ void ObjList::objListInit(LevelGen* newLevelGen)
     textures[3].LoadTexture("images/health.png");
     textures[4].LoadTexture("images/key.png");
     textures[5].LoadTexture("images/BossKey.png");
-    textures[6].LoadTexture("images/tilesetdebug.png");
+    textures[6].LoadTexture("images/tileset.png");
 }
 /*
 int ObjList::createObj(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation)
@@ -335,7 +335,9 @@ bool ObjList::deleteObject(int index)
 
 void ObjList::clearObjList()
 {
-
+     for(int i = 0; i < size; i++){
+        deleteObject(i);
+    }
 }
 
 GameObject* ObjList::getObj(int index)
@@ -469,3 +471,22 @@ bool ObjList::collisioncheckBF(double, double)
     // just in case enemy - gunfire does not work
 }
 
+
+bool ObjList::collisioncheckTF(double Ex, double Ey)
+{
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and mine (placeholder) //adjust later
+        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'f')
+            {
+                getObj(i)->deleteSelf();
+                return true;
+            }
+        }
+    }
+    return false;
+}
