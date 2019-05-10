@@ -352,7 +352,7 @@ templateList::templateList()
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 55, 56, 56, 56, 56, 56, 56, 57
 
                               }, ((x_tiles-2) * (y_tiles-2)));
-        levelList[12].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[12].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,0,0,1,1});
 
         // template 13
         levelList[13].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -436,16 +436,20 @@ LevelNode::LevelNode()
     roomBeat = false;
     enemiesCleared = false;
     chestOpened = false;
-    itemTaken = false;
+    itemTaken = true;
 
     itemX = 0;
     itemY = 0;
-    Item = 0;
+    Item = 3;
     itemInChest = false;
     isBossRoom = false;
     bossRoomDoor = -1;
 
     torchStatusTracker = NULL;
+
+    graphCounter = 0;
+    branch = -1;
+    generated = false;
 
 
     doorLinks = new LevelNode*[maximum_doors_per_room];
@@ -471,9 +475,17 @@ void LevelNode::setRoom(int input)
 
     if(torchStatusTracker != NULL){
         delete[] torchStatusTracker;
+        torchStatusTracker = NULL;
     }
 
     torchStatusTracker = new bool[levels[input].getTorchLocationsSize()]{};
+
+    if(levels[input].getItemlocationsSize() > 0){
+        itemTaken = false;
+        int index = rand()%(levels[input].getItemlocationsSize()/3);
+        itemX = levels[input].getItemLocations(index*3);
+        itemY = levels[input].getItemLocations(index*3 + 1);
+    }
 }
 
 void LevelNode::addDoor(int newDoorIndex, LevelNode* newRoom, bool open)
@@ -481,10 +493,10 @@ void LevelNode::addDoor(int newDoorIndex, LevelNode* newRoom, bool open)
     if(!levels[levelTemplateIndex].getPossibleDoors(newDoorIndex)) return;// if not a possible door don't do anything
     // creates a door from this room to newRoom at the door locations of newDoorIndex
     doors[newDoorIndex] = true;
-    if(doorLinks[newDoorIndex] != NULL){
+    /*if(doorLinks[newDoorIndex] != NULL){ // May cause leak
             delete doorLinks[newDoorIndex];
             doorLinks[newDoorIndex] = NULL;
-    }
+    }*/
     doorLinks[newDoorIndex] = newRoom;
 
     if(open){ // set door as open or closed
@@ -493,6 +505,12 @@ void LevelNode::addDoor(int newDoorIndex, LevelNode* newRoom, bool open)
         openDoors[newDoorIndex] = 0;
     }
 }
+
+void LevelNode::closeDoor(int input)
+{
+    openDoors[input] = false;
+}
+
 
 bool* LevelNode::getDoors()
 {
@@ -582,11 +600,63 @@ void LevelNode::setItemCoord(int x, int y)
     itemY = y;
 }
 
+void LevelNode::setItemType(int input)
+{
+    Item = input;
+}
+
+
 void LevelNode::openDoor(int door)
 {
     openDoors[door] = true;
+
 }
 
+void LevelNode::generateRoom(bool requireMajorItem)
+{
+    vector<int> possibleRooms;
+
+    for(int i = 0; i < number_of_level_templates; i++){
+        if(requireMajorItem){
+            if(levels[i].getItemlocationsSize() == 0) continue; // if no items fail
+            bool itemPassFlag = false;
+            for(int j = 0; j < levels[i].getItemlocationsSize()/3; j++){
+                if(levels[i].getItemLocations((j*3)+2) == 1) itemPassFlag = true;
+            }
+
+            if(!itemPassFlag) continue;
+        }
+
+        if(doors[0] && !levels[i].getPossibleDoors(0)){
+            continue; // do not use i
+        }
+        if(doors[1] && !levels[i].getPossibleDoors(1)){
+            continue; // do not use i
+        }
+        if(doors[2] && !levels[i].getPossibleDoors(2)){
+            continue; // do not use i
+        }
+        if(doors[3] && !levels[i].getPossibleDoors(3)){
+            continue; // do not use i
+        }
+        if(doors[4] && !levels[i].getPossibleDoors(4)){
+            continue; // do not use i
+        }
+        if(doors[5] && !levels[i].getPossibleDoors(5)){
+            continue; // do not use i
+        }
+        if(doors[6] && !levels[i].getPossibleDoors(6)){
+            continue; // do not use i
+        }
+        if(doors[7] && !levels[i].getPossibleDoors(7)){
+            continue; // do not use i
+        }
+        // it allows the needed doors
+        possibleRooms.push_back(i);
+    }
+
+    setRoom(possibleRooms.at( (rand()%possibleRooms.size())));
+}
 
 /// Level generator ----------------------------------------------------------------
 
@@ -630,34 +700,649 @@ void LevelGen::InitLevelGen(ObjList* newObjectList)
 void LevelGen::generateLevels()
 {
     startingRoom = new LevelNode();
-    startingRoom->setRoom(5);
-    startingRoom->addDoor(0, startingRoom, 1);
-    startingRoom->addDoor(1, startingRoom, 0);
-    startingRoom->addDoor(2, startingRoom, 1);
-    startingRoom->addDoor(3, startingRoom, 1);
-    startingRoom->addDoor(4, startingRoom, 1);
-    startingRoom->addDoor(5, startingRoom, 0);
-    startingRoom->addDoor(6, startingRoom, 1);
-    startingRoom->addDoor(7, startingRoom, 1);
-    startingRoom->bossRoomDoor = -1;
-
     currentRoom = startingRoom;
+    srand(time(0));
+
+    // 0 1 2 x 4 3 6
+
+    LevelNode* mapGrid[7][7]{};
+    dir dirMapGrid[7][7]{};
+    vector<int> frontier;
+
+    dirMapGrid[3][3].up = 1; // 0,0 is top left
+    dirMapGrid[3][3].down = 1;
+    dirMapGrid[3][3].left = 1;
+    dirMapGrid[3][3].right = 1;
+    dirMapGrid[3][3].done = 1;
+
+    frontier.push_back(3); // x
+    frontier.push_back(4); // y
+    dirMapGrid[3][4].up = 1;
+    dirMapGrid[3][4].done = 1;
+
+    frontier.push_back(3); // x
+    frontier.push_back(2); // y
+    dirMapGrid[3][2].down = 1;
+    dirMapGrid[3][2].done = 1;
+
+    frontier.push_back(2);
+    frontier.push_back(3);
+    dirMapGrid[2][3].right = 1;
+    dirMapGrid[2][3].done = 1;
+
+    frontier.push_back(4);
+    frontier.push_back(3);
+    dirMapGrid[4][3].left = 1;
+    dirMapGrid[4][3].done = 1;
+
+    int x,y,randomVal;
+    dir temp;
+    while(!frontier.empty()){
+
+        y = frontier.back();
+        frontier.pop_back();
+        x = frontier.back();
+        frontier.pop_back();
+        temp.up = 0;
+        temp.down = 0;
+        temp.left = 0;
+        temp.right = 0;
+
+        //up
+        if(y-1 >= 0 && !dirMapGrid[x][y].up){
+            if(!dirMapGrid[x][y-1].done){
+                temp.up = 1;
+            }
+        }
+
+        //down
+        if(y+1 <= 6 && !dirMapGrid[x][y].down){
+            if(!dirMapGrid[x][y+1].done){
+                temp.down = 1;
+            }
+        }
+
+        //left
+        if(x-1 >= 0 && !dirMapGrid[x][y].left){
+            if(!dirMapGrid[x-1][y].done){
+                temp.left = 1;
+            }
+        }
+
+        //right
+        if(x+1 <=6 && !dirMapGrid[x][y].up){
+            if(!dirMapGrid[x+1][y].done){
+                temp.right = 1;
+            }
+        }
+
+        randomVal = rand()%4;
+        switch(randomVal){
+        case 0:
+            if(temp.up){
+                dirMapGrid[x][y].up = true;
+
+                dirMapGrid[x][y-1].down = true; // new room
+                dirMapGrid[x][y-1].done = true;
+
+                frontier.push_back(x); // add new room to frontier
+                frontier.push_back(y-1);
+            }
+            break;
+        case 1:
+            if(temp.down){
+                dirMapGrid[x][y].down = true;
+
+                dirMapGrid[x][y+1].up = true; // new room
+                dirMapGrid[x][y+1].done = true;
+
+                frontier.push_back(x); // add new room to frontier
+                frontier.push_back(y+1);
+            }
+            break;
+        case 2:
+            if(temp.left){
+                dirMapGrid[x][y].left = true;
+
+                dirMapGrid[x-1][y].right = true; // new room
+                dirMapGrid[x-1][y].done = true;
+
+                frontier.push_back(x-1); // add new room to frontier
+                frontier.push_back(y);
+            }
+            break;
+        case 3:
+            if(temp.right){
+                dirMapGrid[x][y].right = true;
+
+                dirMapGrid[x+1][y].left = true; // new room
+                dirMapGrid[x+1][y].done = true;
+
+                frontier.push_back(x+1); // add new room to frontier
+                frontier.push_back(y);
+            }
+            break;
+        }
+
+        if(rand()%4 != 0){ // 75% chance of creating another branch
+            randomVal++%4;
+            switch(randomVal){
+            case 0:
+                if(temp.up){
+                    dirMapGrid[x][y].up = true;
+
+                    dirMapGrid[x][y-1].down = true; // new room
+                    dirMapGrid[x][y-1].done = true;
+
+                    frontier.push_back(x); // add new room to frontier
+                    frontier.push_back(y-1);
+                }
+                break;
+            case 1:
+                if(temp.down){
+                    dirMapGrid[x][y].down = true;
+
+                    dirMapGrid[x][y+1].up = true; // new room
+                    dirMapGrid[x][y+1].done = true;
+
+                    frontier.push_back(x); // add new room to frontier
+                    frontier.push_back(y+1);
+                }
+                break;
+            case 2:
+                if(temp.left){
+                    dirMapGrid[x][y].left = true;
+
+                    dirMapGrid[x-1][y].right = true; // new room
+                    dirMapGrid[x-1][y].done = true;
+
+                    frontier.push_back(x-1); // add new room to frontier
+                    frontier.push_back(y);
+                }
+                break;
+            case 3:
+                if(temp.right){
+                    dirMapGrid[x][y].right = true;
+
+                    dirMapGrid[x+1][y].left = true; // new room
+                    dirMapGrid[x+1][y].done = true;
+
+                    frontier.push_back(x+1); // add new room to frontier
+                    frontier.push_back(y);
+                }
+                break;
+            }
+        }
+    }
+
+    // Create LevelNodes
+    for(int y = 0; y < 7; y++){
+        for(int x = 0; x < 7; x++){
+            if(dirMapGrid[x][y].done){
+                mapGrid[x][y] = new LevelNode();
+            }
+        }
+    }
+
+    // link LevelNodes
+    mapGrid[3][3] = startingRoom;
+    startingRoom->graphCounter = 0;
+
+    startingRoom->addDoor(0, mapGrid[3-1][3],1);
+    frontier.push_back(2);
+    frontier.push_back(3);
+    mapGrid[2][3]->addDoor(4,startingRoom,1);
+    mapGrid[2][3]->graphCounter = 1;
+    mapGrid[2][3]->branch = 0; // left branch
+    dirMapGrid[2][3].right = 0;
+
+    startingRoom->addDoor(2, mapGrid[3][3-1],1);
+    frontier.push_back(3);
+    frontier.push_back(2);
+    mapGrid[3][2]->addDoor(6,startingRoom,1);
+    mapGrid[3][2]->graphCounter = 1;
+    mapGrid[3][2]->branch = 1; // up branch
+    dirMapGrid[3][2].down = 0;
+
+    startingRoom->addDoor(4, mapGrid[3+1][3],1);
+    frontier.push_back(4);
+    frontier.push_back(3);
+    mapGrid[4][3]->addDoor(0,startingRoom,1);
+    mapGrid[4][3]->graphCounter = 1;
+    mapGrid[4][3]->branch = 2; // right branch
+    dirMapGrid[4][3].left = 0;
+
+    startingRoom->addDoor(6, mapGrid[3][3+1],1);
+    frontier.push_back(3);
+    frontier.push_back(4);
+    mapGrid[3][4]->addDoor(2,startingRoom,1);
+    mapGrid[3][4]->graphCounter = 1;
+    mapGrid[3][4]->branch = 3; // right branch
+    dirMapGrid[3][4].up = 0;
+
+    dirMapGrid[3][3].up = 0;
+    dirMapGrid[3][3].down = 0;
+    dirMapGrid[3][3].left = 0;
+    dirMapGrid[3][3].right = 0;
+
+
+    while(!frontier.empty()){
+        y = frontier.back();
+        frontier.pop_back();
+        x = frontier.back();
+        frontier.pop_back();
+
+        //up
+        if(dirMapGrid[x][y].up){
+                cout << dirMapGrid[x][y].up << endl;
+            switch (rand()%3){
+            case 0: // left door
+                mapGrid[x][y]->addDoor(1,mapGrid[x][y-1],1);
+                mapGrid[x][y-1]->addDoor(7,mapGrid[x][y],1);
+                mapGrid[x][y-1]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+                mapGrid[x][y-1]->branch = mapGrid[x][y]->branch;
+                dirMapGrid[x][y-1].down = 0;// new node down direction has door
+                dirMapGrid[x][y].up = 0; // current node up direction has door
+                break;
+
+            case 1: // center door
+                mapGrid[x][y]->addDoor(2,mapGrid[x][y-1],1);
+                mapGrid[x][y-1]->addDoor(6,mapGrid[x][y],1);
+                mapGrid[x][y-1]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+                mapGrid[x][y-1]->branch = mapGrid[x][y]->branch;
+                dirMapGrid[x][y-1].down = 0;// new node down direction has door
+                dirMapGrid[x][y].up = 0; // current node up direction has door
+                break;
+
+            case 2: // right door
+                mapGrid[x][y]->addDoor(3,mapGrid[x][y-1],1);
+                mapGrid[x][y-1]->addDoor(5,mapGrid[x][y],1);
+                mapGrid[x][y-1]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+                mapGrid[x][y-1]->branch = mapGrid[x][y]->branch;
+                dirMapGrid[x][y-1].down = 0;// new node down direction has door
+                dirMapGrid[x][y].up = 0; // current node up direction has door
+                break;
+
+            }
+            frontier.push_back(x);
+            frontier.push_back(y-1);
+        }
+
+        //down
+        if(dirMapGrid[x][y].down){
+            switch (rand()%3){
+            case 0: // left door
+                mapGrid[x][y]->addDoor(7,mapGrid[x][y+1],1);
+                mapGrid[x][y+1]->addDoor(1,mapGrid[x][y],1);
+                mapGrid[x][y+1]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+                mapGrid[x][y+1]->branch = mapGrid[x][y]->branch;
+                dirMapGrid[x][y+1].up = 0;// new node down direction has door
+                dirMapGrid[x][y].down = 0; // current node up direction has door
+                break;
+
+            case 1: // center door
+                mapGrid[x][y]->addDoor(6,mapGrid[x][y+1],1);
+                mapGrid[x][y+1]->addDoor(2,mapGrid[x][y],1);
+                mapGrid[x][y+1]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+                mapGrid[x][y+1]->branch = mapGrid[x][y]->branch;
+                dirMapGrid[x][y+1].up = 0;// new node down direction has door
+                dirMapGrid[x][y].down = 0; // current node up direction has door
+                break;
+
+            case 2: // right door
+                mapGrid[x][y]->addDoor(5,mapGrid[x][y+1],1);
+                mapGrid[x][y+1]->addDoor(3,mapGrid[x][y],1);
+                mapGrid[x][y+1]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+                mapGrid[x][y+1]->branch = mapGrid[x][y]->branch;
+                dirMapGrid[x][y+1].up = 0;// new node down direction has door
+                dirMapGrid[x][y].down = 0; // current node up direction has door
+                break;
+
+            }
+            frontier.push_back(x);
+            frontier.push_back(y+1);
+        }
+
+        //left
+        if(dirMapGrid[x][y].left){
+            mapGrid[x][y]->addDoor(0,mapGrid[x-1][y],1);
+            mapGrid[x-1][y]->addDoor(4,mapGrid[x][y],1);
+            mapGrid[x-1][y]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+            mapGrid[x-1][y]->branch = mapGrid[x][y]->branch;
+            dirMapGrid[x-1][y].right = 0;// new node down direction has door
+            dirMapGrid[x][y].left = 0; // current node up direction has door
+
+            frontier.push_back(x-1);
+            frontier.push_back(y);
+        }
+
+        //right
+        if(dirMapGrid[x][y].right){
+            mapGrid[x][y]->addDoor(4,mapGrid[x+1][y],1);
+            mapGrid[x+1][y]->addDoor(0,mapGrid[x][y],1);
+            mapGrid[x+1][y]->graphCounter = mapGrid[x][y]->graphCounter + 1; // new node is further from starting room
+            mapGrid[x+1][y]->branch = mapGrid[x][y]->branch;
+            dirMapGrid[x+1][y].left = 0;// new node down direction has door
+            dirMapGrid[x][y].right = 0; // current node up direction has door
+
+            frontier.push_back(x+1);
+            frontier.push_back(y);
+        }
+
+    }
+
+    int maxLeft[3]{};
+    int maxRight[3]{};
+    int maxUp[3]{};
+    int maxDown[3]{};
+
+    for(int y = 0; y < 7; y++){
+        for(int x = 0; x < 7; x++){
+           if(mapGrid[x][y]){
+                if(mapGrid[x][y]->branch == 0){//left
+                    if(maxLeft[2] < mapGrid[x][y]->graphCounter){
+                        maxLeft[0] = x;
+                        maxLeft[1] = y;
+                        maxLeft[2] = mapGrid[x][y]->graphCounter;
+                    }
+
+                }else if(mapGrid[x][y]->branch == 1){ // up
+                    if(maxUp[2] < mapGrid[x][y]->graphCounter){
+                        maxUp[0] = x;
+                        maxUp[1] = y;
+                        maxUp[2] = mapGrid[x][y]->graphCounter;
+                    }
+
+                }else if(mapGrid[x][y]->branch == 2){ // right
+                    if(maxRight[2] < mapGrid[x][y]->graphCounter){
+                        maxRight[0] = x;
+                        maxRight[1] = y;
+                        maxRight[2] = mapGrid[x][y]->graphCounter;
+                    }
+
+                }else if(mapGrid[x][y]->branch == 3){ // down
+                    if(maxDown[2] < mapGrid[x][y]->graphCounter){
+                        maxDown[0] = x;
+                        maxDown[1] = y;
+                        maxDown[2] = mapGrid[x][y]->graphCounter;
+                    }
+
+                }
+            }
+        }
+    }
+
+    //find max branch
+    int maxMax = maxLeft[2];
+    int maxBranch = 0;
+    if(maxMax < maxUp[2]){
+        maxBranch = 1;
+        maxMax = maxUp[3];
+
+    }
+    if(maxMax < maxRight[2]){
+        maxBranch = 2;
+        maxMax = maxRight[3];
+
+    }
+    if(maxMax < maxDown[2]){
+        maxBranch = 3;
+        maxMax = maxDown[3];
+    }
+
+    cout << maxLeft[2] << ' ' << maxUp[2] << ' ' << maxRight[2] << ' ' << maxDown[2] << ' ' << maxBranch << endl;
+
+    // make max branch be boss room
+    switch (maxBranch){
+    case 0:
+        mapGrid[maxLeft[0]][maxLeft[1]]->isBossRoom = true;
+        mapGrid[maxLeft[0]][maxLeft[1]]->generated = true;
+        cout << maxLeft[0] << ' ' << maxLeft[1] << endl;
+
+        for(int i = 0; i < maximum_doors_per_room; i++){ // find door
+            if(mapGrid[maxLeft[0]][maxLeft[1]]->getDoors()[i]){
+                switch(i){ // find corresponding door
+                case 0:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 4;
+                    break;
+                case 1:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 7;
+                    break;
+                case 2:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 6;
+                    break;
+                case 3:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 5;
+                    break;
+                case 4:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 0;
+                    break;
+                case 5:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 3;
+                    break;
+                case 6:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 2;
+                    break;
+                case 7:
+                    mapGrid[maxLeft[0]][maxLeft[1]]->getNextRoom(i)->bossRoomDoor = 1;
+                    break;
+                }
+            }
+        }
+        break;
+    case 1:
+        mapGrid[maxUp[0]][maxUp[1]]->isBossRoom = true;
+        mapGrid[maxUp[0]][maxUp[1]]->generated = true;
+        cout << maxUp[0] << ' ' << maxUp[1] << endl;
+
+        for(int i = 0; i < maximum_doors_per_room; i++){ // find door
+            if(mapGrid[maxUp[0]][maxUp[1]]->getDoors()[i]){
+                switch(i){ // find corresponding door
+                case 0:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 4;
+                    break;
+                case 1:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 7;
+                    break;
+                case 2:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 6;
+                    break;
+                case 3:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 5;
+                    break;
+                case 4:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 0;
+                    break;
+                case 5:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 3;
+                    break;
+                case 6:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 2;
+                    break;
+                case 7:
+                    mapGrid[maxUp[0]][maxUp[1]]->getNextRoom(i)->bossRoomDoor = 1;
+                    break;
+                }
+            }
+        }
+        break;
+    case 2:
+        mapGrid[maxRight[0]][maxRight[1]]->isBossRoom = true;
+        mapGrid[maxRight[0]][maxRight[1]]->generated = true;
+        cout << maxRight[0] << ' ' << maxRight[1] << endl;
+
+        for(int i = 0; i < maximum_doors_per_room; i++){ // find door
+            if(mapGrid[maxRight[0]][maxRight[1]]->getDoors()[i]){
+                switch(i){ // find corresponding door
+                case 0:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 4;
+                    break;
+                case 1:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 7;
+                    break;
+                case 2:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 6;
+                    break;
+                case 3:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 5;
+                    break;
+                case 4:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 0;
+                    break;
+                case 5:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 3;
+                    break;
+                case 6:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 2;
+                    break;
+                case 7:
+                    mapGrid[maxRight[0]][maxRight[1]]->getNextRoom(i)->bossRoomDoor = 1;
+                    break;
+                }
+            }
+        }
+        break;
+    case 3:
+        mapGrid[maxDown[0]][maxDown[1]]->isBossRoom = true;
+        mapGrid[maxDown[0]][maxDown[1]]->generated = true;
+        cout << maxDown[0] << ' ' << maxDown[1] << endl;
+
+        for(int i = 0; i < maximum_doors_per_room; i++){ // find door
+            if(mapGrid[maxDown[0]][maxDown[1]]->getDoors()[i]){
+                switch(i){ // find corresponding door
+                case 0:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 4;
+                    break;
+                case 1:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 7;
+                    break;
+                case 2:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 6;
+                    break;
+                case 3:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 5;
+                    break;
+                case 4:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 0;
+                    break;
+                case 5:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 3;
+                    break;
+                case 6:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 2;
+                    break;
+                case 7:
+                    mapGrid[maxDown[0]][maxDown[1]]->getNextRoom(i)->bossRoomDoor = 1;
+                    break;
+                }
+            }
+        }
+        break;
+    }
+
+    int keyBranch = (maxBranch+(rand()%3 + 1))%4; // choose random branch other than max to be the boss key
+    int keyBranchX, keyBranchY;
+
+    switch(keyBranch){
+    case 0:
+        keyBranchX = maxLeft[0];//set coords
+        keyBranchY = maxLeft[1];
+
+        startingRoom->closeDoor(0); // close that branch and make it need a key
+        break;
+    case 1:
+        keyBranchX = maxUp[0];//set coords
+        keyBranchY = maxUp[1];
+
+        startingRoom->closeDoor(2); // close that branch and make it need a key
+        break;
+    case 2:
+        keyBranchX = maxRight[0];//set coords
+        keyBranchY = maxRight[1];
+
+        startingRoom->closeDoor(4); // close that branch and make it need a key
+        break;
+    case 3:
+        keyBranchX = maxDown[0];//set coords
+        keyBranchY = maxDown[1];
+
+        startingRoom->closeDoor(6); // close that branch and make it need a key
+        break;
+    }
+
+    mapGrid[keyBranchX][keyBranchY]->generated = true;
+    mapGrid[keyBranchX][keyBranchY]->generateRoom(true); // create a room with an item spawn
+    mapGrid[keyBranchX][keyBranchY]->setItemType(2); // type 2 is boss key;
+
+    keyBranch++; // then set the branch for the normal key;
+    if(keyBranch == maxBranch){
+        keyBranch++; // if it is the max branch just inc it again
+    }
+
+    switch(keyBranch){
+    case 0:
+        keyBranchX = maxLeft[0];//set coords
+        keyBranchY = maxLeft[1];
+        break;
+    case 1:
+        keyBranchX = maxUp[0];//set coords
+        keyBranchY = maxUp[1];
+        break;
+    case 2:
+        keyBranchX = maxRight[0];//set coords
+        keyBranchY = maxRight[1];
+        break;
+    case 3:
+        keyBranchX = maxDown[0];//set coords
+        keyBranchY = maxDown[1];
+        break;
+    }
+
+    mapGrid[keyBranchX][keyBranchY]->generated = true;
+    mapGrid[keyBranchX][keyBranchY]->generateRoom(true); // create a room with an item spawn
+    mapGrid[keyBranchX][keyBranchY]->setItemType(1); // type 1 is normal key;
+
+    startingRoom->generated = true; // do not generate the starting room
+
+    //Generate all of the other rooms
+    for(int y = 0; y < 7; y++){
+        for(int x = 0; x < 7; x++){
+           if(mapGrid[x][y] && !(mapGrid[x][y]->generated)){ // if it is a room and has not been generated yet
+                mapGrid[x][y]->generateRoom(0);
+                mapGrid[x][y]->generated = true;
+           }
+        }
+    }
+
+
+    for(int y = 0; y < 7; y++){
+        for(int x = 0; x < 7; x++){
+           if(mapGrid[x][y]){
+                cout << mapGrid[x][y]->branch << mapGrid[x][y]->graphCounter << ' ';
+            }else{
+                cout << "bx" << ' ';
+            }
+        }
+        cout << endl;
+    }
+
+
     //SET UP ROOM
 
     //spawn item
     if(!(currentRoom->isItemTaken()) && currentRoom->getItemType() != 0){ // if there is an item
         switch (currentRoom->getItemType()){
         case 1: // spawn key
-            objectList->createItem('k',currentRoom->getItemX(), currentRoom->getItemY());
+            objectList->createItem('k',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
         case 2: // spawn boss key
-            objectList->createItem('b',currentRoom->getItemX(), currentRoom->getItemY());
+            objectList->createItem('b',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
         case 3: // spawn health
-            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+            objectList->createItem('h',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
         default: // if item type is wrong spawn health kit
-            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+            objectList->createItem('h',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
         }
     }
@@ -688,16 +1373,16 @@ int LevelGen::enterDoor(int door)
     if(!(currentRoom->isItemTaken()) && currentRoom->getItemType() != 0){ // if there is an item
         switch (currentRoom->getItemType()){
         case 1: // spawn key
-            objectList->createItem('k',currentRoom->getItemX(), currentRoom->getItemY());
+            objectList->createItem('k',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
         case 2: // spawn boss key
-            objectList->createItem('b',currentRoom->getItemX(), currentRoom->getItemY());
+            objectList->createItem('b',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
         case 3: // spawn health
-            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+            objectList->createItem('h',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
-        default: // if item type is wrong spawn health kit
-            objectList->createItem('h',currentRoom->getItemX(), currentRoom->getItemY());
+        default: // if item type is wrong or default spawn health kit
+            objectList->createItem('h',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
             break;
         }
     }

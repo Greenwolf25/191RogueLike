@@ -62,13 +62,6 @@ GLint GLScene::initGL(bool* quit)
 
     level->generateLevels();
 
-    for(int y=0; y < y_tiles; y++){
-        for(int x=0; x < x_tiles; x++){
-                cout << level->getWallMatrix(level->getTileIndex(x,y)) << " ";
-        }
-        cout << endl;
-    }
-
     return true;
 }
 

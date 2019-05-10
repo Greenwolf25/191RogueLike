@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <TextureLoader.h>
+#include <time.h>
 #include <vector>
 using namespace std;
 
@@ -14,6 +15,14 @@ using namespace std;
 
 #define x_tiles 21
 #define y_tiles 12
+
+struct dir{
+    bool up;
+    bool down;
+    bool left;
+    bool right;
+    bool done;
+};
 
 class ObjList;
 
@@ -65,6 +74,7 @@ class LevelNode
 
         void setRoom(int);
         void addDoor(int, LevelNode*, bool); /// note: 8 possible door locations per room 1 on both left and right and 3 on top and bottom
+        void closeDoor(int);
 
         bool* getDoors();
         bool* getOpenDoors();
@@ -83,6 +93,7 @@ class LevelNode
         bool setEnemiesCleared();
         bool setChestOpened();
         bool setItemTaken();
+        void setItemType(int);
         void setItemCoord(int, int);
 
         void openDoor(int);
@@ -92,6 +103,13 @@ class LevelNode
         bool isBossRoom;
 
         int bossRoomDoor;// which door is a bossRoom Door (-1 if none)
+
+        int graphCounter; // for use in making map
+        int branch; // 0 == left branch, 1, 2, 3 = down branch
+
+        bool generated;
+
+        void generateRoom(bool);
 
     protected:
         int levelTemplateIndex;
@@ -158,6 +176,7 @@ class LevelGen
         int getDoorY(int door);
 
     protected:
+
         int gridX;
         int gridY;
         double maxX;
