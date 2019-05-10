@@ -404,6 +404,24 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[15].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+
+        // template 5 again for better chance of spawning
+        levelList[16].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
+                              {
+                                43, 44, 44, 44, 44, 44, 44, 45,  0,  0,  0, 43, 44, 44, 44, 44, 44, 44, 45,
+                                49, 50, 56, 56, 56, 56, 56, 57,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                49, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49, 50, 50, 50, 50, 50, 33, 51,
+                                49, 50, 44, 44, 44, 44, 44, 45,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                49, 50, 56, 50, 50, 50, 50, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                49, 51,  0, 49, 50, 63, 65, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                55, 56, 44, 50, 50, 75, 77, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                 0,  0, 49, 50, 50, 50, 50, 51,  0,  0,  0, 49, 50, 50, 50, 50, 50, 50, 51,
+                                43, 44, 50, 50, 50, 50, 50, 51,  0,  0,  0, 49, 50, 50, 56, 50, 50, 50, 51,
+                                55, 56, 56, 56, 56, 56, 56, 57,  0,  0,  0, 55, 56, 57,  0, 55, 56, 56, 57
+
+                              }, ((x_tiles-2) * (y_tiles-2)));
+        levelList[16].setTorchLocations(new int[8]{2,8, 3,6, 15,10, 18,3},8);
+        levelList[16].setPossibleDoors(new bool[maximum_doors_per_room]{0,0,1,0,0,0,1,0});
     // end level templates
 
 
@@ -675,6 +693,7 @@ LevelGen::LevelGen()
     pitMatrix = new bool [gridX*gridY]{};
     tileSet = new TextureLoader();
     bossDoor = new TextureLoader();
+    soundGen = new sound();
 
     lockRoom = false;
 }
@@ -687,6 +706,7 @@ LevelGen::~LevelGen()
     delete currentRoom;
     delete tileSet;
     delete bossDoor;
+    delete soundGen;
 }
 
 void LevelGen::InitLevelGen(ObjList* newObjectList)
@@ -1766,15 +1786,22 @@ bool LevelGen::getPitMatrix(int index)
     return pitMatrix[index];
 }
 
-bool LevelGen::openDoor(int door)
-{
+bool LevelGen::openDoor(int door, bool hasBossKey){
     if(lockRoom) return false;
 
+
     if(currentRoom->getOpenDoors()[door]){
+        cout << "open door :" << door << endl;
+        if(currentRoom->bossRoomDoor == door && hasBossKey){
+           currentRoom->bossRoomDoor = -1;
+            wallMatrix[(gridX)*getDoorY(door) + getDoorX(door)] = 0;
+            soundGen->playSound("sounds/Door.wav");
+        }
         return false; // door is open so do not use key
-    }else{
+    }else if(currentRoom->getDoors()[door]){
         currentRoom->openDoor(door);
         wallMatrix[(gridX)*getDoorY(door) + getDoorX(door)] = 0;
+        soundGen->playSound("sounds/Door.wav");
         return true;
     }
 }
@@ -1955,7 +1982,9 @@ void LevelGen::setWallMatrix()
         for(int y=0; y < gridY; y++){
             if(x == 0 || x == gridX-1){// if outer wall x
                 if(y == getDoorY(0)){ // if it is the correct level for the left or right door in y  axis
-                    if((currentRoom->getDoors()[0] && x == getDoorX(0) && currentRoom->getOpenDoors()[0])  ||  (currentRoom->getDoors()[4] && x == getDoorX(4) && currentRoom->getOpenDoors()[4])){ //if door 0 or door 4
+                    if((currentRoom->getDoors()[0] && x == getDoorX(0) && (currentRoom->getOpenDoors()[0] && !(currentRoom->bossRoomDoor == 0)))
+                       ||  (currentRoom->getDoors()[4] && x == getDoorX(4) && (currentRoom->getOpenDoors()[4] && !(currentRoom->bossRoomDoor == 4)))){ //if door 0 or door 4
+
                         wallMatrix[(gridX)*y + x] = 0;
                     }else{ // otherwise wall
                         wallMatrix[(gridX)*y + x] = 1;
@@ -1965,19 +1994,25 @@ void LevelGen::setWallMatrix()
                 }
             }else if(y == 0 || y == gridY-1){// if top and bottom wall
                 if(x == getDoorX(1)){ // if door 1 or 7
-                    if((currentRoom->getDoors()[1] && y == getDoorY(1) && currentRoom->getOpenDoors()[1]) || (currentRoom->getDoors()[7] && y == getDoorY(7) && currentRoom->getOpenDoors()[7])){
+                    if((currentRoom->getDoors()[1] && y == getDoorY(1) && (currentRoom->getOpenDoors()[1] && !(currentRoom->bossRoomDoor == 1)))
+                       || (currentRoom->getDoors()[7] && y == getDoorY(7) && (currentRoom->getOpenDoors()[7] && !(currentRoom->bossRoomDoor == 7)))){
+
                         wallMatrix[(gridX)*y + x] = 0;
                     }else{ // otherwise wall
                         wallMatrix[(gridX)*y + x] = 1;
                     }
                 }else if(x == getDoorX(2)){ // door 2 or 6
-                    if((currentRoom->getDoors()[2] && y == getDoorY(2) && currentRoom->getOpenDoors()[2])  ||  (currentRoom->getDoors()[6] && y == getDoorY(6) && currentRoom->getOpenDoors()[6])){
+                    if((currentRoom->getDoors()[2] && y == getDoorY(2) && (currentRoom->getOpenDoors()[2] && !(currentRoom->bossRoomDoor == 2)))
+                       ||  (currentRoom->getDoors()[6] && y == getDoorY(6) && (currentRoom->getOpenDoors()[6] && !(currentRoom->bossRoomDoor == 6)))){
+
                         wallMatrix[(gridX)*y + x] = 0;
                     }else{ // otherwise wall
                         wallMatrix[(gridX)*y + x] = 1;
                     }
                 }else if(x == getDoorX(3)){ // door 3 or 5
-                    if((currentRoom->getDoors()[3] && y == getDoorY(3) && currentRoom->getOpenDoors()[3])  ||  (currentRoom->getDoors()[5] && y == getDoorY(5) && currentRoom->getOpenDoors()[5])){
+                    if((currentRoom->getDoors()[3] && y == getDoorY(3) && (currentRoom->getOpenDoors()[3] && !(currentRoom->bossRoomDoor == 3)))
+                       |  (currentRoom->getDoors()[5] && y == getDoorY(5) && (currentRoom->getOpenDoors()[5] && !(currentRoom->bossRoomDoor == 5)))){
+
                         wallMatrix[(gridX)*y + x] = 0;
                     }else{ // otherwise wall
                         wallMatrix[(gridX)*y + x] = 1;

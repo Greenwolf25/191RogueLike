@@ -490,3 +490,31 @@ bool ObjList::collisioncheckTF(double Ex, double Ey)
     }
     return false;
 }
+
+char ObjList::collisioncheckPickUp(double Ex, double Ey)
+{
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and mine (placeholder) //adjust later
+        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'k')
+            {
+                getObj(i)->deleteSelf();
+                return 'k';
+            }else if(getObj(i)->typeCheck == 'b')
+            {
+                getObj(i)->deleteSelf();
+                return 'b';
+            }else if(getObj(i)->typeCheck == 'h')
+            {
+                getObj(i)->deleteSelf();
+                return 'h';
+            }
+
+        }
+    }
+    return 0;
+}

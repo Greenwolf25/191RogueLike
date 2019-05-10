@@ -7,10 +7,11 @@
 #include <TextureLoader.h>
 #include <time.h>
 #include <vector>
+#include <sound.h>
 using namespace std;
 
 
-#define number_of_level_templates 16 /// CHANGE ME WHEN ADDING TEMPLATES
+#define number_of_level_templates 17 /// CHANGE ME WHEN ADDING TEMPLATES
 #define maximum_doors_per_room 8
 
 #define x_tiles 21
@@ -166,7 +167,7 @@ class LevelGen
 
         int gridToDoorNum(int x, int y); // returns the door number of a door given x and y or -1 if not door
 
-        bool openDoor(int); // returns true if door is opened. returns false if door is already open or is not able to be opened by key.
+        bool openDoor(int,bool); // returns true if door is opened. returns false if door is already open or is not able to be opened by key.
 
         bool inTransition; // true if the level gen is transitioning between levels
 
@@ -176,6 +177,8 @@ class LevelGen
         int getDoorY(int door);
 
     protected:
+
+        sound* soundGen;
 
         int gridX;
         int gridY;

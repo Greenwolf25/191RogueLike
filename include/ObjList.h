@@ -66,6 +66,9 @@ class ObjList
         //collision Check for gunFire and Torch
         bool collisioncheckTF(double,double);
 
+        //collision Check for pickup items
+        char collisioncheckPickUp(double, double);
+
         //for collision sound, call it where this function is called
         //don't know if I'll use these
         //void setXpos(double); // called in the area object is spawned so it can give xPos a value

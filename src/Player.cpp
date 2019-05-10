@@ -102,7 +102,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum)){//if door is opened
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -124,7 +124,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum)){//if door is opened
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -146,7 +146,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum)){//if door is opened
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -168,7 +168,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum)){//if door is opened
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -264,6 +264,25 @@ void Player::runperframe()
         x = levelGenerator->gridToCoordX(levelGenerator->getDoorX(newDoor));
         y = levelGenerator->gridToCoordY(levelGenerator->getDoorY(newDoor));
 
+    }
+
+    // pickup check
+    switch (objectList->collisioncheckPickUp(x,y)){
+    case 'k':
+        PS->playSound("sounds/pickup.wav");
+        numberOfKeys++;
+        break;
+    case 'b':
+        PS->playSound("sounds/pickup.wav");
+        BossKey = true;
+        break;
+    case 'h':
+        PS->playSound("sounds/pickup.wav");
+        healthPoints += 20;
+        if(healthPoints > 100){
+            healthPoints = 100;
+        }
+        break;
     }
 }
 
