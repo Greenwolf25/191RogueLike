@@ -142,6 +142,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[0].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[0].setEnemyLocations(new int[8]{6,3, 6,7 ,14,3, 14,7},8);
 
         // template 1
         levelList[1].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -159,6 +160,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[1].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[1].setEnemyLocations(new int[8]{6,3, 6,7 ,14,3, 14,7},8);
 
         // template 2
         levelList[2].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -176,6 +178,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[2].setPossibleDoors(new bool[maximum_doors_per_room]{1,0,0,0,1,0,0,0});
+        levelList[2].setEnemyLocations(new int[8]{6,2, 6,9 ,14,2, 14,9},8);
 
         // template 3
         levelList[3].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -194,6 +197,7 @@ templateList::templateList()
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[3].setItemLocations(new int[3]{3,6,1},3); // item one (key) at (3,6)
         levelList[3].setPossibleDoors(new bool[maximum_doors_per_room]{1,0,0,0,0,0,0,0});
+        levelList[3].setEnemyLocations(new int[8]{3,1, 3,9 ,8,3, 8,7},8);
 
          // template 4
         levelList[4].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -212,6 +216,7 @@ templateList::templateList()
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[4].setItemLocations(new int[3]{17,6,1},3); // item one (key) at (17,6)
         levelList[4].setPossibleDoors(new bool[maximum_doors_per_room]{0,0,0,0,1,0,0,0});
+        levelList[4].setEnemyLocations(new int[8]{17,1, 17,9 ,14,3, 14,7},8);
 
         // template 5
         levelList[5].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -228,8 +233,9 @@ templateList::templateList()
                                 55, 56, 56, 56, 56, 56, 56, 57,  0,  0,  0, 55, 56, 57,  0, 55, 56, 56, 57
 
                               }, ((x_tiles-2) * (y_tiles-2)));
-        levelList[5].setTorchLocations(new int[8]{2,8, 3,6, 15,10, 18,3},8);
+        levelList[5].setTorchLocations(new int[8]{2,8, 3,6, 15,10, 15,3},8);
         levelList[5].setPossibleDoors(new bool[maximum_doors_per_room]{0,0,1,0,0,0,1,0});
+        levelList[5].setEnemyLocations(new int[8]{3,2, 4,9 ,8,3, 8,7},8);
 
         // template 6
         levelList[6].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -248,6 +254,7 @@ templateList::templateList()
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[6].setItemLocations(new int[3]{11,5,1},3); // item one (key) at (17,6)
         levelList[6].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,0,0,1,0,1,0});
+        levelList[6].setEnemyLocations(new int[8]{6,3, 8,5 ,14,3, 14,7},8);
 
         // template 7
         levelList[7].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -266,6 +273,7 @@ templateList::templateList()
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[7].setItemLocations(new int[6]{6,5,1,14,5,1},6);
         levelList[7].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[7].setEnemyLocations(new int[8]{4,4, 16,4 ,7,4, 13,4},8);
 
         // template 8
         levelList[8].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -284,6 +292,7 @@ templateList::templateList()
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[8].setItemLocations(new int[3]{10,6,1},3);
         levelList[8].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[8].setEnemyLocations(new int[8]{6,3, 6,7 ,14,3, 14,7},8);
 
         // template 9
         levelList[9].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -301,6 +310,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[9].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[9].setEnemyLocations(new int[8]{6,3, 6,7 ,14,3, 14,7},8);
 
         // template 10
         levelList[10].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -318,6 +328,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[10].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[10].setEnemyLocations(new int[8]{6,3, 6,7 ,14,3, 14,7},8);
 
         // template 11
         levelList[11].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -336,6 +347,7 @@ templateList::templateList()
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[11].setTorchLocations(new int[4]{10,6, 10,5},4);
         levelList[11].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[11].setEnemyLocations(new int[8]{6,3, 6,7 ,14,3, 14,7},8);
 
         // template 12
         levelList[12].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -353,6 +365,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[12].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,0,0,1,1});
+        levelList[12].setEnemyLocations(new int[8]{6,3, 6,7 ,14,3, 16,8},8);
 
         // template 13
         levelList[13].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -370,6 +383,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[13].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,0,1,1,1,1});
+        levelList[13].setEnemyLocations(new int[8]{6,4, 11,4 ,17,3, 14,7},8);
 
          // template 14
         levelList[14].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -387,6 +401,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[14].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[14].setEnemyLocations(new int[8]{6,3, 6,9 ,14,3, 14,9},8);
 
           // template 14
         levelList[15].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -404,6 +419,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[15].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
+        levelList[14].setEnemyLocations(new int[8]{6,3, 6,9 ,14,2, 14,8},8);
 
         // template 5 again for better chance of spawning
         levelList[16].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -422,6 +438,7 @@ templateList::templateList()
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[16].setTorchLocations(new int[8]{2,8, 3,6, 15,10, 18,3},8);
         levelList[16].setPossibleDoors(new bool[maximum_doors_per_room]{0,0,1,0,0,0,1,0});
+        levelList[16].setEnemyLocations(new int[8]{3,2, 4,9 ,8,3, 8,7},8);
     // end level templates
 
 
@@ -1375,7 +1392,7 @@ void LevelGen::generateLevels()
                                 );
     }
     //spawn enemies
-        //TODO
+    // Don't spawn because starting room
 
 
     setWallMatrix();
@@ -1415,7 +1432,13 @@ int LevelGen::enterDoor(int door)
                                 );
     }
     //spawn enemies
-        //TODO
+    if(currentRoom != startingRoom){ // do not spawn enemies in starting room
+        for(int i = 0; i < (currentRoom->getLevelTemplate().getEnemyLocationsSize()/2); i++){
+                objectList->createItem('h' ,gridToCoordX(currentRoom->getLevelTemplate().getEnemyLocations(i*2)), // get x location
+                                    gridToCoordY(currentRoom->getLevelTemplate().getEnemyLocations(i*2 +1)) // get y location
+                                    );
+        }
+    }
 
     setWallMatrix();
     setPitMatrix();
