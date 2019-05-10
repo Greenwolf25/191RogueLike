@@ -617,7 +617,11 @@ Enemy::Enemy()
     yMin = 0.0;
     typeCheck = 'g'; //for ghost i guess
     alive = true;
+    once = true;
+    onceagain = true;
+    hit = false;
     HP = 10;
+    dyingSound = true;
 
     lifetime.start();
     animationTimer.start();
@@ -630,31 +634,94 @@ Enemy::~Enemy()
 
 void Enemy::runPerFrame() //fix
 {
-
- if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
-    {
-        //x+=.001;
-        xMin += 0.25;
-        xMax += 0.25;
-
-        if(xMax >= 1.0)
-        {
-            yMax += .1428;
-            yMin += .1428;
-            xMax = 0.25;
-            xMin = 0.0;
-        }
-        if(yMax >= .714)
-        {
-            yMax = 0.1428;
-            yMin = 0.0;
-            xMax = 0.25;
-            xMin = 0.0;
-        }
-
-        animationTimer.reset();
-    }
     lifeStatus();
+    if(alive)
+    {
+        if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
+        {
+            //x+=.001;
+            xMin += 0.25;
+            xMax += 0.25;
+
+            if(xMax >= 1.0)
+            {
+                yMax += .1428;
+                yMin += .1428;
+                xMax = 0.25;
+                xMin = 0.0;
+            }
+            if(yMax >= .714)
+            {
+                yMax = 0.1428;
+                yMin = 0.0;
+                xMax = 0.25;
+                xMin = 0.0;
+            }
+
+            animationTimer.reset();
+        }
+    }
+    if(hit) // maybe make t a var in gamebject tself
+    {
+        if(onceagain)
+        {
+            yMax = 1.0;
+            yMin = 0.8568;
+            xMax = 0.25;
+            xMin = 0.0;
+            onceagain = false;
+        }
+        if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
+        {
+        //x+=.001;
+            xMin += 0.25;
+            xMax += 0.25;
+
+            if(xMin >= 1.0) // fix the others!
+            {
+                onceagain = true;
+                hit = false;
+            }
+            animationTimer.reset();
+        }
+    }
+   if(!alive)
+   {
+        if(dyingSound)
+        {
+            sfx(SNDS);
+            dyingSound = false;
+        }
+        if(once)
+        {
+            yMax = 0.714;
+            yMin = 0.5712;
+            xMax = 0.25;
+            xMin = 0.0;
+            once = false;
+        }
+        if(animationTimer.getTicks() > 100) //allows it to noticeably run through frames
+        {
+        //x+=.001;
+            xMin += 0.25;
+            xMax += 0.25;
+
+            if(xMin >= 1.0) // fix the others!
+            {
+                yMax += .1428;
+                yMin += .1428;
+                xMax = 0.25;
+                xMin = 0.0;
+            }
+            if(yMin >= .8568) //deleteself
+            {
+
+                deleteSelf();
+            }
+
+            animationTimer.reset();
+        }
+    }
 }
 
 void Enemy::drawObject()
@@ -689,7 +756,7 @@ void Enemy::Init(TextureLoader* newTex)
 
 void Enemy::sfx(sound* sfx)
 {
-
+    sfx->playSound("sounds/skulldeath.wav");
 }
 
 void Enemy::lifeStatus()
@@ -698,16 +765,31 @@ void Enemy::lifeStatus()
     {
         alive = false;
     }
-    if(!alive)
-    {
-        deleteSelf();
-    }
 }
 
 ///BOSS CLASS
 Boss::Boss()
 {
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.2; //fix
+    yScale = 0.2;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 1.0;//0.25; //fix
+    yMax = 0.2;
+    xMin = 0.75;//0.0;
+    yMin = 0.0;
+    typeCheck = 'a'; //for ghost i guess
+    alive = true;
+    once = true;
+    HP = 10;
+    dyingSound = true;
 
+    lifetime.start();
+    animationTimer.start();
+    projectileInterval.start();
 }
 
 Boss::~Boss()
@@ -717,36 +799,145 @@ Boss::~Boss()
 
 void Boss::runPerFrame()
 {
+//shoot projetile ani
+//smile ani?
+//death ani
+    lifeStatus(); //checks health to see if it dieded
+    if(alive)
+    {
+        if(animationTimer.getTicks() > 500) //allows it to noticeably run through frames
+        {
+            //x+=.001;
+            //xMin += 0.25;
+            //xMax += 0.25;
+
+            if(xMax >= 1.0)
+            {
+                //yMax += .2;
+                //yMin += .2;
+                //xMax = 0.25;
+                //xMin = 0.0;
+            }
+            //if(yMax >= .6)
+            //{
+             //   yMax = 0.2;
+            //    yMin = 0.0;
+            //    xMax = 0.25;
+            //    xMin = 0.0;
+            //}
+
+            animationTimer.reset();
+        }
+    }
+
+    ///death animation (use for the others too)
+   if(!alive) //death check
+   {
+    //initial for death ani
+        if(dyingSound)
+        {
+            sfx(SNDS);
+            dyingSound = false;
+        }
+        if(once) ///give this to enemy and hands
+        {
+            yMax = 0.8;
+            yMin = 0.6;
+            xMax = 0.25;
+            xMin = 0.0;
+            once = false;
+        }
+        if(animationTimer.getTicks() > 300) //allows it to noticeably run through frames
+        {
+        //x+=.001;
+            xMin += 0.25;
+            xMax += 0.25;
+
+            if(xMin >= 1.0) // fix the others!
+            {
+                yMax += .2;
+                yMin += .2;
+                xMax = 0.25;
+                xMin = 0.0;
+            }
+            if(yMin >= 1.0) //deleteself
+            {
+
+                deleteSelf();
+            }
+
+        animationTimer.reset();
+        }
+    }
+
 
 }
 
 void Boss::drawObject()
 {
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
 
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
 }
 
-void Boss::Init(TextureLoader*)
+void Boss::Init(TextureLoader* newTex)
 {
-
+    defaultTex = newTex;
 }
 
-void Boss::sfx(sound*)
+void Boss::sfx(sound* snds)
 {
-
+    snds->playSound("sounds/bossdeath2.wav");
 }
 
 void Boss::lifeStatus()
 {
-    if(!alive)
+    if(HP <= 0)
     {
-        deleteSelf();
+        alive = false;
     }
 }
 
 ///BOSSES RIGHT HAND CLASS
 BossHandR::BossHandR()
 {
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.2;//fix
+    yScale = 0.2;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = .6668;//1.0;//0.1666; //now do ani FIX LATER
+    yMax = 0.5;
+    xMin = .5002;//0.8334;//0.0;
+    yMin = 0.0;
+    typeCheck = 'r'; //for ghost i guess
+    alive = true;
+    once = true;
+    HP = 30;
+    dyingSound = true;
 
+    lifetime.start();
+    animationTimer.start();
 }
 
 BossHandR::~BossHandR()
@@ -756,36 +947,121 @@ BossHandR::~BossHandR()
 
 void BossHandR::runPerFrame()
 {
+    lifeStatus();
+    if(alive)
+    {
+        if(animationTimer.getTicks() > 100) //allows it to noticeably run through frames
+        {
+            //x+=.001;
+            /*
+            xMin += 0.1666;
+            xMax += 0.1666;
 
+            if(xMax+.0001 >= 1.0)
+            {
+                xMax = 0.1666;
+                xMin = 0.0;
+            }
+            animationTimer.reset();
+            */
+        }
+    }
+    if(!alive)
+    {
+        if(dyingSound)
+        {
+            sfx(SNDS);
+            dyingSound = false;
+        }
+        if(once)
+        {
+            xMax = 0.1666; //now do ani
+            yMax = 1.0;
+            xMin = 0.0;
+            yMin = 0.5;
+            once = false;
+        }
+        if(animationTimer.getTicks() > 300) //allows it to noticeably run through frames
+        {
+        //x+=.001;
+            xMin += 0.1666;
+            xMax += 0.1666;
+
+            if(xMax+.0004 >= 1.0) // fix the others!
+            {
+
+                deleteSelf();
+            }
+            animationTimer.reset();
+        }
+    }
 }
 
 void BossHandR::drawObject()
 {
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
 
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
 }
 
-void BossHandR::Init(TextureLoader*)
+void BossHandR::Init(TextureLoader* newTex)
 {
-
+    defaultTex = newTex;
 }
 
-void BossHandR::sfx(sound*)
+void BossHandR::sfx(sound* snds)
 {
-
+    snds->playSound("sounds/handdeath.wav");
 }
 
 void BossHandR::lifeStatus()
 {
-    if(!alive)
+    if(HP <= 0)
     {
-        deleteSelf();
+        alive = false;
     }
 }
 
 ///BOSSESS LEFT HAND CLASS
 BossHandL::BossHandL()
 {
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.2;//fix
+    yScale = 0.2;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = .6668;//1.0;//0.1666; //now do ani FIX LATER
+    yMax = 0.5;
+    xMin = .5002;//0.8334;//0.0;
+    yMin = 0.0;
+    typeCheck = 'l'; //for ghost i guess
+    once = true;
+    alive = true;
+    HP = 30;
+    dyingSound = true;
 
+    lifetime.start();
+    animationTimer.start();
 }
 
 BossHandL::~BossHandL()
@@ -795,36 +1071,116 @@ BossHandL::~BossHandL()
 
 void BossHandL::runPerFrame()
 {
+    lifeStatus();
+    if(alive)
+    {
+        /*if(animationTimer.getTicks() > 100) //allows it to noticeably run through frames
+        {
+            //x+=.001;
+            xMin += 0.1666;
+            xMax += 0.1666;
 
+            if(xMax+.0001 >= 1.0)
+            {
+                xMax = 0.1666;
+                xMin = 0.0;
+            }
+            animationTimer.reset();
+        }*/
+    }
+    if(!alive)
+    {
+        if(dyingSound)
+        {
+            sfx(SNDS);
+            dyingSound = false;
+        }
+       if(once)
+        {
+            xMax = 0.1666; //now do ani
+            yMax = 1.0;
+            xMin = 0.0;
+            yMin = 0.5;
+            once = false;
+        }
+        if(animationTimer.getTicks() > 300) //allows it to noticeably run through frames
+        {
+        //x+=.001;
+            xMin += 0.1666;
+            xMax += 0.1666;
+
+            if(xMax+.0004 >= 1.0) // fix the others!
+            {
+                deleteSelf();
+            }
+            animationTimer.reset();
+        }
+    }
 }
 
 void BossHandL::drawObject()
 {
+     glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
 
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
 }
 
-void BossHandL::Init(TextureLoader*)
+void BossHandL::Init(TextureLoader* newTex)
 {
-
+     defaultTex = newTex;
 }
 
-void BossHandL::sfx(sound*)
+void BossHandL::sfx(sound* snds)
 {
-
+    snds->playSound("sounds/handdeath.wav");
 }
 
 void BossHandL::lifeStatus()
 {
-    if(!alive)
+    if(HP <= 0)
     {
-        deleteSelf();
+        alive = false;
     }
 }
 
 ///BOSSESS RIGHT ROCKET POWERED FIST CLASS
 BossFistR::BossFistR()
 {
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.2;//fix
+    yScale = 0.2;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 0.3333; //now do ani
+    yMax = 1.0;
+    xMin = 0.0;
+    yMin = 0.0;
+    typeCheck = 'x'; //for ghost i guess
+    alive = true;
+    //HP = 10;
 
+    lifetime.start();
+    animationTimer.start();
 }
 
 BossFistR::~BossFistR()
@@ -834,27 +1190,76 @@ BossFistR::~BossFistR()
 
 void BossFistR::runPerFrame()
 {
+    y-=.001;
+if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
+    {
+        //x+=.001;
+        xMin += 0.3333;
+        xMax += 0.3333;
 
+        if(xMax+.0001 >= 1.0)
+        {
+            xMax = 0.3333;
+            xMin = 0.0;
+        }
+        animationTimer.reset();
+    }
 }
 
 void BossFistR::drawObject()
 {
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
 
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
 }
 
-void BossFistR::Init(TextureLoader*)
+void BossFistR::Init(TextureLoader* newTex)
 {
-
+     defaultTex = newTex;
 }
 
-void BossFistR::sfx(sound*)
+void BossFistR::sfx(sound* snds)
 {
-
+    snds->playSound("sounds/destroyed.wav");
 }
 ///BOSSESS LEFT ROCKET POWERED FIST CLASS
 BossFistL::BossFistL()
 {
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.2;//fix
+    yScale = 0.2;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 0.3333; //now do ani
+    yMax = 1.0;
+    xMin = 0.0;
+    yMin = 0.0;
+    typeCheck = 'y'; //for ghost i guess
+    alive = true;
+    //HP = 10;
 
+    lifetime.start();
+    animationTimer.start();
 }
 
 BossFistL::~BossFistL()
@@ -864,27 +1269,77 @@ BossFistL::~BossFistL()
 
 void BossFistL::runPerFrame()
 {
+    y-=.001;
+if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
+    {
+        //x+=.001;
+        xMin += 0.3333;
+        xMax += 0.3333;
 
+        if(xMax+.0001 >= 1.0)
+        {
+            xMax = 0.3333;
+            xMin = 0.0;
+        }
+        animationTimer.reset();
+    }
+    //lifeStatus();
 }
 
 void BossFistL::drawObject()
 {
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
 
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
 }
 
-void BossFistL::Init(TextureLoader*)
+void BossFistL::Init(TextureLoader* newTex)
 {
-
+    defaultTex = newTex;
 }
 
-void BossFistL::sfx(sound*)
+void BossFistL::sfx(sound* snds)
 {
-
+    snds->playSound("sounds/destroyed.wav");
 }
 ///BOSSESS PROJECTILE ATK CLASS
 BossSkullatk::BossSkullatk()
 {
+    x = 0.0;
+    y = 0.0;
+    z = -1.0;
+    xScale = 0.2;//fix
+    yScale = 0.2;
+    zScale = 1.0;
+    rotation = 0;
+    xMax = 0.25; //now do ani
+    yMax = 1.0;
+    xMin = 0.0;
+    yMin = 0.0;
+    typeCheck = 'z'; //for ghost i guess
+    alive = true;
+    //HP = 10;
 
+    lifetime.start();
+    animationTimer.start();
 }
 
 BossSkullatk::~BossSkullatk()
@@ -894,20 +1349,54 @@ BossSkullatk::~BossSkullatk()
 
 void BossSkullatk::runPerFrame()
 {
+    y-=.001;
+    if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
+    {
+        //x+=.001;
+        xMin += 0.25;
+        xMax += 0.25;
 
+        if(xMax >= 1.0)
+        {
+            xMax = 0.25;
+            xMin = 0.0;
+        }
+        animationTimer.reset();
+    }
+    //lifeStatus();
 }
 
 void BossSkullatk::drawObject()
 {
+    glPushMatrix();
+    defaultTex->binder();
+    glTranslated(x,y,z);
+    glRotated(rotation, 0,0,1);
+    glScaled(xScale, yScale, zScale);
+    glBegin(GL_QUADS);
 
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(0.5, -0.5, 0.0);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(0.5, 0.5, 0.0);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.5, 0.5, 0.0);
+
+    glEnd();
+    glPopMatrix();
 }
 
-void BossSkullatk::Init(TextureLoader*)
+void BossSkullatk::Init(TextureLoader* newTex)
 {
-
+     defaultTex = newTex;
 }
 
-void BossSkullatk::sfx(sound*)
+void BossSkullatk::sfx(sound* snds)
 {
-
+    snds->playSound("sounds/destroyed.wav");
 }

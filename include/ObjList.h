@@ -2,9 +2,10 @@
 #define OBJLIST_H
 #include <TextureLoader.h>
 #include <LevelGen.h>
+#include <sound.h>
 
-//#include <sound.h>
 using namespace std;
+//sound* letmeusethisplease = new sound();
 
 class GameObject;
 
@@ -19,6 +20,8 @@ class ObjList
         void objListInit(LevelGen*);
 
         LevelGen* levelGenerator;
+
+        sound* sfx;
 
         //int createObj(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
         //int createObj(double, double); // X,Y (return index) if no free space return -1
@@ -36,7 +39,15 @@ class ObjList
 
         int createTorch(double, double, bool*); // X, Y, Lit/Unlit (pointer as it will be give by level Gen so it knows when the torch is lit)
 
+        ///enemy and bosses
         int createEnemy(double, double);
+        int createBoss(double, double);
+        int createHandR(double, double);
+        int createHandL(double, double);
+        ///projectiles
+        int createFFR(double, double);
+        int createFFL(double, double);
+        int createSkullP(double, double);
 
         bool deleteObject(int); // delete index (return false if NULL)
         void clearObjList(); // empty the ObjList and delete all objects
@@ -58,26 +69,28 @@ class ObjList
         //funtion that checks for collision between enemy and projectile
         //called in enemies runperdframe, npts are enemies xpos, ypos
         //bool collisioncheckEF(double,double);
-
+        ///ENEMY COLLISIONS
         bool collisioncheckEpW(); //Enemy - playerWeapons (now do something)
         ///BOSS COLLISIONS
-        bool collisioncheckBF(); //Boss  - gunfire
-        bool collisioncheckBE(); //Boss  - mine explosion
-        bool collisioncheckBhrF();//Boss R hand  - gunFire
-        bool collisioncheckBhlF();//Boss L hand  - gunFire
-        bool collisioncheckBhrE();//Boss R hand  - Mine explosion
-        bool collisioncheckBhlE();//Boss L hand  - Mine explosion
-        bool collisioncheckBfrF();
-        bool collisioncheckBflF();
-        bool collisioncheckBfrM();
-        bool collisioncheckBflM();
+        bool collisioncheckBpW(); //Boss  - playerWeapons
+        bool collisioncheckBhrpW();//Boss R hand  - playerWeapons
+        bool collisioncheckBhlpW();//Boss L hand  - playerWeapons
+        bool collisioncheckBfrpW();//Boss R fire fist - playerWeapons
+        bool collisioncheckBflpW();//boss L fire fist - playerWeapons
+        bool collisioncheckSppW();//skull projectile - playerWeapons
 
+        ///FOR BOSS PROJECTILE spawning
+        bool bossAtk(int);
+        bool rightHandAtk(int);
+        bool leftHandAtk(int);
+        ///run these in glscene too i guess
 
-        //collision check for mine and boss
-        bool collisioncheckBM(double,double);
+        ///FOR PROJECTILE MOTION
+        void skullPmotion();
+        void FFRmotion();
+        void FFLmotion();
+        ///
 
-        //collision check for gunfire and boss
-        bool collisioncheckBF(double,double);
 
         //for collision sound, call it where this function is called
         //don't know if I'll use these

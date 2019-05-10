@@ -23,6 +23,7 @@ class GameObject
         bool activ;
         int  timecheck;
         int HP;
+        bool hit;
 
 
 
@@ -39,6 +40,7 @@ class GameObject
 
         Timer lifetime; // time since object creation  ------------ DO NOT RESET ULESS NEEDED (if you need a new timer create one)
         Timer animationTimer;// timer for animations
+        Timer projectileInterval;
 
         void deleteSelf();
 
@@ -155,6 +157,10 @@ class Enemy: public GameObject{
         void lifeStatus();
         bool alive;
         int  health;
+        bool once; //for death ani
+        bool onceagain; // for hurt ani
+        bool dyingSound; //to play sound once
+        //bool hitSound; // to play sound once
 
 };
 
@@ -171,6 +177,8 @@ class Boss: public GameObject{ //reminder: invulnerable while at least one hand 
             void lifeStatus();
             bool alive;
             int  health;
+            bool once; // for death ani
+            bool dyingSound; //to play sound once
 };
 ///may merge hands and their projectiles into the bosses class if possible
 class BossHandR: public GameObject{
@@ -185,6 +193,8 @@ class BossHandR: public GameObject{
             void lifeStatus();
             bool alive;
             int  health;
+            bool once; //for death ani
+            bool dyingSound; //to play sound once
 };
 
 class BossHandL: public GameObject{
@@ -199,6 +209,8 @@ class BossHandL: public GameObject{
             void lifeStatus();
             bool alive;
             int  health;
+            bool once; //for death ani
+            bool dyingSound; //to play sound once
 };
 
 class BossFistR: public GameObject{ //reminder: striking these with the mine decreases Bosses right hands hit points

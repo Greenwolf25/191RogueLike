@@ -176,10 +176,25 @@ void Player::playerInput(Inputs *KbMs)
         xM = x; //adjusted for testing mine collision
         yM = y; //just remove the .1s
         objectList->createMine(xM, yM);
-        //objectList->createEnemy(xM+.15, yM+.15);
+
 
         PS->playSound("sounds/setmine.wav");
     }
+    ///For Testing!!! comment out when done
+    if(KbMs->isKeyPressed(0x58)&&mineSpawnTimer.getTicks() >1000) // z key
+    {
+        mineSpawnTimer.reset();
+        xM = x; //adjusted for testing mine collision
+        yM = y;
+        objectList->createEnemy(xM, yM+.35);
+        objectList->createBoss(xM, yM+.2);
+        objectList->createHandR(xM-.15,yM+.15);
+        objectList->createHandL(xM+.15,yM+.15);
+        objectList->createFFR(xM-.3,yM);
+        objectList->createFFL(xM+.3,yM);
+        objectList->createSkullP(xM,yM-.1);
+    }
+
 }
 void Player::Explo(double x1, double y1)
 {

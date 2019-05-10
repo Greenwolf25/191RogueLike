@@ -20,6 +20,9 @@ LevelGen *level = new LevelGen();
 sound* SND = new sound();
 particles* p = new particles();
 Timer* T = new Timer();
+Timer* bt = new Timer();
+Timer* rt = new Timer();
+Timer* lt = new Timer();
 
 double tempX, tempY = 0.0;
 
@@ -39,6 +42,8 @@ GLScene::~GLScene()
 }
 GLint GLScene::initGL(bool* quit)
 {
+    //bossExist = false;
+
     closeGame = quit;
     glShadeModel(GL_SMOOTH); // For smooth animation transitions
     glClearColor(0.6f, 0.8f, 0.8f, 0.0f); // set Background color (R,G,B,A)
@@ -138,7 +143,74 @@ GLint GLScene::idleGLScene()
         player->playerInput(KbMs);
         player->runperframe();
         objectList->runPerFrame();
+        ///COLLISIONS
         objectList->collisioncheckEpW();
+        objectList->collisioncheckBpW();
+        objectList->collisioncheckBhrpW();
+        objectList->collisioncheckBhlpW();
+        objectList->collisioncheckBfrpW();
+        objectList->collisioncheckBflpW();
+        objectList->collisioncheckSppW();
+        ///FOR BOSS PROJETILES
+        //for(int i = 0; i < objectList->Size();i++)
+        //{
+        //    if(objectList->getObj(i) == NULL){}
+        //        else if(objectList->getObj(i)->typeCheck == 'a')
+        //        {
+        //            bossExist = true;
+        //        }
+        //}
+
+        if(bt->getTicks() > 3000) ///For Now
+        {
+            for(int i = 0; i < objectList->Size(); i++)
+            {
+                if(objectList->getObj(i) == NULL){}
+                else if(objectList->getObj(i)->typeCheck == 'a')
+                {
+                    if(objectList->getObj(i)->HP > 0)
+                    {
+                         objectList->bossAtk(i);
+                    }
+
+                }
+            }
+            bt->reset();
+        }
+
+        if(rt->getTicks() > 3500) ///For Now
+        {
+            for(int i = 0; i < objectList->Size(); i++)
+            {
+                if(objectList->getObj(i) == NULL){}
+                else if(objectList->getObj(i)->typeCheck == 'r')
+                {
+                    if(objectList->getObj(i)->HP > 0)
+                    {
+                        objectList->rightHandAtk(i);
+                    }
+
+                }
+            }
+            rt->reset();
+        }
+
+        if(lt->getTicks() > 4000) ///For Now
+        {
+            for(int i = 0; i < objectList->Size(); i++)
+            {
+                if(objectList->getObj(i) == NULL){}
+                else if(objectList->getObj(i)->typeCheck == 'l')
+                {
+                    if(objectList->getObj(i)->HP > 0)
+                    {
+                        objectList->leftHandAtk(i);
+                    }
+                }
+            }
+            lt->reset();
+        }
+
     }
 
 }

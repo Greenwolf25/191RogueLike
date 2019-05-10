@@ -23,6 +23,7 @@ class GLScene
         int winMsg(HWND,UINT,WPARAM,LPARAM);
         float screenWidth, screenHeight;
         bool* closeGame;
+        bool bossExist;
 
     protected:
 
