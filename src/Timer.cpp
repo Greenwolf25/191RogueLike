@@ -60,7 +60,7 @@ bool Timer::pause()
         return false;
     }
     paused = true;
-    cout << "paused" << endl;
+    //cout << "paused" << endl;
     pausedAt = clock();
 
     return true;
@@ -71,7 +71,7 @@ bool Timer::unpause()
     if(!paused){
         return false;
     }
-    cout << "unpaused" << endl;
+    //cout << "unpaused" << endl;
     paused = false;
     offset += clock() - pausedAt; // adds pause time to total time paused
 

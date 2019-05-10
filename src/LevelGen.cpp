@@ -419,7 +419,7 @@ templateList::templateList()
 
                               }, ((x_tiles-2) * (y_tiles-2)));
         levelList[15].setPossibleDoors(new bool[maximum_doors_per_room]{1,1,1,1,1,1,1,1});
-        levelList[14].setEnemyLocations(new int[8]{6,3, 6,9 ,14,2, 14,8},8);
+        levelList[15].setEnemyLocations(new int[8]{6,3, 6,9 ,14,2, 14,8},8);
 
         // template 5 again for better chance of spawning
         levelList[16].setTileInfo(new int[(x_tiles-2) * (y_tiles-2)] // -2 to subtract outer walls as they are known
@@ -971,7 +971,7 @@ void LevelGen::generateLevels()
 
         //up
         if(dirMapGrid[x][y].up){
-                cout << dirMapGrid[x][y].up << endl;
+                //cout << dirMapGrid[x][y].up << endl;
             switch (rand()%3){
             case 0: // left door
                 mapGrid[x][y]->addDoor(1,mapGrid[x][y-1],1);
@@ -1127,14 +1127,14 @@ void LevelGen::generateLevels()
         maxMax = maxDown[3];
     }
 
-    cout << maxLeft[2] << ' ' << maxUp[2] << ' ' << maxRight[2] << ' ' << maxDown[2] << ' ' << maxBranch << endl;
+    //cout << maxLeft[2] << ' ' << maxUp[2] << ' ' << maxRight[2] << ' ' << maxDown[2] << ' ' << maxBranch << endl;
 
     // make max branch be boss room
     switch (maxBranch){
     case 0:
         mapGrid[maxLeft[0]][maxLeft[1]]->isBossRoom = true;
         mapGrid[maxLeft[0]][maxLeft[1]]->generated = true;
-        cout << maxLeft[0] << ' ' << maxLeft[1] << endl;
+        //cout << maxLeft[0] << ' ' << maxLeft[1] << endl;
 
         for(int i = 0; i < maximum_doors_per_room; i++){ // find door
             if(mapGrid[maxLeft[0]][maxLeft[1]]->getDoors()[i]){
@@ -1170,7 +1170,7 @@ void LevelGen::generateLevels()
     case 1:
         mapGrid[maxUp[0]][maxUp[1]]->isBossRoom = true;
         mapGrid[maxUp[0]][maxUp[1]]->generated = true;
-        cout << maxUp[0] << ' ' << maxUp[1] << endl;
+        //cout << maxUp[0] << ' ' << maxUp[1] << endl;
 
         for(int i = 0; i < maximum_doors_per_room; i++){ // find door
             if(mapGrid[maxUp[0]][maxUp[1]]->getDoors()[i]){
@@ -1206,7 +1206,7 @@ void LevelGen::generateLevels()
     case 2:
         mapGrid[maxRight[0]][maxRight[1]]->isBossRoom = true;
         mapGrid[maxRight[0]][maxRight[1]]->generated = true;
-        cout << maxRight[0] << ' ' << maxRight[1] << endl;
+        //cout << maxRight[0] << ' ' << maxRight[1] << endl;
 
         for(int i = 0; i < maximum_doors_per_room; i++){ // find door
             if(mapGrid[maxRight[0]][maxRight[1]]->getDoors()[i]){
@@ -1242,7 +1242,7 @@ void LevelGen::generateLevels()
     case 3:
         mapGrid[maxDown[0]][maxDown[1]]->isBossRoom = true;
         mapGrid[maxDown[0]][maxDown[1]]->generated = true;
-        cout << maxDown[0] << ' ' << maxDown[1] << endl;
+        //cout << maxDown[0] << ' ' << maxDown[1] << endl;
 
         for(int i = 0; i < maximum_doors_per_room; i++){ // find door
             if(mapGrid[maxDown[0]][maxDown[1]]->getDoors()[i]){
@@ -1352,7 +1352,7 @@ void LevelGen::generateLevels()
     }
 
 
-    for(int y = 0; y < 7; y++){
+    /*for(int y = 0; y < 7; y++){
         for(int x = 0; x < 7; x++){
            if(mapGrid[x][y]){
                 cout << mapGrid[x][y]->branch << mapGrid[x][y]->graphCounter << ' ';
@@ -1361,7 +1361,7 @@ void LevelGen::generateLevels()
             }
         }
         cout << endl;
-    }
+    }*/
 
 
     //SET UP ROOM
@@ -1432,7 +1432,7 @@ int LevelGen::enterDoor(int door)
                                 );
     }
     //spawn enemies
-    if(currentRoom != startingRoom){ // do not spawn enemies in starting room
+    if(currentRoom != startingRoom || !currentRoom->isBossRoom){ // do not spawn enemies in starting room or boss room
         for(int i = 0; i < (currentRoom->getLevelTemplate().getEnemyLocationsSize()/2); i++){
                 objectList->createItem('h' ,gridToCoordX(currentRoom->getLevelTemplate().getEnemyLocations(i*2)), // get x location
                                     gridToCoordY(currentRoom->getLevelTemplate().getEnemyLocations(i*2 +1)) // get y location
@@ -1814,7 +1814,6 @@ bool LevelGen::openDoor(int door, bool hasBossKey){
 
 
     if(currentRoom->getOpenDoors()[door]){
-        cout << "open door :" << door << endl;
         if(currentRoom->bossRoomDoor == door && hasBossKey){
            currentRoom->bossRoomDoor = -1;
             wallMatrix[(gridX)*getDoorY(door) + getDoorX(door)] = 0;
