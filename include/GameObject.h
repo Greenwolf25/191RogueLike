@@ -22,6 +22,7 @@ class GameObject
         char typeCheck; // current used: f, m, s, k, b, h, t
         bool activ;
         int  timecheck;
+        int HP;
 
 
 
@@ -141,4 +142,99 @@ class Torch: public GameObject{
             double tileSizeY;
 
 };
+
+class Enemy: public GameObject{
+     public:
+        Enemy();
+        virtual ~Enemy();
+
+        void runPerFrame();
+        void drawObject();
+        void Init(TextureLoader*);
+        void sfx(sound*);
+        void lifeStatus();
+        bool alive;
+        int  health;
+
+};
+
+class Boss: public GameObject{ //reminder: invulnerable while at least one hand is alive
+ public:
+            Boss();
+            virtual ~Boss();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+            void sfx(sound*);
+            bool defenseless;
+            void lifeStatus();
+            bool alive;
+            int  health;
+};
+///may merge hands and their projectiles into the bosses class if possible
+class BossHandR: public GameObject{
+ public:
+            BossHandR();
+            virtual ~BossHandR();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+            void sfx(sound*);
+            void lifeStatus();
+            bool alive;
+            int  health;
+};
+
+class BossHandL: public GameObject{
+ public:
+            BossHandL();
+            virtual ~BossHandL();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+            void sfx(sound*);
+            void lifeStatus();
+            bool alive;
+            int  health;
+};
+
+class BossFistR: public GameObject{ //reminder: striking these with the mine decreases Bosses right hands hit points
+     public:
+            BossFistR();
+            virtual ~BossFistR();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+            void sfx(sound*);
+            bool alive;
+};
+
+class BossFistL: public GameObject{ //reminder: striking these with the mine decreases Bosses left hands hit points
+     public:
+            BossFistL();
+            virtual ~BossFistL();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+            void sfx(sound*);
+            bool alive;
+};
+
+class BossSkullatk: public GameObject{ // Bosses projectile attack.
+     public:
+            BossSkullatk();
+            virtual ~BossSkullatk();
+
+            void runPerFrame();
+            void drawObject();
+            void Init(TextureLoader*);
+            void sfx(sound*);
+            bool alive;
+};
+
 #endif // GAMEOBJECT_H

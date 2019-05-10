@@ -176,6 +176,7 @@ void Player::playerInput(Inputs *KbMs)
         xM = x; //adjusted for testing mine collision
         yM = y; //just remove the .1s
         objectList->createMine(xM, yM);
+        //objectList->createEnemy(xM+.15, yM+.15);
 
         PS->playSound("sounds/setmine.wav");
     }

@@ -28,7 +28,7 @@ ObjList::~ObjList()
 void ObjList::objListInit(LevelGen* newLevelGen)
 {
     levelGenerator = newLevelGen;
-    textures = new TextureLoader[7];
+    textures = new TextureLoader[8];
     textures[0].LoadTexture("images/mine.png");
     textures[1].LoadTexture("images/bullet.png");
     textures[2].LoadTexture("images/boom.png");
@@ -36,6 +36,7 @@ void ObjList::objListInit(LevelGen* newLevelGen)
     textures[4].LoadTexture("images/key.png");
     textures[5].LoadTexture("images/BossKey.png");
     textures[6].LoadTexture("images/tilesetdebug.png");
+    textures[7].LoadTexture("images/skull2.png");
 }
 /*
 int ObjList::createObj(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation)
@@ -322,6 +323,31 @@ int ObjList::createTorch(double inputX, double inputY, bool* litStatusBool)
 
     return index;
 }
+///ENEMY CREATION
+int ObjList::createEnemy(double inputX, double inputY)
+{
+    int index = -1;
+    for(int i = 0; i < size; i++){
+        if(objectList[i] == NULL){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) return -1; // if no free space return -1
+
+    Enemy *temp = new Enemy();
+    temp->z += (zOffput * index); // to avoid z fighting
+    temp->x = inputX;
+    temp->y = inputY;
+    temp->objList = this;
+    temp->objListIndex = index;
+    temp->Init(&textures[7]);
+    objectList[index] = temp;
+
+    return index;
+}
+
 
 bool ObjList::deleteObject(int index)
 {
@@ -413,7 +439,58 @@ bool ObjList::mineRuntimeCheck() //checks if any mine has been active for too lo
 }
 
 
-bool ObjList::collisioncheckEM(double Ex, double Ey) // play enemy's sound somehow
+
+
+bool ObjList::collisioncheckEpW() // play enemy's sound somehow
+{
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and mine (placeholder) //adjust later
+        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
+        if(getObj(i) == NULL){}
+        //if(getObj(i)->typeCheck == 'g')
+        else if(getObj(i)->typeCheck == 'g')
+        {
+            double skullx = getObj(i)->x;
+            double skully = getObj(i)->y;
+            for(int j = 0; j<size;j++)
+            {
+                if(getObj(j) == NULL){}
+                else if(getObj(j)->typeCheck == 'f')
+                {
+                    double firex = getObj(j)->x;
+                    double firey = getObj(j)->y;
+                    if((fabs(firex - skullx) <= var) && (fabs(firey - skully) <= var))
+                    {
+                        cout << "hit" << endl;
+                        getObj(i)->HP -= 4;
+                        getObj(j)->deleteSelf();
+                        return true;
+                    }
+                }
+                else if(getObj(j)->typeCheck == 'm')
+                {
+                    double minex = getObj(j)->x;
+                    double miney = getObj(j)->y;
+                    if((fabs(minex - skullx) <= var) && (fabs(miney - skully) <= var))
+                    {
+                        cout << "hit" << endl;
+                        getObj(j)->deleteSelf();
+                        getObj(i)->HP -= 10;
+                        createExplosion(skullx,skully);
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
+
+///Discard pile///
+/*bool ObjList::collisioncheckEF(double Ex, double Ey) // play enemy's sound somehow
 //still need: enemy class/ enemy hurt sound/
 //explo sound to play upon it's draw-(call the sound in enemy class?)
 {
@@ -422,22 +499,25 @@ bool ObjList::collisioncheckEM(double Ex, double Ey) // play enemy's sound someh
         double var = .05; //enemy and mine (placeholder) //adjust later
         //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
         if(getObj(i) == NULL){}
+        //if(getObj(i)->typeCheck == 'g')
         else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
         {
-            if(getObj(i)->typeCheck == 'm')
+            if(getObj(i)->typeCheck == 'f')
             {
                 double ax = getObj(i)->x;
                 double by = getObj(i)->y;
                 getObj(i)->deleteSelf();
-                createExplosion(ax, by);
+                cout << "hit" << endl;
+                //createExplosion(ax, by);
                 return true;
             }
         }
     }
     return false;
-}
+}*/
 
-bool ObjList::collisioncheckEF(double Ex, double Ey) // remember to play sound in enemy class if true
+/*
+bool ObjList::collisioncheckEM(double Ex, double Ey) // remember to play sound in enemy class if true
 {
     for(int i = 0; i < size; i++) //
     {
@@ -457,15 +537,4 @@ bool ObjList::collisioncheckEF(double Ex, double Ey) // remember to play sound i
         }
     }
     return false;
-}
-
-bool ObjList::collisioncheckBM(double, double)
-{
-    // just in case enemy - mine does not work
-}
-
-bool ObjList::collisioncheckBF(double, double)
-{
-    // just in case enemy - gunfire does not work
-}
-
+}*/

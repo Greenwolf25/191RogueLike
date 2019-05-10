@@ -36,6 +36,8 @@ class ObjList
 
         int createTorch(double, double, bool*); // X, Y, Lit/Unlit (pointer as it will be give by level Gen so it knows when the torch is lit)
 
+        int createEnemy(double, double);
+
         bool deleteObject(int); // delete index (return false if NULL)
         void clearObjList(); // empty the ObjList and delete all objects
 
@@ -55,7 +57,21 @@ class ObjList
 
         //funtion that checks for collision between enemy and projectile
         //called in enemies runperdframe, npts are enemies xpos, ypos
-        bool collisioncheckEF(double,double);
+        //bool collisioncheckEF(double,double);
+
+        bool collisioncheckEpW(); //Enemy - playerWeapons (now do something)
+        ///BOSS COLLISIONS
+        bool collisioncheckBF(); //Boss  - gunfire
+        bool collisioncheckBE(); //Boss  - mine explosion
+        bool collisioncheckBhrF();//Boss R hand  - gunFire
+        bool collisioncheckBhlF();//Boss L hand  - gunFire
+        bool collisioncheckBhrE();//Boss R hand  - Mine explosion
+        bool collisioncheckBhlE();//Boss L hand  - Mine explosion
+        bool collisioncheckBfrF();
+        bool collisioncheckBflF();
+        bool collisioncheckBfrM();
+        bool collisioncheckBflM();
+
 
         //collision check for mine and boss
         bool collisioncheckBM(double,double);

@@ -138,6 +138,7 @@ GLint GLScene::idleGLScene()
         player->playerInput(KbMs);
         player->runperframe();
         objectList->runPerFrame();
+        objectList->collisioncheckEpW();
     }
 
 }
