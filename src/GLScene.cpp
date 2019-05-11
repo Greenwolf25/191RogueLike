@@ -72,7 +72,7 @@ GLint GLScene::initGL(bool* quit)
         }
         cout << endl;
     }
-
+    SND->playMusic("sounds/underworld.mp3");
     return true;
 }
 
@@ -140,6 +140,7 @@ GLint GLScene::idleGLScene()
     menu->menuInputs(KbMs,closeGame);
 
     if(menu->inMenu == false){ // if the game is running
+
         player->playerInput(KbMs);
         player->runperframe();
         objectList->runPerFrame();
@@ -151,15 +152,8 @@ GLint GLScene::idleGLScene()
         objectList->collisioncheckBfrpW();
         objectList->collisioncheckBflpW();
         objectList->collisioncheckSppW();
+
         ///FOR BOSS PROJETILES
-        //for(int i = 0; i < objectList->Size();i++)
-        //{
-        //    if(objectList->getObj(i) == NULL){}
-        //        else if(objectList->getObj(i)->typeCheck == 'a')
-        //        {
-        //            bossExist = true;
-        //        }
-        //}
     ///BOSSES FACE PROJECTILE SPAWN/////////////////////////////////
         if(bt->getTicks() > 3200) ///For Now                     ///
         {                                                        ///
