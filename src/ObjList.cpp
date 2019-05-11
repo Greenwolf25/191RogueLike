@@ -1045,7 +1045,7 @@ bool ObjList::collisioncheckPE(double pX, double pY)
             {
                 cout << "hello" << endl;
                 ///player damaged sound
-
+                sfx->playSound("sounds/playerhit.wav");
                 ///do something
                 return true;
             }
@@ -1076,6 +1076,7 @@ bool ObjList::collisioncheckPB(double pX, double pY)
             {
                 cout << "hey" << endl;
                 ///player damaged sound
+                sfx->playSound("sounds/playerhit.wav");
                 ///do something
                 return true;
             }
@@ -1088,6 +1089,7 @@ bool ObjList::collisioncheckPB(double pX, double pY)
             {
                 cout << "look" << endl;
                 ///player damaged sound
+                sfx->playSound("sounds/playerhit.wav");
                 ///do something
                 return true;
             }
@@ -1100,6 +1102,7 @@ bool ObjList::collisioncheckPB(double pX, double pY)
             {
                 cout << "listen" << endl;
                 ///player damaged sound
+                sfx->playSound("sounds/playerhit.wav");
                 ///do something
                 return true;
             }
@@ -1125,6 +1128,7 @@ bool ObjList::collisioncheckPBp(double pX, double pY)
                 cout << "hey" << endl;
                 getObj(i)->deleteSelf();
                 ///player damaged sound
+                sfx->playSound("sounds/playerhit.wav");
                 ///do something
                 return true;
             }
@@ -1138,6 +1142,7 @@ bool ObjList::collisioncheckPBp(double pX, double pY)
                 cout << "look" << endl;
                 getObj(i)->deleteSelf();
                 ///player damaged sound
+                sfx->playSound("sounds/playerhit.wav");
                 ///do something
                 return true;
             }
@@ -1151,6 +1156,7 @@ bool ObjList::collisioncheckPBp(double pX, double pY)
                 cout << "listen" << endl;
                 getObj(i)->deleteSelf();
                 ///player damaged sound
+                sfx->playSound("sounds/playerhit.wav");
                 ///do something
                 return true;
             }
