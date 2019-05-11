@@ -29,6 +29,7 @@ class Player
         void playerInput(Inputs*);
         void Explo(double, double);
         void runperframe();
+        bool lifeStatus();
 
         bool stillAlive;
         int  healthPoints; // keeps track of the number of hits player has taken
@@ -45,6 +46,7 @@ class Player
         Timer explosionTimer;
         Timer mineDurationTimer;
         Timer animationTimer;
+        Timer Iframes; /// to keep player-related collisions from activating several times
 
         double tempX; // used for calculations to avoid variable decelerations
         double tempY;

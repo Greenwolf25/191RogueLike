@@ -160,57 +160,136 @@ GLint GLScene::idleGLScene()
         //            bossExist = true;
         //        }
         //}
+    ///BOSSES FACE PROJECTILE SPAWN/////////////////////////////////
+        if(bt->getTicks() > 3200) ///For Now                     ///
+        {                                                        ///
+            for(int i = 0; i < objectList->Size(); i++)          ///
+            {                                                    ///
+                if(objectList->getObj(i) == NULL){}              ///
+                else if(objectList->getObj(i)->typeCheck == 'a') ///
+                {                                                ///
+                    if(objectList->getObj(i)->HP > 0)            ///
+                    {                                            ///
+                         objectList->bossAtk(i);                 ///
+                    }                                            ///
+                }                                                ///
+            }                                                    ///
+            bt->reset();                                         ///
+        }                                                        ///
+    /// ////////////////////////////////////////////////////////////
 
-        if(bt->getTicks() > 3000) ///For Now
+    ///BOSS RIGHT HAND ATTACKING PROJECTILE SPAWN////////////////////
+        if(rt->getTicks() > 3500) ///For Now                      ///
+        {                                                         ///
+            for(int i = 0; i < objectList->Size(); i++)           ///
+            {                                                     ///
+                if(objectList->getObj(i) == NULL){}               ///
+                else if(objectList->getObj(i)->typeCheck == 'r')  ///
+                {                                                 ///
+                    if(objectList->getObj(i)->HP > 0)             ///
+                    {                                             ///
+                        objectList->rightHandAtk(i);              ///
+                    }                                             ///
+                }                                                 ///
+            }                                                     ///
+            rt->reset();                                          ///
+        }                                                         ///
+    /// /////////////////////////////////////////////////////////////
+
+    ///BOSS LEFT HAND ATTACKING PROJECTILE SPAWN/////////////////////
+        if(lt->getTicks() > 4000) ///For Now                      ///
+        {                                                         ///
+            for(int i = 0; i < objectList->Size(); i++)           ///
+            {                                                     ///
+                if(objectList->getObj(i) == NULL){}               ///
+                else if(objectList->getObj(i)->typeCheck == 'l')  ///
+                {                                                 ///
+                    if(objectList->getObj(i)->HP > 0)             ///
+                    {                                             ///
+                        objectList->leftHandAtk(i);               ///
+                    }                                             ///
+                }                                                 ///
+            }                                                     ///
+            lt->reset();                                          ///
+        }                                                         ///
+    /// /////////////////////////////////////////////////////////////
+
+    ///BOSS PROJECTILE MOTION////////////////////////////// ADJUST?
+    for(int i = 0; i < objectList->Size(); i++)         ///
+    {                                                   ///
+        if(objectList->getObj(i) == NULL){}             ///
+        else if(objectList->getObj(i)->typeCheck == 'z')///
+        {                                               ///
+            double projX = objectList->getObj(i)->x;    ///
+            double projY = objectList->getObj(i)->y;    ///
+            double slopeX = player->x - projX;          ///
+            double slopeY = player->y - projY;          ///
+            objectList->getObj(i)->x += (slopeX*.005);  ///
+            objectList->getObj(i)->y += (slopeY*.005);  ///
+        }                                               ///
+    }                                                   ///
+    /// ///////////////////////////////////////////////////
+
+    /// //////////////////////
+    double pX = player->x; ///
+    double pY = player->y; ///
+    /// //////////////////////
+
+    ///FIRE FIST RIGHT PROJECTILE MOTION///////////////////////////////
+    for(int i = 0; i < objectList->Size(); i++)
+    {
+        if(objectList->getObj(i) == NULL){}
+        else if(objectList->getObj(i)->typeCheck == 'x')
         {
-            for(int i = 0; i < objectList->Size(); i++)
+            double projX = objectList->getObj(i)->x;
+            double projY = objectList->getObj(i)->y;
+            if(pX > 0) ///POSITIVE
             {
-                if(objectList->getObj(i) == NULL){}
-                else if(objectList->getObj(i)->typeCheck == 'a')
-                {
-                    if(objectList->getObj(i)->HP > 0)
-                    {
-                         objectList->bossAtk(i);
-                    }
-
-                }
+                if(pX >= projX){objectList->getObj(i)->x+=.003;}
             }
-            bt->reset();
+            else       ///NEGATIVE
+            {
+                if(pX <= projX){objectList->getObj(i)->x-=.003;}
+            }
+            if(pY > 0) ///POSITIVE
+            {
+                if(pY >= projY){objectList->getObj(i)->y+=.003;}
+            }
+            else       ///NEGATIVE
+            {
+                if(pY <= projY){objectList->getObj(i)->y-=.003;}
+            }
         }
+    }
+    /// /////////////////////////////////////////////////////////////
 
-        if(rt->getTicks() > 3500) ///For Now
+    ///FIRE FIST LEFT PROJECTILE MOTION//////////////////////////////
+    for(int i = 0; i < objectList->Size(); i++)
+    {
+        if(objectList->getObj(i) == NULL){}
+        else if(objectList->getObj(i)->typeCheck == 'y')
         {
-            for(int i = 0; i < objectList->Size(); i++)
+            double projX = objectList->getObj(i)->x;
+            double projY = objectList->getObj(i)->y;
+            if(pX > 0) ///POSITIVE
             {
-                if(objectList->getObj(i) == NULL){}
-                else if(objectList->getObj(i)->typeCheck == 'r')
-                {
-                    if(objectList->getObj(i)->HP > 0)
-                    {
-                        objectList->rightHandAtk(i);
-                    }
-
-                }
+                if(pX >= projX){objectList->getObj(i)->x+=.003;}
             }
-            rt->reset();
-        }
-
-        if(lt->getTicks() > 4000) ///For Now
-        {
-            for(int i = 0; i < objectList->Size(); i++)
+            else       ///NEGATIVE
             {
-                if(objectList->getObj(i) == NULL){}
-                else if(objectList->getObj(i)->typeCheck == 'l')
-                {
-                    if(objectList->getObj(i)->HP > 0)
-                    {
-                        objectList->leftHandAtk(i);
-                    }
-                }
+                if(pX <= projX){objectList->getObj(i)->x-=.003;}
             }
-            lt->reset();
+            if(pY > 0) ///POSITIVE
+            {
+                if(pY >= projY){objectList->getObj(i)->y+=.003;}
+            }
+            else       ///NEGATIVE
+            {
+                if(pY <= projY){objectList->getObj(i)->y-=.003;}
+            }
         }
-
+    }
+    /// /////////////////////////////////////////////////////////////
     }
 
 }

@@ -64,14 +64,20 @@ class ObjList
 
         //functon that checks for collsion between enemy and mine called in
         //enemies runperframe, inputs are enemies xpos,ypos
-        bool collisioncheckEM(double,double);
+        //bool collisioncheckEM(double,double);
 
         //funtion that checks for collision between enemy and projectile
         //called in enemies runperdframe, npts are enemies xpos, ypos
         //bool collisioncheckEF(double,double);
-        ///ENEMY COLLISIONS
-        bool collisioncheckEpW(); //Enemy - playerWeapons (now do something)
-        ///BOSS COLLISIONS
+        ///PLAYER COLLISIONS (called in player.cpp in "runperframe" w/ players x and y passed)
+        bool collisioncheckPE(double,double);        /// (fix) collision between player and enemy
+        bool collisioncheckPBmovement(double,double);/// (fix) prevent player from passing over boss
+        bool collisioncheckPB(double,double);        /// (fix) collision between player and boss or boss hands
+        bool collisioncheckPBp(double,double);       /// (fix) collision between player and boss projectiles
+
+        ///ENEMY COLLISIONS (called in GLSCENE in "idle")
+        bool collisioncheckEpW(); //Enemy - playerWeapons
+        ///BOSS COLLISIONS (called in GLSCENE in "idle")
         bool collisioncheckBpW(); //Boss  - playerWeapons
         bool collisioncheckBhrpW();//Boss R hand  - playerWeapons
         bool collisioncheckBhlpW();//Boss L hand  - playerWeapons
@@ -79,27 +85,27 @@ class ObjList
         bool collisioncheckBflpW();//boss L fire fist - playerWeapons
         bool collisioncheckSppW();//skull projectile - playerWeapons
 
-        ///FOR BOSS PROJECTILE spawning
+        ///FOR BOSS PROJECTILE SPAWNING (called in GLSCENE in "idle")
         bool bossAtk(int);
         bool rightHandAtk(int);
         bool leftHandAtk(int);
-        ///run these in glscene too i guess
 
-        ///FOR PROJECTILE MOTION
-        void skullPmotion();
-        void FFRmotion();
-        void FFLmotion();
-        ///
-
+        ///ALT FUNCTIONS IN GLSCENE "idle"
+        void skullPmotion(double,double);
+        void FFRmotion(double,double);
+        void FFLmotion(double,double);
 
         //for collision sound, call it where this function is called
-        //don't know if I'll use these
         //void setXpos(double); // called in the area object is spawned so it can give xPos a value
         //void setYpos(double); // called in the area object is spawned so it can give yPos a value
         //double getXpos(); //
         //double getYpos();
         //void soundT(sound*);
+        ///For Explosion on Mine Expiration
         bool mineRuntimeCheck();
+
+        bool checkingtype(int,char);
+        bool test(int);
 
     protected:
 

@@ -570,8 +570,8 @@ bool ObjList::collisioncheck(double Ex, double Ey)
     }
     return false;
 }
-
-bool ObjList::mineRuntimeCheck() //checks if any mine has been active for too long
+///checks if any mine has been active for too long
+bool ObjList::mineRuntimeCheck()
 {
     for(int i = 0; i < size; i++)
     {
@@ -592,6 +592,7 @@ bool ObjList::mineRuntimeCheck() //checks if any mine has been active for too lo
     return false;
 }
 
+///USED TO SPAWN PROJECTILE IN FUNCTION USED IN GLSCENE
 bool ObjList::bossAtk(int i) //now adjust ani frames
 {
     double ax = getObj(i)->x;
@@ -599,7 +600,7 @@ bool ObjList::bossAtk(int i) //now adjust ani frames
     createSkullP(ax,by-.07);
     return true;
 }
-
+///USED TO SPAWN PROJECTILE IN FUNCTION USED IN GLSCENE
 bool ObjList::rightHandAtk(int i)
 {
     double ax = getObj(i)->x;
@@ -607,7 +608,7 @@ bool ObjList::rightHandAtk(int i)
     createFFR(ax,by-.02);
     return true;
 }
-
+///USED TO SPAWN PROJECTILE IN FUNCTION USED IN GLSCENE
 bool ObjList::leftHandAtk(int i)
 {
     double ax = getObj(i)->x;
@@ -616,7 +617,7 @@ bool ObjList::leftHandAtk(int i)
     return true;
 }
 
-
+///ENEMY COLLISION WITH PLAYER WEAPONS
 bool ObjList::collisioncheckEpW() // play enemy's sound somehow
 {
     for(int i = 0; i < size; i++) //
@@ -655,7 +656,7 @@ bool ObjList::collisioncheckEpW() // play enemy's sound somehow
                         cout << "hit" << endl;
                         sfx->playSound("sounds/skullhurt.wav"); //fix
                         getObj(j)->deleteSelf();
-                        getObj(i)->HP -= 10;
+                        getObj(i)->HP -= 10; ///DIES IN ONE HIT
                         createExplosion(skullx,skully);
                         return true;
                     }
@@ -666,6 +667,7 @@ bool ObjList::collisioncheckEpW() // play enemy's sound somehow
     return false;
 }
 
+///BOSSES FACE COLLISION WITH PLAYER WEAPONS
 bool ObjList::collisioncheckBpW() //add sound //adjust size of enemy // adjust var //weapon power
 {
    for(int i = 0; i < size; i++) //
@@ -687,11 +689,30 @@ bool ObjList::collisioncheckBpW() //add sound //adjust size of enemy // adjust v
                     double firey = getObj(j)->y;
                     if((fabs(firex - bossx) <= var) && (fabs(firey - bossy) <= var))
                     {
-                        sfx->playSound("sounds/bosshit.wav");
-                        cout << "hit" << endl;
-                        getObj(i)->HP -= 1;
-                        getObj(j)->deleteSelf();
-                        return true;
+                        bool vul = true; ///IS BOSS VULNERABLE?
+                        for(int k = 0; k < size; k++)
+                        {
+                            if(getObj(k) == NULL){}
+                            else if( (getObj(k)->typeCheck == 'r') || (getObj(k)->typeCheck == 'l') )
+                            {
+                                vul = false; ///BOSS CAN'T BE DAMAGED WHILE AT LEAST ONE HAND EXISTS
+                            }
+                        }
+                        if(vul)
+                        {
+                            sfx->playSound("sounds/bosshit.wav"); ///change?
+                            cout << "hit" << endl;
+                            getObj(i)->HP -= 2;
+                            getObj(j)->deleteSelf();
+                            return true;
+                        }
+                        else
+                        {
+                            sfx->playSound("sounds/notveryeffective.wav"); ///change?
+                            getObj(j)->deleteSelf();
+                            return true;
+                        }
+
                     }
                 }
                 else if(getObj(j)->typeCheck == 'm')
@@ -700,12 +721,31 @@ bool ObjList::collisioncheckBpW() //add sound //adjust size of enemy // adjust v
                     double miney = getObj(j)->y;
                     if((fabs(minex - bossx) <= var) && (fabs(miney - bossy) <= var))
                     {
-                        cout << "hit" << endl;
-                        sfx->playSound("sounds/bosshit.wav");
-                        getObj(j)->deleteSelf();
-                        getObj(i)->HP -= 3;
-                        createExplosion(bossx,bossy);
-                        return true;
+                        bool vul = true; ///IS BOSS VULNERABLE?
+                        for(int k = 0; k < size; k++)
+                        {
+                            if(getObj(k) == NULL){}
+                            else if( (getObj(k)->typeCheck == 'r') || (getObj(k)->typeCheck == 'l') )
+                            {
+                                vul = false; ///BOSS CAN'T BE DAMAGED WHILE AT LEAST ONE HAND EXISTS
+                            }
+                        }
+                        if(vul)
+                        {
+                            sfx->playSound("sounds/bosshit.wav"); ///change?
+                            cout << "hit" << endl;
+                            getObj(i)->HP -= 5;
+                            getObj(j)->deleteSelf();
+                            createExplosion(bossx,bossy);
+                            return true;
+                        }
+                        else
+                        {
+                            sfx->playSound("sounds/notveryeffective.wav"); ///change?
+                            getObj(j)->deleteSelf();
+                            createExplosion(bossx,bossy);
+                            return true;
+                        }
                     }
                 }
             }
@@ -714,6 +754,7 @@ bool ObjList::collisioncheckBpW() //add sound //adjust size of enemy // adjust v
     return false;
 }
 
+///BOSSES LEFT HAND COLLISION WITH PLAYER WEAPONS
 bool ObjList::collisioncheckBhlpW() //adjust var//adjust weapon power//add sound
 {
     for(int i = 0; i < size; i++)
@@ -762,14 +803,13 @@ bool ObjList::collisioncheckBhlpW() //adjust var//adjust weapon power//add sound
     return false;
 }
 
+///BOSSES RIGHT HAND COLLISION WITH PLAYER WEAPONS
 bool ObjList::collisioncheckBhrpW()
 {
      for(int i = 0; i < size; i++)
     {
         double var = .08;
-        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
         if(getObj(i) == NULL){}
-        //if(getObj(i)->typeCheck == 'g')
         else if(getObj(i)->typeCheck == 'l') //boss left hand
         {
             double bosshrx = getObj(i)->x;
@@ -810,15 +850,14 @@ bool ObjList::collisioncheckBhrpW()
     return false;
 }
 
+/// RIGHT FIRE FIST COLLISION WITH PLAYER WEAPONS
 bool ObjList::collisioncheckBfrpW()
 {
     for(int i = 0; i < size; i++)
     {
         double var = .05;
-        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
         if(getObj(i) == NULL){}
-        //if(getObj(i)->typeCheck == 'g')
-        else if(getObj(i)->typeCheck == 'x') //boss left hand
+        else if(getObj(i)->typeCheck == 'x') //boss fire right hand
         {
             double bossfrx = getObj(i)->x;
             double bossfry = getObj(i)->y;
@@ -832,14 +871,13 @@ bool ObjList::collisioncheckBfrpW()
                     if((fabs(firex - bossfrx) <= var) && (fabs(firey - bossfry) <= var))
                     {
                         cout << "hit" << endl;
+                        ///FIRE FIST PROJECTILES CAN'T BE STOPPED WITH GUN FIRE
                         sfx->playSound("sounds/notveryeffective.wav");
-                        //getObj(i)->HP -= 4;
                         getObj(j)->deleteSelf();
-                        //ineffective
                         return true;
                     }
                 }
-                else if(getObj(j)->typeCheck == 'm')
+                else if(getObj(j)->typeCheck == 'm')///hurt right hand
                 {
                     double minex = getObj(j)->x;
                     double miney = getObj(j)->y;
@@ -848,7 +886,16 @@ bool ObjList::collisioncheckBfrpW()
                         cout << "hit" << endl;
                         sfx->playSound("sounds/projhit.wav");
                         getObj(j)->deleteSelf();
-                        //getObj(i)->HP -= 10;
+                        ///DESTROYING FIRE FIST PROJECTILE DAMAGES THE HAND IT SPAWNED FROM
+                        for(int k = 0; k < size; k++)
+                        {
+                            if(getObj(k) == NULL){}
+                            else if(getObj(k)->typeCheck == 'r')
+                            {
+                                getObj(k)->HP -= 5;
+                            }
+                        }
+                        ///
                         createExplosion(bossfrx,bossfry);
                         getObj(i)->deleteSelf();
                         return true;
@@ -860,15 +907,14 @@ bool ObjList::collisioncheckBfrpW()
     return false;
 }
 
+///LEFT FIRE FIST COLLISION WITH PLAYER WEAPONS
 bool ObjList::collisioncheckBflpW()
 {
     for(int i = 0; i < size; i++)
     {
         double var = .05;
-        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
         if(getObj(i) == NULL){}
-        //if(getObj(i)->typeCheck == 'g')
-        else if(getObj(i)->typeCheck == 'y') //boss left hand
+        else if(getObj(i)->typeCheck == 'y') //boss fire left hand
         {
             double bossflx = getObj(i)->x;
             double bossfly = getObj(i)->y;
@@ -882,14 +928,13 @@ bool ObjList::collisioncheckBflpW()
                     if((fabs(firex - bossflx) <= var) && (fabs(firey - bossfly) <= var))
                     {
                         cout << "hit" << endl;
+                        ///FIRE FIST PROJECTILES CAN'T BE STOPPED WITH GUN FIRE
                         sfx->playSound("sounds/notveryeffective.wav");
-                        //getObj(i)->HP -= 4;
                         getObj(j)->deleteSelf();
-                        //ineffective
                         return true;
                     }
                 }
-                else if(getObj(j)->typeCheck == 'm')
+                else if(getObj(j)->typeCheck == 'm') /// hurt boss left hand
                 {
                     double minex = getObj(j)->x;
                     double miney = getObj(j)->y;
@@ -898,7 +943,16 @@ bool ObjList::collisioncheckBflpW()
                         cout << "hit" << endl;
                         sfx->playSound("sounds/projhit.wav");
                         getObj(j)->deleteSelf();
-                        //getObj(i)->HP -= 10;
+                        ///DESTROYING FIRE FIST PROJECTILE DAMAGES THE HAND IT SPAWNED FROM
+                        for(int k = 0; k < size; k++)
+                        {
+                            if(getObj(k) == NULL){}
+                            else if(getObj(k)->typeCheck == 'l')
+                            {
+                                getObj(k)->HP -= 5;
+                            }
+                        }
+                        ///
                         createExplosion(bossflx,bossfly);
                         getObj(i)->deleteSelf();
                         return true;
@@ -909,6 +963,8 @@ bool ObjList::collisioncheckBflpW()
     }
     return false;
 }
+
+///SKULL PROJECTILE COLLISION WITH PLAYER WEAPONS
 bool ObjList::collisioncheckSppW()
 {
     for(int i = 0; i < size; i++)
@@ -951,6 +1007,152 @@ bool ObjList::collisioncheckSppW()
                         return true;
                     }
                 }
+            }
+        }
+    }
+    return false;
+}
+
+
+bool ObjList::checkingtype(int i, char type)
+{
+    if(getObj(i)->typeCheck == type)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ObjList::test(int i)
+{
+    getObj(i)->x += .01;
+}
+///player-enemy collision NOTE: INCREASNG VAR-BIGGER HITBOX | DECREASING VAR-SMALLER HITBOX
+bool ObjList::collisioncheckPE(double pX, double pY)
+{
+    for(int i = 0; i < size; i++)
+    {
+
+        double var = .07; ///ADJUST?
+
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+        {
+            if(getObj(i)->typeCheck == 'g') /// enemy
+            {
+                cout << "hello" << endl;
+                ///player damaged sound
+
+                ///do something
+                return true;
+            }
+
+        }
+    }
+    return false;
+}
+
+bool ObjList::collisioncheckPBmovement(double pX, double pY)
+{
+    /// prevent player from advancing into any boss image
+}
+///Player-Boss collisions
+bool ObjList::collisioncheckPB(double pX, double pY)
+{
+    for(int i = 0; i < size; i++)
+    {
+
+        double var; ///NOW ADJUST FOR EACH TYPE
+
+        if(getObj(i) == NULL){}
+        else if(getObj(i)->typeCheck == 'a')///boss face
+        {
+            ///var fix
+            var = .09;
+            if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+            {
+                cout << "hey" << endl;
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+        }
+        else if(getObj(i)->typeCheck == 'r') ///right hand
+        {
+            ///var fix
+            var = .09;
+            if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+            {
+                cout << "look" << endl;
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+        }
+        else if(getObj(i)->typeCheck == 'l')///left hand
+        {
+            ///var fix
+            var = .09;
+            if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+            {
+                cout << "listen" << endl;
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+        }
+    }
+    return false;
+}
+///player-boss related projectiles
+bool ObjList::collisioncheckPBp(double pX, double pY)
+{
+    for(int i = 0; i < size; i++)
+    {
+
+        double var; ///NOW ADJUST FOR EACH TYPE
+
+        if(getObj(i) == NULL){}
+        else if(getObj(i)->typeCheck == 'x')///fire fist right
+        {
+            ///var
+            var = .05;
+            if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+            {
+                cout << "hey" << endl;
+                getObj(i)->deleteSelf();
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+        }
+        else if(getObj(i)->typeCheck == 'y') ///fire fist left
+        {
+            ///var
+            var = .05;
+            if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+            {
+                cout << "look" << endl;
+                getObj(i)->deleteSelf();
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+        }
+        else if(getObj(i)->typeCheck == 'z')///skull projectile
+        {
+            ///var
+            var = .05;
+            if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+            {
+                cout << "listen" << endl;
+                getObj(i)->deleteSelf();
+                ///player damaged sound
+                ///do something
+                return true;
             }
         }
     }
@@ -1007,3 +1209,58 @@ bool ObjList::collisioncheckEM(double Ex, double Ey) // remember to play sound i
     }
     return false;
 }*/
+/*
+ for(int i = 0; i < size; i++)
+    {
+
+        double var = .05; ///ADJUST (MAYBE ADJUST ORDER OF CHECKS SO EACH TYPE CAN GET IT"S OWN VAR)
+
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
+        {
+            if(getObj(i)->typeCheck == 'a') ///Boss face
+            {
+                cout << "hey" << endl;
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+            else if(getObj(i)->typeCheck == 'r') ///right hand
+            {
+                cout << "look" << endl;
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+            else if(getObj(i)->typeCheck == 'l')///left hand
+            {
+                cout << "listen" << endl;
+                ///player damaged sound
+                ///do something
+                return true;
+            }
+
+        }
+    }
+    return false;
+*/
+//void ObjList::skullPmotion(double pX, double pY)
+//{
+//    for(int i; i < size; i++)
+//    {
+//        if(getObj(i) == NULL){}
+        /*else if(getObj(i)->typeCheck == 'z')
+        {
+            double projX = getObj(i)->x;
+            double projY = getObj(i)->y;
+            double slopeX = pX - projX;
+            double slopeY = pY - projY;
+            getObj(i)->x += slopeX*.005;
+            getObj(i)->y += slopeY*.005;
+        }*/
+//        else if(getObj(i)->typeCheck == 'z')
+//        {
+//            getObj(i)->x +=.001;
+//        }
+//    }
+//}

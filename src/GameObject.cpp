@@ -1190,7 +1190,7 @@ BossFistR::~BossFistR()
 
 void BossFistR::runPerFrame()
 {
-    y-=.001;
+    //y-=.001;
 if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
         //x+=.001;
@@ -1203,6 +1203,10 @@ if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
             xMin = 0.0;
         }
         animationTimer.reset();
+    }
+    if(lifetime.getTicks() >= 2000)
+    {
+        deleteSelf();
     }
 }
 
@@ -1269,7 +1273,7 @@ BossFistL::~BossFistL()
 
 void BossFistL::runPerFrame()
 {
-    y-=.001;
+    //y-=.001;
 if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
         //x+=.001;
@@ -1283,7 +1287,10 @@ if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
         }
         animationTimer.reset();
     }
-    //lifeStatus();
+    if(lifetime.getTicks() >= 2000)
+    {
+        deleteSelf();
+    }
 }
 
 void BossFistL::drawObject()
@@ -1349,7 +1356,10 @@ BossSkullatk::~BossSkullatk()
 
 void BossSkullatk::runPerFrame()
 {
-    y-=.001;
+    if(lifetime.getTicks() <= 60)
+    {
+         y-=.001;
+    }
     if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
         //x+=.001;
@@ -1362,6 +1372,10 @@ void BossSkullatk::runPerFrame()
             xMin = 0.0;
         }
         animationTimer.reset();
+    }
+    if(lifetime.getTicks() >= 20000)
+    {
+        deleteSelf();
     }
     //lifeStatus();
 }

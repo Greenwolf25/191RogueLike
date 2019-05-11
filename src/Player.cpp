@@ -28,6 +28,7 @@ Player::Player()
     healthPoints = 100;
     numberOfKeys = 10;
     BossKey = false;
+    stillAlive = true;
 }
 
 Player::~Player()
@@ -71,6 +72,7 @@ void Player::playerInit(ObjList* newObjectList, LevelGen* newLevelGen)
     objectList = newObjectList;
     levelGenerator = newLevelGen;
     spawnTimer.start();
+    Iframes.start();
     idle = new TextureLoader();
     idle->LoadTexture("images/playerT.png");
     xMin = 0.0;
@@ -186,13 +188,13 @@ void Player::playerInput(Inputs *KbMs)
         mineSpawnTimer.reset();
         xM = x; //adjusted for testing mine collision
         yM = y;
-        objectList->createEnemy(xM, yM+.35);
-        objectList->createBoss(xM, yM+.2);
-        objectList->createHandR(xM-.15,yM+.15);
-        objectList->createHandL(xM+.15,yM+.15);
-        objectList->createFFR(xM-.3,yM);
-        objectList->createFFL(xM+.3,yM);
-        objectList->createSkullP(xM,yM-.1);
+        //objectList->createEnemy(xM, yM+.15);
+        objectList->createBoss(xM, yM+.35);
+        objectList->createHandR(xM-.25,yM+.25);
+        objectList->createHandL(xM+.25,yM+.25);
+        //objectList->createFFR(xM-.2,yM);
+        //objectList->createFFL(xM+.2,yM);
+        //objectList->createSkullP(xM,yM-.1);
     }
 
 }
@@ -204,47 +206,53 @@ void Player::Explo(double x1, double y1)
             explosionTimer.reset();
         }
 }
+
+bool Player::lifeStatus()
+{
+    if(healthPoints <= 0)
+    {
+        stillAlive = false;
+    }
+}
+
+
 void Player::runperframe()
 {
-    //if(objectList->collisioncheck(x,y)) //if collision happened (change to EM ver later)
-    //{
-        //PS->playSound("sounds/test.wav"); // for the test //looks like it's playing for the bullet too. oh well
-    //}
-    //else
-    //{
         objectList->mineRuntimeCheck();
-
-    //}
-    //objectList->mineRuntimeCheck();
-    //call runtime check function from objectlist
-    /*
-    for(int i = 0; i < objectList->Size(); i++)
-    {
-
-        if( objectList->getObj(i)->typeCheck == 'm')
+        ///temporary!! just to check if player is destroyed
+        lifeStatus();
+        if(stillAlive)
         {
-            double ax = objectList->getObj(i)->x;
-            double bx = objectList->getObj(i)->y;
-            if(objectList->getObj(i)->activ == false)
-            {
-                Explo(x,y);
-            }
+
         }
-    }*/
-    /*
-    if(objectList->collisioncheck(x,y) && flag) //if collision happened while mine is n screen
-    {
-        PS->playSound("sounds/test.wav"); // for the test
-        Explo(xM,yM); //explosion is spawned
-        flag = false; // no mine on screen
-    }
-    else if(flag && mineDurationTimer.getTicks() > 8500 ) // if mine is on screen
-    {
-            Explo(xM,yM); // explosion is spawned
-            flag = false; // no mine on screen
-            mineDurationTimer.reset(); // resets timer
-    }
-    */
+        else
+        {
+            ///Player is dead
+            ///do something (gameover screen?)
+            cout << "you are dead" << endl;
+        }
+        ///
+
+        if(Iframes.getTicks() >= 500)
+        {
+            ///PLAYER-RELATED COLLISIONS CALLED HERE
+            if( objectList->collisioncheckPE(x,y)  )
+            {
+                healthPoints -=10;
+            }
+            if( objectList->collisioncheckPB(x,y) )
+            {
+                healthPoints -=20;
+            }
+
+
+            Iframes.reset();
+        }
+        if( objectList->collisioncheckPBp(x,y) )
+        {
+            healthPoints -=15;
+        }
+
 }
 
 
