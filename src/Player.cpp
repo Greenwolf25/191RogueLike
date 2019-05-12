@@ -66,6 +66,17 @@ void Player::lookAt(double x3, double y3)
 {
 
 }
+///69
+double Player::getX()
+{
+    return x;
+}
+
+double Player::getY()
+{
+    return y;
+}
+///79
 
 void Player::playerInit(ObjList* newObjectList, LevelGen* newLevelGen)
 {

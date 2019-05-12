@@ -3,6 +3,7 @@
 #include <TextureLoader.h>
 #include <LevelGen.h>
 #include <sound.h>
+#include <Player.h>
 
 using namespace std;
 //sound* letmeusethisplease = new sound();
@@ -11,15 +12,20 @@ class GameObject;
 
 class LevelGen;
 
+class Player;
+
 class ObjList
 {
     public:
         ObjList(int);
         virtual ~ObjList();
 
-        void objListInit(LevelGen*);
+        //void objListInit(LevelGen*);
+        void objListInit(LevelGen*, Player*);
 
         LevelGen* levelGenerator;
+
+        Player* play;
 
         sound* sfx;
 
@@ -41,6 +47,10 @@ class ObjList
 
         ///enemy and bosses
         int createEnemy(double, double);
+        void updateEnemy(double,double,int);
+        void updateX(double);
+        void updateY(double);
+
         int createBoss(double, double);
         int createHandR(double, double);
         int createHandL(double, double);

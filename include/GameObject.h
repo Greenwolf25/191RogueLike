@@ -24,6 +24,10 @@ class GameObject
         int  timecheck;
         int HP;
         bool hit;
+        double px;
+        double py;
+        double gpx;
+        double gpy;
 
 
 
@@ -153,6 +157,7 @@ class Enemy: public GameObject{
         void runPerFrame();
         void drawObject();
         void Init(TextureLoader*);
+        void updatePath();
         void sfx(sound*);
         void lifeStatus();
         bool alive;
@@ -160,6 +165,7 @@ class Enemy: public GameObject{
         bool once; //for death ani
         bool onceagain; // for hurt ani
         bool dyingSound; //to play sound once
+        double speed;
         //bool hitSound; // to play sound once
 
 };

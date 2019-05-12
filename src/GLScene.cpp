@@ -24,6 +24,8 @@ Timer* bt = new Timer();
 Timer* rt = new Timer();
 Timer* lt = new Timer();
 
+int eindex;///27 a change
+
 double tempX, tempY = 0.0;
 
 ObjList *objectList = new ObjList(100);
@@ -62,8 +64,8 @@ GLint GLScene::initGL(bool* quit)
     menu->pauseMenuInit("images/pauseMenu.png");
     Plx->parallaxInit("images/test2.png");
     player->playerInit(objectList, level);
-    objectList->objListInit(level);
-
+    //objectList->objListInit(level);
+    objectList->objListInit(level, player); /// a change 68
     level->generateLevels();
 
     for(int y=0; y < y_tiles; y++){
@@ -72,6 +74,7 @@ GLint GLScene::initGL(bool* quit)
         }
         cout << endl;
     }
+    eindex = objectList->createEnemy(0.5,0.2);/// a change 77
     SND->playMusic("sounds/underworld.mp3");
     return true;
 }

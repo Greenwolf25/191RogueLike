@@ -8,6 +8,10 @@
 #include <LevelGen.h>
 #include <sound.h>
 
+///11
+class ObjList; // a change
+class LevelGen;// a change
+///14
 
 
 class Player
@@ -15,6 +19,9 @@ class Player
     public:
         Player();
         virtual ~Player();
+        ///21
+        void playerInit(ObjList*, LevelGen*); /// a change
+        ///23 (comment out the other)
 
         double x, y, z;
         double xMin, xMax, yMin, yMax;
@@ -25,9 +32,11 @@ class Player
 
         void drawPlayer();
         void lookAt(double,double);
-        void playerInit(ObjList*, LevelGen*);
+        //void playerInit(ObjList*, LevelGen*);
         void playerInput(Inputs*);
         void Explo(double, double);
+        double getX();/// a change 37
+        double getY();/// a change 38
         void runperframe();
         bool lifeStatus();
 

@@ -607,6 +607,7 @@ Enemy::Enemy()
     x = 0.0;
     y = 0.0;
     z = -1.0;
+    //z = -1.0 - .002;
     xScale = 0.2;
     yScale = 0.2;
     zScale = 1.0;
@@ -619,6 +620,7 @@ Enemy::Enemy()
     alive = true;
     once = true;
     onceagain = true;
+    speed = 0.0005;
     hit = false;
     HP = 10;
     dyingSound = true;
@@ -721,6 +723,29 @@ void Enemy::runPerFrame() //fix
 
             animationTimer.reset();
         }
+    }
+    px = objList->play->x; /// a change
+    py = objList->play->y; /// a change
+    updatePath(); /// a change
+}
+
+void Enemy::updatePath()
+{
+    if(px<=x)
+    {
+        x -= speed;
+    }
+    if(py<=px)
+    {
+        y -= speed;
+    }
+    if(x<=px)
+    {
+        x += speed;
+    }
+    if(y<=py)
+    {
+        y += speed;
     }
 }
 

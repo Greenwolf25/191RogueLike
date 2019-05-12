@@ -27,8 +27,10 @@ ObjList::~ObjList()
 }
 
 
-void ObjList::objListInit(LevelGen* newLevelGen)
+//void ObjList::objListInit(LevelGen* newLevelGen)
+void ObjList::objListInit(LevelGen* newLevelGen, Player* player1)/// a change
 {
+    play = player1;/// a change
     levelGenerator = newLevelGen;
     textures = new TextureLoader[14];
     sound* sfx = new sound();
