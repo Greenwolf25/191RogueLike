@@ -23,7 +23,10 @@ class GameObject
         bool activ;
         int  timecheck;
         int HP;
-
+        double px;
+        double py;
+        double gpx;
+        double gpy;
 
 
 
@@ -33,6 +36,7 @@ class GameObject
         virtual void drawObject(); // draw the object to screen
         virtual void runPerFrame(); // tasks to run each frame (Animation, AI, ETC)
         virtual void Init(TextureLoader*);// initiate object and textures
+
 
         ObjList* objList; // the object list that the object is a member (for self deletion)
         int objListIndex; // index of self for above
@@ -151,10 +155,14 @@ class Enemy: public GameObject{
         void runPerFrame();
         void drawObject();
         void Init(TextureLoader*);
+
+        void updatePath();
         void sfx(sound*);
         void lifeStatus();
         bool alive;
         int  health;
+        double speed;
+
 
 };
 

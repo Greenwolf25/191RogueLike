@@ -25,6 +25,8 @@ double tempX, tempY = 0.0;
 
 ObjList *objectList = new ObjList(100);
 
+int eindex;
+
 
 GLScene::GLScene()
 {
@@ -57,7 +59,7 @@ GLint GLScene::initGL(bool* quit)
     menu->pauseMenuInit("images/pauseMenu.png");
     Plx->parallaxInit("images/test2.png");
     player->playerInit(objectList, level);
-    objectList->objListInit(level);
+    objectList->objListInit(level, player);
 
     level->generateLevels();
 
@@ -67,6 +69,7 @@ GLint GLScene::initGL(bool* quit)
         }
         cout << endl;
     }
+    eindex = objectList->createEnemy(0.5,0.2);
 
     return true;
 }
@@ -110,6 +113,7 @@ GLint GLScene::drawGLScene()
 
             player->drawPlayer();
             objectList->draw();
+
 
         }
 

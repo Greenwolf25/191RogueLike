@@ -25,8 +25,9 @@ ObjList::~ObjList()
 }
 
 
-void ObjList::objListInit(LevelGen* newLevelGen)
+void ObjList::objListInit(LevelGen* newLevelGen, Player* player1)
 {
+    play = player1;
     levelGenerator = newLevelGen;
     textures = new TextureLoader[8];
     textures[0].LoadTexture("images/mine.png");
@@ -37,6 +38,7 @@ void ObjList::objListInit(LevelGen* newLevelGen)
     textures[5].LoadTexture("images/BossKey.png");
     textures[6].LoadTexture("images/tilesetdebug.png");
     textures[7].LoadTexture("images/skull2.png");
+    //textures[8].LoadTexture("images/trollface.png")
 }
 /*
 int ObjList::createObj(double inputX, double inputY, double inputZ, double scaleX, double scaleY, double inputRotation)
@@ -326,6 +328,7 @@ int ObjList::createTorch(double inputX, double inputY, bool* litStatusBool)
 ///ENEMY CREATION
 int ObjList::createEnemy(double inputX, double inputY)
 {
+    cout<<"in createEmeny"<<endl;
     int index = -1;
     for(int i = 0; i < size; i++){
         if(objectList[i] == NULL){
@@ -347,6 +350,24 @@ int ObjList::createEnemy(double inputX, double inputY)
 
     return index;
 }
+
+/*void ObjList::updateEnemy(double inputX, double inputY, int index)
+{
+    objectList[index]->updatePos(inputX,inputY);
+
+}*/
+/*void ObjList::updateX(double inputX, double inputY, int index)
+{
+    objectList[index]->updateX() = inputX;
+    objectList[index]->updateY() = inputY;
+
+}
+void ObjList::updateY(double inputX, double inputY, int index)
+{
+    objectList[index]->updateX() = inputX;
+    objectList[index]->updateY()= inputY;
+
+}*/
 
 
 bool ObjList::deleteObject(int index)
@@ -372,6 +393,7 @@ GameObject* ObjList::getObj(int index)
 
 void ObjList::draw()
 {
+
     for(int i = 0; i < size; i++){
         if(objectList[i] != NULL){
             objectList[i]->drawObject();

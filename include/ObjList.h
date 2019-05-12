@@ -2,6 +2,7 @@
 #define OBJLIST_H
 #include <TextureLoader.h>
 #include <LevelGen.h>
+#include <Player.h>
 
 //#include <sound.h>
 using namespace std;
@@ -10,15 +11,18 @@ class GameObject;
 
 class LevelGen;
 
+class Player;
 class ObjList
 {
     public:
         ObjList(int);
         virtual ~ObjList();
 
-        void objListInit(LevelGen*);
+        void objListInit(LevelGen*, Player*);
 
         LevelGen* levelGenerator;
+
+        Player* play;
 
         //int createObj(double, double, double, double, double, double); // X,Y,Z,scaleX,scaleY,Rotate (return index)if no free space return -1
         //int createObj(double, double); // X,Y (return index) if no free space return -1
@@ -37,6 +41,9 @@ class ObjList
         int createTorch(double, double, bool*); // X, Y, Lit/Unlit (pointer as it will be give by level Gen so it knows when the torch is lit)
 
         int createEnemy(double, double);
+        void updateEnemy(double, double, int);
+        void updateX(double);
+        void updateY(double);
 
         bool deleteObject(int); // delete index (return false if NULL)
         void clearObjList(); // empty the ObjList and delete all objects

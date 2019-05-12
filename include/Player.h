@@ -8,13 +8,16 @@
 #include <LevelGen.h>
 #include <sound.h>
 
+class ObjList;
 
+class LevelGen;
 
 class Player
 {
     public:
         Player();
         virtual ~Player();
+        void playerInit(ObjList*, LevelGen*);
 
         double x, y, z;
         double xMin, xMax, yMin, yMax;
@@ -25,10 +28,12 @@ class Player
 
         void drawPlayer();
         void lookAt(double,double);
-        void playerInit(ObjList*, LevelGen*);
         void playerInput(Inputs*);
         void Explo(double, double);
         void runperframe();
+
+        double getX();
+        double getY();
 
         bool stillAlive;
         int  healthPoints; // keeps track of the number of hits player has taken

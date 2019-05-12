@@ -71,6 +71,7 @@ void GameObject::deleteSelf()
     objList->deleteObject(objListIndex);
 }
 
+
 /// Start of Projectile Object -------------------------------
 
 Projectile::Projectile()
@@ -606,7 +607,7 @@ Enemy::Enemy()
 {
     x = 0.0;
     y = 0.0;
-    z = -1.0;
+    z = -1.0 - 0.002;
     xScale = 0.2;
     yScale = 0.2;
     zScale = 1.0;
@@ -618,6 +619,7 @@ Enemy::Enemy()
     typeCheck = 'g'; //for ghost i guess
     alive = true;
     HP = 10;
+    speed = 0.0005;
 
     lifetime.start();
     animationTimer.start();
@@ -654,11 +656,34 @@ void Enemy::runPerFrame() //fix
 
         animationTimer.reset();
     }
+    px = objList->play->x;
+    py = objList->play->y;
+    updatePath();
     lifeStatus();
+}
+void Enemy::updatePath()
+{
+    if(px<=x)
+    {
+        x -= speed;
+    }
+    if(py<=x)
+    {
+        y -= speed;
+    }
+    if(x<=px)
+    {
+        x += speed;
+    }
+    if(y<=py)
+    {
+        y += speed;
+    }
 }
 
 void Enemy::drawObject()
 {
+
     glPushMatrix();
     defaultTex->binder();
     glTranslated(x,y,z);
@@ -682,6 +707,8 @@ void Enemy::drawObject()
     glPopMatrix();
 }
 
+
+
 void Enemy::Init(TextureLoader* newTex)
 {
     defaultTex = newTex;
@@ -703,6 +730,11 @@ void Enemy::lifeStatus()
         deleteSelf();
     }
 }
+/*void Enemy::updatePos(double playx, double playy)
+{
+    px = playx;
+    py = playy;
+}*/
 
 ///BOSS CLASS
 Boss::Boss()
