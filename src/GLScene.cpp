@@ -224,6 +224,22 @@ GLint GLScene::idleGLScene()
     }                                                   ///
     /// ///////////////////////////////////////////////////
 
+    /// TEMP ENEMY MOTION /////////////////////////////////
+    /*for(int i = 0; i < objectList->Size(); i++)         ///
+    {                                                   ///
+        if(objectList->getObj(i) == NULL){}             ///
+        else if(objectList->getObj(i)->typeCheck == 'g')///
+        {                                               ///
+            double projX = objectList->getObj(i)->x;    ///
+            double projY = objectList->getObj(i)->y;    ///
+            double slopeX = player->x - projX;          ///
+            double slopeY = player->y - projY;          ///
+            objectList->getObj(i)->x += (slopeX*.005);  ///
+            objectList->getObj(i)->y += (slopeY*.005);  ///
+        }                                               ///
+    }*/                                                   ///
+    /// ///////////////////////////////////////////////////
+
     /// //////////////////////
     double pX = player->x; ///
     double pY = player->y; ///
