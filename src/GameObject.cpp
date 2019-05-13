@@ -1203,6 +1203,7 @@ BossFistR::BossFistR()
     typeCheck = 'x'; //for ghost i guess
     alive = true;
     //HP = 10;
+    speed = .003;
 
     lifetime.start();
     animationTimer.start();
@@ -1216,6 +1217,9 @@ BossFistR::~BossFistR()
 void BossFistR::runPerFrame()
 {
     //y-=.001;
+    px = objList->play->x; /// a change
+    py = objList->play->y; /// a change
+    updatePath(); /// a change
 if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
         //x+=.001;
@@ -1229,11 +1233,32 @@ if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
         }
         animationTimer.reset();
     }
-    if(lifetime.getTicks() >= 2000)
+    if(lifetime.getTicks() >= 3000)
     {
         deleteSelf();
     }
 }
+
+void BossFistR::updatePath()
+{
+    if(px<=x)
+    {
+        x -= speed;
+    }
+    if(py<=px)
+    {
+        y -= speed;
+    }
+    if(x<=px)
+    {
+        x += speed;
+    }
+    if(y<=py)
+    {
+        y += speed;
+    }
+}
+
 
 void BossFistR::drawObject()
 {
@@ -1286,6 +1311,7 @@ BossFistL::BossFistL()
     typeCheck = 'y'; //for ghost i guess
     alive = true;
     //HP = 10;
+    speed = .003;
 
     lifetime.start();
     animationTimer.start();
@@ -1299,6 +1325,9 @@ BossFistL::~BossFistL()
 void BossFistL::runPerFrame()
 {
     //y-=.001;
+    px = objList->play->x; /// a change
+    py = objList->play->y; /// a change
+    updatePath(); /// a change
 if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
         //x+=.001;
@@ -1312,11 +1341,32 @@ if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
         }
         animationTimer.reset();
     }
-    if(lifetime.getTicks() >= 2000)
+    if(lifetime.getTicks() >= 3000)
     {
         deleteSelf();
     }
 }
+
+void BossFistL::updatePath()
+{
+    if(px<=x)
+    {
+        x -= speed;
+    }
+    if(py<=px)
+    {
+        y -= speed;
+    }
+    if(x<=px)
+    {
+        x += speed;
+    }
+    if(y<=py)
+    {
+        y += speed;
+    }
+}
+
 
 void BossFistL::drawObject()
 {

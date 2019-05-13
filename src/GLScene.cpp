@@ -11,6 +11,10 @@
 #include <LevelGen.h>
 #include <sound.h>
 #include <particles.h>
+///
+#include <time.h>
+#include <stdlib.h>
+///
 
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
@@ -155,25 +159,31 @@ GLint GLScene::idleGLScene()
         objectList->collisioncheckBfrpW();
         objectList->collisioncheckBflpW();
         objectList->collisioncheckSppW();
-
+        srand(time(NULL));
         ///FOR BOSS PROJETILES
-    ///BOSSES FACE PROJECTILE SPAWN/////////////////////////////////
-        if(bt->getTicks() > 3200) ///For Now                     ///
-        {                                                        ///
-            for(int i = 0; i < objectList->Size(); i++)          ///
-            {                                                    ///
-                if(objectList->getObj(i) == NULL){}              ///
-                else if(objectList->getObj(i)->typeCheck == 'a') ///
-                {                                                ///
-                    if(objectList->getObj(i)->HP > 0)            ///
-                    {                                            ///
-                         objectList->bossAtk(i);                 ///
-                    }                                            ///
-                }                                                ///
-            }                                                    ///
-            bt->reset();                                         ///
-        }                                                        ///
-    /// ////////////////////////////////////////////////////////////
+    ///BOSSES FACE PROJECTILE SPAWN///////////////////////////////////////////////////////////////////
+        if(bt->getTicks() > 3200) ///For Now                                                       ///
+        {                                                                                          ///
+            for(int i = 0; i < objectList->Size(); i++)                                            ///
+            {                                                                                      ///
+                if(objectList->getObj(i) == NULL){}                                                ///
+                else if(objectList->getObj(i)->typeCheck == 'a')                                   ///
+                {                                                                                  ///
+                                                                                 ///
+                    int atk = rand()%10+1;                                                         ///
+                    if( (objectList->getObj(i)->HP > 0) && (atk >= 3))                             ///
+                    {                                                                              ///
+                         objectList->bossAtk(i);                                                   ///
+                    }                                                                              ///
+                    if( (objectList->getObj(i)->HP > 0) && (atk < 3))                              ///
+                    {                                                                              ///
+                        objectList->createEnemy(objectList->getObj(i)->x,objectList->getObj(i)->y-.05);///
+                    }                                                                              ///
+                }                                                                                  ///
+            }                                                                                      ///
+            bt->reset();                                                                           ///
+        }                                                                                          ///
+    /// //////////////////////////////////////////////////////////////////////////////////////////////
 
     ///BOSS RIGHT HAND ATTACKING PROJECTILE SPAWN////////////////////
         if(rt->getTicks() > 3500) ///For Now                      ///
@@ -249,7 +259,7 @@ GLint GLScene::idleGLScene()
     /// //////////////////////
 
     ///FIRE FIST RIGHT PROJECTILE MOTION///////////////////////////////
-    for(int i = 0; i < objectList->Size(); i++)
+    /*for(int i = 0; i < objectList->Size(); i++)
     {
         if(objectList->getObj(i) == NULL){}
         else if(objectList->getObj(i)->typeCheck == 'x')
@@ -273,12 +283,12 @@ GLint GLScene::idleGLScene()
                 if(pY <= projY){objectList->getObj(i)->y-=.003;}
             }
         }
-    }
+    }*/
     /// /////////////////////////////////////////////////////////////
 
     ///FIRE FIST LEFT PROJECTILE MOTION//////////////////////////////
-    for(int i = 0; i < objectList->Size(); i++)
-    {
+    /*for(int i = 0; i < objectList->Size(); i++)
+        {
         if(objectList->getObj(i) == NULL){}
         else if(objectList->getObj(i)->typeCheck == 'y')
         {
@@ -301,7 +311,7 @@ GLint GLScene::idleGLScene()
                 if(pY <= projY){objectList->getObj(i)->y-=.003;}
             }
         }
-    }
+    }*/
     /// /////////////////////////////////////////////////////////////
     }
 

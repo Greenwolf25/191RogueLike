@@ -157,7 +157,7 @@ class Enemy: public GameObject{
         void runPerFrame();
         void drawObject();
         void Init(TextureLoader*);
-        void updatePath();
+
         void sfx(sound*);
         void lifeStatus();
         bool alive;
@@ -165,6 +165,7 @@ class Enemy: public GameObject{
         bool once; //for death ani
         bool onceagain; // for hurt ani
         bool dyingSound; //to play sound once
+        void updatePath();
         double speed;
         //bool hitSound; // to play sound once
 
@@ -229,6 +230,8 @@ class BossFistR: public GameObject{ //reminder: striking these with the mine dec
             void Init(TextureLoader*);
             void sfx(sound*);
             bool alive;
+            void updatePath();
+            double speed;
 };
 
 class BossFistL: public GameObject{ //reminder: striking these with the mine decreases Bosses left hands hit points
@@ -241,6 +244,8 @@ class BossFistL: public GameObject{ //reminder: striking these with the mine dec
             void Init(TextureLoader*);
             void sfx(sound*);
             bool alive;
+            void updatePath();
+            double speed;
 };
 
 class BossSkullatk: public GameObject{ // Bosses projectile attack.
