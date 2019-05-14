@@ -28,6 +28,7 @@ class GameObject
         double py;
         double gpx;
         double gpy;
+        bool attacking;
 
 
 
@@ -45,6 +46,7 @@ class GameObject
         Timer lifetime; // time since object creation  ------------ DO NOT RESET ULESS NEEDED (if you need a new timer create one)
         Timer animationTimer;// timer for animations
         Timer projectileInterval;
+        Timer ani;
 
         void deleteSelf();
 

@@ -173,11 +173,13 @@ GLint GLScene::idleGLScene()
                     int atk = rand()%10+1;                                                         ///
                     if( (objectList->getObj(i)->HP > 0) && (atk >= 3))                             ///
                     {                                                                              ///
-                         objectList->bossAtk(i);                                                   ///
+                         objectList->bossAtk(i);
+                         objectList->getObj(i)->attacking = true;                                                   ///
                     }                                                                              ///
                     if( (objectList->getObj(i)->HP > 0) && (atk < 3))                              ///
                     {                                                                              ///
                         objectList->createEnemy(objectList->getObj(i)->x,objectList->getObj(i)->y-.05);///
+                        objectList->getObj(i)->attacking = true;
                     }                                                                              ///
                 }                                                                                  ///
             }                                                                                      ///
@@ -196,6 +198,7 @@ GLint GLScene::idleGLScene()
                     if(objectList->getObj(i)->HP > 0)             ///
                     {                                             ///
                         objectList->rightHandAtk(i);              ///
+                        objectList->getObj(i)->attacking = true;  ///causes attacking ani
                     }                                             ///
                 }                                                 ///
             }                                                     ///
@@ -214,6 +217,7 @@ GLint GLScene::idleGLScene()
                     if(objectList->getObj(i)->HP > 0)             ///
                     {                                             ///
                         objectList->leftHandAtk(i);               ///
+                        objectList->getObj(i)->attacking = true;  ///causes attacking ani
                     }                                             ///
                 }                                                 ///
             }                                                     ///

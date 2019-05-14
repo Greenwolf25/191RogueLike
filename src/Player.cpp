@@ -199,10 +199,40 @@ void Player::playerInput(Inputs *KbMs)
         mineSpawnTimer.reset();
         xM = x; //adjusted for testing mine collision
         yM = y;
+        ///objectList->createBoss(xM, yM+.35);
+        ///objectList->createHandR(xM-.15,yM+.35);
+        ///objectList->createHandL(xM+.15,yM+.35);
+    }
+    if(KbMs->isKeyPressed(0x59)&&mineSpawnTimer.getTicks() >1000) // y key
+    {
+        mineSpawnTimer.reset();
+        xM = x; //adjusted for testing mine collision
+        yM = y;
+        ///objectList->createEnemy(xM, yM+.15);
+    }
+    if(KbMs->isKeyPressed(0x60)&&mineSpawnTimer.getTicks() >1000) // z key
+    {
+        mineSpawnTimer.reset();
+        xM = x; //adjusted for testing mine collision
+        yM = y;
+        ///objectList->createBoss(xM, yM+.35);
+    }
+    if(KbMs->isKeyPressed(0x42)&&mineSpawnTimer.getTicks() >1000) // b key
+    {
+        mineSpawnTimer.reset();
+        xM = x; //adjusted for testing mine collision
+        yM = y;
+        ///objectList->createHandR(xM-.25,yM+.25);
+    }
+    if(KbMs->isKeyPressed(0x43)&&mineSpawnTimer.getTicks() >1000) // c key
+    {
+        mineSpawnTimer.reset();
+        xM = x; //adjusted for testing mine collision
+        yM = y;
         //objectList->createEnemy(xM, yM+.15);
         //objectList->createBoss(xM, yM+.35);
         //objectList->createHandR(xM-.25,yM+.25);
-        //objectList->createHandL(xM+.25,yM+.25);
+        ///objectList->createHandL(xM+.25,yM+.25);
         //objectList->createFFR(xM-.2,yM);
         //objectList->createFFL(xM+.2,yM);
         //objectList->createSkullP(xM,yM-.1);

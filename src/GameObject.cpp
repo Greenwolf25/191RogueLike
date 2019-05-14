@@ -637,7 +637,7 @@ Enemy::~Enemy()
 void Enemy::runPerFrame() //fix
 {
     lifeStatus();
-    if(alive)
+    if(alive && !hit)
     {
         if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
         {
@@ -687,7 +687,7 @@ void Enemy::runPerFrame() //fix
             animationTimer.reset();
         }
     }
-   if(!alive)
+   else if(!alive)
    {
         if(dyingSound)
         {
@@ -802,15 +802,16 @@ Boss::Boss()
     yScale = 0.2;
     zScale = 1.0;
     rotation = 0;
-    xMax = 1.0;//0.25; //fix
+    xMax = .25;//1.0;//0.25; //fix
     yMax = 0.2;
-    xMin = 0.75;//0.0;
+    xMin = 0.0;//0.75;//0.0;
     yMin = 0.0;
     typeCheck = 'a'; //for ghost i guess
     alive = true;
     once = true;
     HP = 10;
     dyingSound = true;
+    attacking = false;
 
     lifetime.start();
     animationTimer.start();
@@ -830,26 +831,27 @@ void Boss::runPerFrame()
     lifeStatus(); //checks health to see if it dieded
     if(alive)
     {
-        if(animationTimer.getTicks() > 500) //allows it to noticeably run through frames
+        if(animationTimer.getTicks() > 200 && attacking) //allows it to noticeably run through frames
         {
             //x+=.001;
-            //xMin += 0.25;
-            //xMax += 0.25;
+            xMin += 0.25;
+            xMax += 0.25;
 
             if(xMax >= 1.0)
             {
-                //yMax += .2;
-                //yMin += .2;
-                //xMax = 0.25;
-                //xMin = 0.0;
+                yMax += .2;
+                yMin += .2;
+                xMax = 0.25;
+                xMin = 0.0;
             }
-            //if(yMax >= .6)
-            //{
-             //   yMax = 0.2;
-            //    yMin = 0.0;
-            //    xMax = 0.25;
-            //    xMin = 0.0;
-            //}
+            if(yMax >= .6)
+            {
+                yMax = 0.2;
+                yMin = 0.0;
+                xMax = 0.25;
+                xMin = 0.0;
+                attacking = false;
+            }
 
             animationTimer.reset();
         }
@@ -951,15 +953,16 @@ BossHandR::BossHandR()
     yScale = 0.2;
     zScale = 1.0;
     rotation = 0;
-    xMax = .6668;//1.0;//0.1666; //now do ani FIX LATER
+    xMax = 0.6668;//1.0;//.6668;//1.0;//0.1666; //now do ani FIX LATER
     yMax = 0.5;
-    xMin = .5002;//0.8334;//0.0;
+    xMin = 0.5002;//0.8334;//.5002;//0.8334;//0.0;
     yMin = 0.0;
     typeCheck = 'r'; //for ghost i guess
     alive = true;
     once = true;
     HP = 30;
     dyingSound = true;
+    attacking = false;
 
     lifetime.start();
     animationTimer.start();
@@ -975,20 +978,21 @@ void BossHandR::runPerFrame()
     lifeStatus();
     if(alive)
     {
-        if(animationTimer.getTicks() > 100) //allows it to noticeably run through frames
+        if(animationTimer.getTicks() > 550 && attacking) //allows it to noticeably run through frames
         {
             //x+=.001;
-            /*
+
             xMin += 0.1666;
             xMax += 0.1666;
 
-            if(xMax+.0001 >= 1.0)
+            if(xMax+.0001 >= 1.6668)
             {
-                xMax = 0.1666;
-                xMin = 0.0;
+                xMax = 0.6668;//0.1666;
+                xMin = 0.5002;//0.0;
+                attacking = false;
             }
             animationTimer.reset();
-            */
+
         }
     }
     if(!alive)
@@ -1099,19 +1103,19 @@ void BossHandL::runPerFrame()
     lifeStatus();
     if(alive)
     {
-        /*if(animationTimer.getTicks() > 100) //allows it to noticeably run through frames
+        if(animationTimer.getTicks() > 550 && attacking) //allows it to noticeably run through frames
         {
-            //x+=.001;
             xMin += 0.1666;
             xMax += 0.1666;
-
-            if(xMax+.0001 >= 1.0)
+            if(xMax+.0001 >= 1.6668)
             {
-                xMax = 0.1666;
-                xMin = 0.0;
+                xMax = 0.6668;//0.1666;
+                xMin = 0.5002;//0.0;
+                attacking = false;
             }
             animationTimer.reset();
-        }*/
+
+        }
     }
     if(!alive)
     {
@@ -1120,7 +1124,7 @@ void BossHandL::runPerFrame()
             sfx(SNDS);
             dyingSound = false;
         }
-       if(once)
+        if(once)
         {
             xMax = 0.1666; //now do ani
             yMax = 1.0;
@@ -1241,19 +1245,19 @@ if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
 
 void BossFistR::updatePath()
 {
-    if(px<=x)
+    if(px<x)
     {
         x -= speed;
     }
-    if(py<=px)
+    if(py<px)
     {
         y -= speed;
     }
-    if(x<=px)
+    if(x<px)
     {
         x += speed;
     }
-    if(y<=py)
+    if(y<py)
     {
         y += speed;
     }
