@@ -86,13 +86,6 @@ GLint GLScene::drawGLScene()
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
 
-    glPointSize(3);
-    glTranslated(tempX,tempY,0.0);
-    glColor3f(1,1,1);
-    glBegin(GL_POINTS);
-        glVertex3d(0,0,-1.05);
-    glEnd();
-
     //glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
     glPopMatrix();
