@@ -1434,10 +1434,16 @@ int LevelGen::enterDoor(int door)
     //spawn enemies
     if(currentRoom != startingRoom && !currentRoom->isBossRoom){ // do not spawn enemies in starting room or boss room
         for(int i = 0; i < (currentRoom->getLevelTemplate().getEnemyLocationsSize()/2); i++){
-                objectList->createItem('h' ,gridToCoordX(currentRoom->getLevelTemplate().getEnemyLocations(i*2)), // get x location
+                objectList->createEnemy(gridToCoordX(currentRoom->getLevelTemplate().getEnemyLocations(i*2)), // get x location
                                     gridToCoordY(currentRoom->getLevelTemplate().getEnemyLocations(i*2 +1)) // get y location
                                     );
         }
+    }
+
+    if(currentRoom->isBossRoom){
+        objectList->createBoss(0.0, 0.0);
+        objectList->createHandR(-0.15, 0.0);
+        objectList->createHandL(0.15, 0.0);
     }
 
     setWallMatrix();

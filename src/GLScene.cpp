@@ -28,7 +28,6 @@ Timer* bt = new Timer();
 Timer* rt = new Timer();
 Timer* lt = new Timer();
 
-int eindex;///27 a change
 
 double tempX, tempY = 0.0;
 
@@ -76,13 +75,6 @@ GLint GLScene::initGL(bool* quit)
     level->InitLevelGen(objectList);
     level->generateLevels();
 
-    for(int y=0; y < y_tiles; y++){
-        for(int x=0; x < x_tiles; x++){
-                cout << level->getWallMatrix(level->getTileIndex(x,y)) << " ";
-        }
-        cout << endl;
-    }
-    eindex = objectList->createEnemy(0.5,0.2);/// a change 77
     SND->playMusic("sounds/underworld.mp3");
     return true;
 }
@@ -150,6 +142,18 @@ GLint GLScene::idleGLScene()
 {
     menu->menuInputs(KbMs,closeGame);
 
+    if(objectList->victory){ // if player is dead
+        menu->menuName = "victory";
+        menu->inMenu = true;
+        Timer::pause(); // stop game to avoid
+    }
+
+    /*if(!player->stillAlive){ // if player is dead
+        menu->menuName = "game over";
+        menu->inMenu = true;
+        Timer::pause(); // stop game to avoid
+    }*/
+
     if(menu->inMenu == false){ // if the game is running
 
         player->playerInput(KbMs);
@@ -173,12 +177,12 @@ GLint GLScene::idleGLScene()
                 if(objectList->getObj(i) == NULL){}                                                ///
                 else if(objectList->getObj(i)->typeCheck == 'a')                                   ///
                 {                                                                                  ///
-                                                                                 ///
+                                                                                                   ///
                     int atk = rand()%10+1;                                                         ///
                     if( (objectList->getObj(i)->HP > 0) && (atk >= 3))                             ///
                     {                                                                              ///
-                         objectList->bossAtk(i);
-                         objectList->getObj(i)->attacking = true;                                                   ///
+                         objectList->bossAtk(i);                                                   ///
+                         objectList->getObj(i)->attacking = true;                                  ///
                     }                                                                              ///
                     if( (objectList->getObj(i)->HP > 0) && (atk < 3))                              ///
                     {                                                                              ///

@@ -628,7 +628,7 @@ Enemy::Enemy()
     alive = true;
     once = true;
     onceagain = true;
-    speed = 0.0005;
+    speed = 0.001;
     hit = false;
     HP = 10;
     dyingSound = true;
@@ -814,7 +814,7 @@ Boss::Boss()
     yMax = 0.2;
     xMin = 0.0;//0.75;//0.0;
     yMin = 0.0;
-    typeCheck = 'a'; //for ghost i guess
+    typeCheck = 'a';
     alive = true;
     once = true;
     HP = 10;
@@ -897,7 +897,7 @@ void Boss::runPerFrame()
             }
             if(yMin >= 1.0) //deleteself
             {
-
+                objList->victory = true;
                 deleteSelf();
             }
 

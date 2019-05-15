@@ -8,6 +8,7 @@
 ObjList::ObjList(int input)
 {
     //ctor
+    victory = false;
     objectList = new GameObject*[input]();
     size = input;
     sfx = new sound();
@@ -515,6 +516,8 @@ bool ObjList::deleteObject(int index)
     return true;
 }
 
+
+
 void ObjList::clearObjList()
 {
      for(int i = 0; i < size; i++){
@@ -564,7 +567,7 @@ bool ObjList::collisioncheck(double Ex, double Ey)
         {
             if(getObj(i)->typeCheck == 'm')
             {
-                cout << "hit" << endl;
+                //cout << "hit" << endl;
                 getObj(i)->deleteSelf();
                 createExplosion(Ex, Ey);
                 return true;
@@ -643,7 +646,7 @@ bool ObjList::collisioncheckEpW() // play enemy's sound somehow
                     double firey = getObj(j)->y;
                     if((fabs(firex - skullx) <= var) && (fabs(firey - skully) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/skullhurt.wav"); //fix
                         getObj(i)->hit = true;
                         getObj(i)->HP -= 4;
@@ -657,7 +660,7 @@ bool ObjList::collisioncheckEpW() // play enemy's sound somehow
                     double miney = getObj(j)->y;
                     if((fabs(minex - skullx) <= var) && (fabs(miney - skully) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/skullhurt.wav"); //fix
                         getObj(j)->deleteSelf();
                         getObj(i)->HP -= 10; ///DIES IN ONE HIT
@@ -705,7 +708,7 @@ bool ObjList::collisioncheckBpW() //add sound //adjust size of enemy // adjust v
                         if(vul)
                         {
                             sfx->playSound("sounds/bosshit.wav"); ///change?
-                            cout << "hit" << endl;
+                            //cout << "hit" << endl;
                             getObj(i)->HP -= 2;
                             getObj(j)->deleteSelf();
                             return true;
@@ -737,7 +740,7 @@ bool ObjList::collisioncheckBpW() //add sound //adjust size of enemy // adjust v
                         if(vul)
                         {
                             sfx->playSound("sounds/bosshit.wav"); ///change?
-                            cout << "hit" << endl;
+                            //cout << "hit" << endl;
                             getObj(i)->HP -= 5;
                             getObj(j)->deleteSelf();
                             createExplosion(bossx,bossy);
@@ -780,7 +783,7 @@ bool ObjList::collisioncheckBhlpW() //adjust var//adjust weapon power//add sound
                     double firey = getObj(j)->y;
                     if((fabs(firex - bosshlx) <= var) && (fabs(firey - bosshly) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/handhit.wav");
                         getObj(i)->HP -= 4;
                         getObj(j)->deleteSelf();
@@ -793,7 +796,7 @@ bool ObjList::collisioncheckBhlpW() //adjust var//adjust weapon power//add sound
                     double miney = getObj(j)->y;
                     if((fabs(minex - bosshlx) <= var) && (fabs(miney - bosshly) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/handhit.wav");
                         getObj(j)->deleteSelf();
                         getObj(i)->HP -= 10;
@@ -827,7 +830,7 @@ bool ObjList::collisioncheckBhrpW()
                     double firey = getObj(j)->y;
                     if((fabs(firex - bosshrx) <= var) && (fabs(firey - bosshry) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/handhit.wav");
                         getObj(i)->HP -= 4;
                         getObj(j)->deleteSelf();
@@ -840,7 +843,7 @@ bool ObjList::collisioncheckBhrpW()
                     double miney = getObj(j)->y;
                     if((fabs(minex - bosshrx) <= var) && (fabs(miney - bosshry) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/handhit.wav");
                         getObj(j)->deleteSelf();
                         getObj(i)->HP -= 10;
@@ -874,7 +877,7 @@ bool ObjList::collisioncheckBfrpW()
                     double firey = getObj(j)->y;
                     if((fabs(firex - bossfrx) <= var) && (fabs(firey - bossfry) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         ///FIRE FIST PROJECTILES CAN'T BE STOPPED WITH GUN FIRE
                         sfx->playSound("sounds/notveryeffective.wav");
                         getObj(j)->deleteSelf();
@@ -887,7 +890,7 @@ bool ObjList::collisioncheckBfrpW()
                     double miney = getObj(j)->y;
                     if((fabs(minex - bossfrx) <= var) && (fabs(miney - bossfry) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/projhit.wav");
                         getObj(j)->deleteSelf();
                         ///DESTROYING FIRE FIST PROJECTILE DAMAGES THE HAND IT SPAWNED FROM
@@ -931,7 +934,7 @@ bool ObjList::collisioncheckBflpW()
                     double firey = getObj(j)->y;
                     if((fabs(firex - bossflx) <= var) && (fabs(firey - bossfly) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         ///FIRE FIST PROJECTILES CAN'T BE STOPPED WITH GUN FIRE
                         sfx->playSound("sounds/notveryeffective.wav");
                         getObj(j)->deleteSelf();
@@ -944,7 +947,7 @@ bool ObjList::collisioncheckBflpW()
                     double miney = getObj(j)->y;
                     if((fabs(minex - bossflx) <= var) && (fabs(miney - bossfly) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/projhit.wav");
                         getObj(j)->deleteSelf();
                         ///DESTROYING FIRE FIST PROJECTILE DAMAGES THE HAND IT SPAWNED FROM
@@ -990,7 +993,7 @@ bool ObjList::collisioncheckSppW()
                     double firey = getObj(j)->y;
                     if((fabs(firex - skullPx) <= var) && (fabs(firey - skullPy) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/projhit.wav");
                         getObj(j)->deleteSelf();
                         getObj(i)->deleteSelf();
@@ -1003,7 +1006,7 @@ bool ObjList::collisioncheckSppW()
                     double miney = getObj(j)->y;
                     if((fabs(minex - skullPx) <= var) && (fabs(miney - skullPy) <= var))
                     {
-                        cout << "hit" << endl;
+                        //cout << "hit" << endl;
                         sfx->playSound("sounds/projhit.wav");
                         getObj(j)->deleteSelf();
                         createExplosion(skullPx,skullPy);
@@ -1047,7 +1050,6 @@ bool ObjList::collisioncheckPE(double pX, double pY)
         {
             if(getObj(i)->typeCheck == 'g') /// enemy
             {
-                cout << "hello" << endl;
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");
                 ///do something
@@ -1078,7 +1080,7 @@ bool ObjList::collisioncheckPB(double pX, double pY)
             var = .09;
             if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
             {
-                cout << "hey" << endl;
+                //cout << "hey" << endl;
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");
                 ///do something
@@ -1091,7 +1093,7 @@ bool ObjList::collisioncheckPB(double pX, double pY)
             var = .09;
             if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
             {
-                cout << "look" << endl;
+                //cout << "look" << endl;
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");
                 ///do something
@@ -1104,7 +1106,7 @@ bool ObjList::collisioncheckPB(double pX, double pY)
             var = .09;
             if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
             {
-                cout << "listen" << endl;
+                //cout << "listen" << endl;
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");
                 ///do something
@@ -1129,7 +1131,7 @@ bool ObjList::collisioncheckPBp(double pX, double pY)
             var = .05;
             if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
             {
-                cout << "hey" << endl;
+                //cout << "hey" << endl;
                 getObj(i)->deleteSelf();
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");
@@ -1143,7 +1145,7 @@ bool ObjList::collisioncheckPBp(double pX, double pY)
             var = .05;
             if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
             {
-                cout << "look" << endl;
+                //cout << "look" << endl;
                 getObj(i)->deleteSelf();
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");
@@ -1157,7 +1159,7 @@ bool ObjList::collisioncheckPBp(double pX, double pY)
             var = .05;
             if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
             {
-                cout << "listen" << endl;
+                //cout << "listen" << endl;
                 getObj(i)->deleteSelf();
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");

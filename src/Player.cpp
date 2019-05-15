@@ -193,19 +193,19 @@ void Player::playerInput(Inputs *KbMs)
         xMin = 0.0;
         xMax = 1.0/8.0;
     }
-    if(KbMs->isKeyPressed(0x20) && spawnTimer.getTicks() > 500){// spacebar
+    if(KbMs->isKeyPressed(0x20) && spawnTimer.getTicks() > 650){// spacebar
         if(rotation == 0.0)
         {
-            objectList->createProjectile(x + .035, y, 0.0, speed, rotation); //now includes angle (.035 to adjust spawn point for now)
+            objectList->createProjectile(x + .035, y, 0.0, (speed+0.001), rotation); //now includes angle (.035 to adjust spawn point for now)
         }else if(rotation == 180.0)
         {
-            objectList->createProjectile(x - .035, y, 0.0, -speed, rotation); //now includes angle
+            objectList->createProjectile(x - .035, y, 0.0, -(speed+0.001), rotation); //now includes angle
         }else if(rotation == 90.0)
         {
-            objectList->createProjectile(x, y + .035, -speed, 0.0, rotation); //now includes angle
+            objectList->createProjectile(x, y + .035, -(speed+0.001), 0.0, rotation); //now includes angle
         }else if(rotation == -90.0)
         {
-            objectList->createProjectile(x, y - .035, speed, 0.0, rotation); //now includes angle
+            objectList->createProjectile(x, y - .035, (speed+0.001), 0.0, rotation); //now includes angle
         }
 
         spawnTimer.reset();
@@ -298,7 +298,7 @@ void Player::runperframe()
         {
             ///Player is dead
             ///do something (gameover screen?)
-            cout << "you are dead" << endl;
+            //cout << "you are dead" << endl;
         }
         ///
 
