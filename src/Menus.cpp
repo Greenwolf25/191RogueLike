@@ -33,6 +33,11 @@ void Menus::pauseMenuInit(char* fileName)
     pauseTexture->LoadTexture(fileName);
 }
 
+void Menus::creditMenuInit(char* fileName)
+{
+    creditTexture->LoadTexture(fileName);
+}
+
 
 void Menus::drawMenus(float width, float height)
 {
@@ -50,6 +55,10 @@ void Menus::drawMenus(float width, float height)
         else if(menuName == "help menu")
         {
             helpTexture->binder();
+        }
+        else if(menuName == "credit menu")
+        {
+            creditTexture->binder();
         }
         glPushMatrix();
         glScaled(3.33,3.33,1.0);
@@ -127,10 +136,18 @@ void Menus::menuInputs(Inputs *KbMs, bool* exitGame)
         {
             menuName = "help menu";
         }
+        else if(KbMs->isKeyPressed(0x43))
+        {
+            menuName = "credit menu";
+        }
         else if(KbMs->isKeyPressed(0x45))
         {
             *exitGame = true;
         }
+    }
+    else if(menuName == "credit menu" && KbMs->isKeyPressed(VK_ESCAPE))
+    {
+        menuName = "main menu";
     }
     else if(menuName == "help menu" && KbMs->isKeyPressed(VK_ESCAPE))
     {

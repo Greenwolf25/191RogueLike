@@ -15,6 +15,7 @@ class Menus
         void landingMenuInit(char*);
         void pauseMenuInit(char*);
         void helpMenuInit(char*);
+        void creditMenuInit(char*);
         void drawMenus(float, float);
         void drawButtons();
         void menuInputs(Inputs*, bool*);
@@ -23,6 +24,7 @@ class Menus
         TextureLoader *pauseTexture = new TextureLoader();
         TextureLoader *landTexture = new TextureLoader();
         TextureLoader *helpTexture = new TextureLoader();
+        TextureLoader *creditTexture = new TextureLoader();
 
         bool inMenu;
         string menuName;

@@ -66,6 +66,7 @@ GLint GLScene::initGL(bool* quit)
     menu->mainMenuInit("images/mMfix.png");
     menu->helpMenuInit("images/helpMenu.png");
     menu->pauseMenuInit("images/pauseMenu.png");
+    menu->creditMenuInit("images/creditMenu.png");
     Plx->parallaxInit("images/test2.png");
     player->playerInit(objectList, level);
     //objectList->objListInit(level);
