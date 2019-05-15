@@ -26,7 +26,7 @@ Player::Player()
     rotation = 0;
     speed = 0.004;
     healthPoints = 100;
-    numberOfKeys = 10;
+    numberOfKeys = 0;
     BossKey = false;
     stillAlive = true;
 }
@@ -38,6 +38,52 @@ Player::~Player()
 }
 void Player::drawPlayer()
 {
+    //health bar
+    glPushMatrix();
+    glDisable(GL_TEXTURE_2D);
+
+    // background
+    glColor3f(0.1,0.1,0.1);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.365, 0.025, -0.5002);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(-0.35, 0.025, -0.5002);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(-0.35, 0.2, -0.5002);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.365, 0.2, -0.5002);
+
+    glEnd();
+
+    // bar
+    if(healthPoints > 0){ // if the player has health
+
+    glColor3f(1.0,0.1,0.1);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(xMin,yMax);
+    glVertex3f(-0.365, 0.025, -0.5);
+
+    glTexCoord2f(xMax,yMax);
+    glVertex3f(-0.35, 0.025, -0.5);
+
+    glTexCoord2f(xMax,yMin);
+    glVertex3f(-0.35, 0.025 + (0.175 * (float)healthPoints/(float)100), -0.5);
+
+    glTexCoord2f(xMin,yMin);
+    glVertex3f(-0.365, 0.025 + (0.175 * (float)healthPoints/(float)100), -0.5);
+
+    glEnd();
+    }
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1.0,1.0,1.0);
+    glPopMatrix();
+
     glPushMatrix();
     idle->binder();
     glTranslated(x,y,z);
@@ -66,7 +112,7 @@ void Player::lookAt(double x3, double y3)
 {
 
 }
-///69
+
 double Player::getX()
 {
     return x;
@@ -76,7 +122,7 @@ double Player::getY()
 {
     return y;
 }
-///79
+
 
 void Player::playerInit(ObjList* newObjectList, LevelGen* newLevelGen)
 {
@@ -115,7 +161,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                if((numberOfKeys > 0 || BossKey) && levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -137,7 +183,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                if((numberOfKeys > 0 || BossKey) && levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -159,7 +205,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                if((numberOfKeys > 0 || BossKey) && levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -181,7 +227,7 @@ void Player::playerInput(Inputs *KbMs)
         }else{
             int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y));
             if(doorNum != -1){// if door
-                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                if((numberOfKeys > 0 || BossKey) && levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
                     numberOfKeys--; // remove a key
                 }
             }
@@ -288,19 +334,8 @@ bool Player::lifeStatus()
 void Player::runperframe()
 {
         objectList->mineRuntimeCheck();
-        ///temporary!! just to check if player is destroyed
         lifeStatus();
-        if(stillAlive)
-        {
 
-        }
-        else
-        {
-            ///Player is dead
-            ///do something (gameover screen?)
-            //cout << "you are dead" << endl;
-        }
-        ///
 
         if(Iframes.getTicks() >= 500)
         {

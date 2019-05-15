@@ -11,10 +11,8 @@
 #include <LevelGen.h>
 #include <sound.h>
 #include <particles.h>
-///
 #include <time.h>
 #include <stdlib.h>
-///
 
 Inputs *KbMs = new Inputs();
 Parallax *Plx = new Parallax();
@@ -75,7 +73,7 @@ GLint GLScene::initGL(bool* quit)
     level->InitLevelGen(objectList);
     level->generateLevels();
 
-    SND->playMusic("sounds/underworld.mp3");
+    SND->playMusic("sounds/underworldQuieter.mp3");
     return true;
 }
 
