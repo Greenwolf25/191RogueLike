@@ -148,11 +148,11 @@ GLint GLScene::idleGLScene()
         Timer::pause(); // stop game to avoid
     }
 
-    /*if(!player->stillAlive){ // if player is dead
+    if(!player->stillAlive){ // if player is dead
         menu->menuName = "game over";
         menu->inMenu = true;
         Timer::pause(); // stop game to avoid
-    }*/
+    }
 
     if(menu->inMenu == false){ // if the game is running
 
