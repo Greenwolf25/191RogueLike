@@ -743,7 +743,7 @@ void Enemy::updatePath()
     {
         x -= speed;
     }
-    if(py<=px)
+    if(py<=y)
     {
         y -= speed;
     }
