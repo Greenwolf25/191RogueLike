@@ -118,6 +118,11 @@ void Projectile::runPerFrame()
 
     //
     if(lifetime.getTicks() > 2000) deleteSelf();
+
+    //collision with level
+    if((objList->levelGenerator->getWallMatrix(objList->levelGenerator->getTileIndex(objList->levelGenerator->coordToGridX(x), objList->levelGenerator->coordToGridY(y))))){
+        deleteSelf();
+    }
 }
 void Projectile::drawObject()
 {
@@ -266,7 +271,6 @@ void Explode::runPerFrame()
     {
         sfx(SNDS); // plays sound???
         playedSound = true;
-        //out << "test" << endl;
     }
     if(animationTimer.getTicks() > 60) //allows it to noticeably run through frames
     {
@@ -569,6 +573,10 @@ void Torch::runPerFrame()
             yMin = tileSizeY * 10.0;
         }
         animationTimer.reset();
+    }
+
+    if(!*lit){
+        if(objList->collisioncheckTF(x,y)) *lit = true; // if the torch is hit by a projectile light it
     }
 }
 

@@ -112,6 +112,13 @@ void Player::playerInput(Inputs *KbMs)
                 xMax += .25;
                 animationTimer.reset();
             }
+        }else{
+            int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY));
+            if(doorNum != -1){// if door
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                    numberOfKeys--; // remove a key
+                }
+            }
         } // otherwise do not move
         rotation = 0;
         //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
@@ -126,6 +133,13 @@ void Player::playerInput(Inputs *KbMs)
                 xMin += .25;
                 xMax += .25;
                 animationTimer.reset();
+            }
+        }else{
+            int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y));
+            if(doorNum != -1){// if door
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                    numberOfKeys--; // remove a key
+                }
             }
         }
         rotation = 90.0;
@@ -142,6 +156,13 @@ void Player::playerInput(Inputs *KbMs)
                 xMax += .25;
                 animationTimer.reset();
             }
+        }else{
+            int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(x), levelGenerator->coordToGridY(tempY));
+            if(doorNum != -1){// if door
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                    numberOfKeys--; // remove a key
+                }
+            }
         } // otherwise do not move
         rotation = 180.0;
         //cout<<"getTicks == "<<animationTimer.getTicks()<<endl;
@@ -156,6 +177,13 @@ void Player::playerInput(Inputs *KbMs)
                 xMin += .25;
                 xMax += .25;
                 animationTimer.reset();
+            }
+        }else{
+            int doorNum = levelGenerator->gridToDoorNum(levelGenerator->coordToGridX(tempX), levelGenerator->coordToGridY(y));
+            if(doorNum != -1){// if door
+                if(levelGenerator->openDoor(doorNum,BossKey)){//if door is opened
+                    numberOfKeys--; // remove a key
+                }
             }
         }
         rotation = -90.0;
@@ -294,7 +322,45 @@ void Player::runperframe()
             healthPoints -=15;
         }
 
+    /*
+    if(objectList->collisioncheck(x,y) && flag) //if collision happened while mine is n screen
+    {
+        PS->playSound("sounds/test.wav"); // for the test
+        Explo(xM,yM); //explosion is spawned
+        flag = false; // no mine on screen
+    }
+    else if(flag && mineDurationTimer.getTicks() > 8500 ) // if mine is on screen
+    {
+            Explo(xM,yM); // explosion is spawned
+            flag = false; // no mine on screen
+            mineDurationTimer.reset(); // resets timer
+    }
+    */
+    //Change level check
+    if(fabs(x) > levelGenerator->getMaxY() || fabs(y) > levelGenerator->getMaxX()){ // if off screen
+        int newDoor = levelGenerator->enterDoor(levelGenerator->gridToDoorNum((levelGenerator->coordToGridX(x)),(levelGenerator->coordToGridY(y))));
+
+        x = levelGenerator->gridToCoordX(levelGenerator->getDoorX(newDoor));
+        y = levelGenerator->gridToCoordY(levelGenerator->getDoorY(newDoor));
+
+    }
+
+    // pickup check
+    switch (objectList->collisioncheckPickUp(x,y)){
+    case 'k':
+        PS->playSound("sounds/pickup.wav");
+        numberOfKeys++;
+        break;
+    case 'b':
+        PS->playSound("sounds/pickup.wav");
+        BossKey = true;
+        break;
+    case 'h':
+        PS->playSound("sounds/pickup.wav");
+        healthPoints += 20;
+        if(healthPoints > 100){
+            healthPoints = 100;
+        }
+        break;
+    }
 }
-
-
-

@@ -22,7 +22,7 @@ Inputs::~Inputs()
 
 void Inputs::keyPressed()
 {
-    cout << wParam << "true" << endl;
+    //cout << wParam << "true" << endl;
     if(wParam < 221) keys[wParam] = true;
 
     /*switch(wParam){
@@ -49,7 +49,7 @@ void Inputs::keyPressed()
 
 void Inputs::keyUp()
 {
-    cout << wParam << "false" << endl;
+    //cout << wParam << "false" << endl;
     if(wParam < 221) keys[wParam] = false;
 }
 

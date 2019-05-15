@@ -5,15 +5,25 @@
 #include <stdlib.h>
 #include <iostream>
 #include <TextureLoader.h>
+#include <time.h>
 #include <vector>
+#include <sound.h>
 using namespace std;
 
 
-#define number_of_level_templates 16 /// CHANGE ME WHEN ADDING TEMPLATES
+#define number_of_level_templates 17 /// CHANGE ME WHEN ADDING TEMPLATES
 #define maximum_doors_per_room 8
 
 #define x_tiles 21
 #define y_tiles 12
+
+struct dir{
+    bool up;
+    bool down;
+    bool left;
+    bool right;
+    bool done;
+};
 
 class ObjList;
 
@@ -65,6 +75,7 @@ class LevelNode
 
         void setRoom(int);
         void addDoor(int, LevelNode*, bool); /// note: 8 possible door locations per room 1 on both left and right and 3 on top and bottom
+        void closeDoor(int);
 
         bool* getDoors();
         bool* getOpenDoors();
@@ -75,9 +86,31 @@ class LevelNode
         bool isEnemiesCleared();
         bool isChestOpened();
         bool isItemTaken();
+        int getItemX();
+        int getItemY();
+        int getItemType();
+
+        bool setRoomBeat();
+        bool setEnemiesCleared();
+        bool setChestOpened();
+        bool setItemTaken();
+        void setItemType(int);
+        void setItemCoord(int, int);
+
+        void openDoor(int);
 
         bool* torchStatusTracker;  // for keeping track of the states of the torches in a room (lit or unlit)
 
+        bool isBossRoom;
+
+        int bossRoomDoor;// which door is a bossRoom Door (-1 if none)
+
+        int graphCounter; // for use in making map
+        int branch; // 0 == left branch, 1, 2, 3 = down branch
+
+        bool generated;
+
+        void generateRoom(bool);
 
     protected:
         int levelTemplateIndex;
@@ -107,7 +140,7 @@ class LevelGen
         LevelGen();
         virtual ~LevelGen();
 
-        InitLevelGen(ObjList* objectList); // uses Objlist to spawn and clear objects and uses player to move player when changing levels and to figure out when to change levels
+        void InitLevelGen(ObjList*); // uses Objlist to spawn and clear objects and uses player to move player when changing levels and to figure out when to change levels
         void generateLevels();
 
         void drawLevel();
@@ -134,11 +167,19 @@ class LevelGen
 
         int gridToDoorNum(int x, int y); // returns the door number of a door given x and y or -1 if not door
 
-        bool openDoor(int); // returns true if door is opened. returns false if door is already open or is not able to be opened by key.
+        bool openDoor(int,bool); // returns true if door is opened. returns false if door is already open or is not able to be opened by key.
 
         bool inTransition; // true if the level gen is transitioning between levels
 
+        int enterDoor(int);
+
+        int getDoorX(int door);
+        int getDoorY(int door);
+
     protected:
+
+        sound* soundGen;
+
         int gridX;
         int gridY;
         double maxX;
@@ -155,13 +196,15 @@ class LevelGen
         int textureX;
         int textureY;
 
+        bool lockRoom; // if true then have all doors be locked and unOpenable
+
         LevelNode* startingRoom;
         LevelNode* currentRoom;
 
         TextureLoader* tileSet;
+        TextureLoader* bossDoor;
 
-        int getDoorX(int door);
-        int getDoorY(int door);
+        ObjList* objectList;
 
         int getTileX(int tile);
         int getTileY(int tile);

@@ -40,7 +40,7 @@ void ObjList::objListInit(LevelGen* newLevelGen, Player* player1)/// a change
     textures[3].LoadTexture("images/health.png");
     textures[4].LoadTexture("images/key.png");
     textures[5].LoadTexture("images/BossKey.png");
-    textures[6].LoadTexture("images/tilesetdebug.png");
+    textures[6].LoadTexture("images/tileset.png");
     textures[7].LoadTexture("images/skull2.png");
     textures[8].LoadTexture("images/boss.png");
     textures[9].LoadTexture("images/handL2.png");
@@ -517,7 +517,9 @@ bool ObjList::deleteObject(int index)
 
 void ObjList::clearObjList()
 {
-
+     for(int i = 0; i < size; i++){
+        deleteObject(i);
+    }
 }
 
 GameObject* ObjList::getObj(int index)
@@ -1272,3 +1274,50 @@ bool ObjList::collisioncheckEM(double Ex, double Ey) // remember to play sound i
 //        }
 //    }
 //}
+
+bool ObjList::collisioncheckTF(double Ex, double Ey)
+{
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and mine (placeholder) //adjust later
+        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'f')
+            {
+                getObj(i)->deleteSelf();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+char ObjList::collisioncheckPickUp(double Ex, double Ey)
+{
+    for(int i = 0; i < size; i++) //
+    {
+        double var = .05; //enemy and mine (placeholder) //adjust later
+        //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
+        if(getObj(i) == NULL){}
+        else if((fabs(getObj(i)->x - Ex) <= var) && (fabs(getObj(i)->y - Ey) <= var))
+        {
+            if(getObj(i)->typeCheck == 'k')
+            {
+                getObj(i)->deleteSelf();
+                return 'k';
+            }else if(getObj(i)->typeCheck == 'b')
+            {
+                getObj(i)->deleteSelf();
+                return 'b';
+            }else if(getObj(i)->typeCheck == 'h')
+            {
+                getObj(i)->deleteSelf();
+                return 'h';
+            }
+
+        }
+    }
+    return 0;
+}

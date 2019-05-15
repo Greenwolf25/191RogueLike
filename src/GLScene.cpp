@@ -52,7 +52,7 @@ GLint GLScene::initGL(bool* quit)
 
     closeGame = quit;
     glShadeModel(GL_SMOOTH); // For smooth animation transitions
-    glClearColor(0.6f, 0.8f, 0.8f, 0.0f); // set Background color (R,G,B,A)
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set Background color (R,G,B,A)
     glClearDepth(1.0d); // What is in front and behind
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -73,6 +73,7 @@ GLint GLScene::initGL(bool* quit)
     player->playerInit(objectList, level);
     //objectList->objListInit(level);
     objectList->objListInit(level, player); /// a change 68
+    level->InitLevelGen(objectList);
     level->generateLevels();
 
     for(int y=0; y < y_tiles; y++){
@@ -375,7 +376,6 @@ int GLScene::winMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_LBUTTONDOWN:
         {
             KbMs->wParam = wParam;
-            cout << LOWORD(lParam) << " " << HIWORD(lParam) << endl;
         break;								// Jump Back
         }
 

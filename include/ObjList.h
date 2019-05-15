@@ -105,6 +105,12 @@ class ObjList
         void FFRmotion(double,double);
         void FFLmotion(double,double);
 
+        //collision Check for gunFire and Torch
+        bool collisioncheckTF(double,double);
+
+        //collision Check for pickup items
+        char collisioncheckPickUp(double, double);
+
         //for collision sound, call it where this function is called
         //void setXpos(double); // called in the area object is spawned so it can give xPos a value
         //void setYpos(double); // called in the area object is spawned so it can give yPos a value
