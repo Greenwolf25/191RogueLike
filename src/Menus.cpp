@@ -38,6 +38,16 @@ void Menus::creditMenuInit(char* fileName)
     creditTexture->LoadTexture(fileName);
 }
 
+void Menus::gameOverMenuInit(char* fileName)
+{
+    gameOverTexture->LoadTexture(fileName);
+}
+
+void Menus::victoryMenuInit(char*fileName)
+{
+    victoryTexture->LoadTexture(fileName);
+}
+
 
 void Menus::drawMenus(float width, float height)
 {
@@ -59,6 +69,14 @@ void Menus::drawMenus(float width, float height)
         else if(menuName == "credit menu")
         {
             creditTexture->binder();
+        }
+        else if (menuName == "game over")
+        {
+            gameOverTexture->binder();
+        }
+        else if (menuName == "victory")
+        {
+            victoryTexture->binder();
         }
         glPushMatrix();
         glScaled(3.33,3.33,1.0);
@@ -152,6 +170,14 @@ void Menus::menuInputs(Inputs *KbMs, bool* exitGame)
     else if(menuName == "help menu" && KbMs->isKeyPressed(VK_ESCAPE))
     {
         menuName = "main menu";
+    }
+    else if(menuName == "game over" && KbMs->isKeyPressed(0x45))
+    {
+        *exitGame = true;
+    }
+    else if(menuName == "victory" && KbMs->isKeyPressed(0x45))
+    {
+        *exitGame = true;
     }
     else if(menuName == "pause menu")
     {
