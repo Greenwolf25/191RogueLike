@@ -236,7 +236,7 @@ void Player::playerInput(Inputs *KbMs)
         mineSpawnTimer.reset();
         xM = x; //adjusted for testing mine collision
         yM = y;
-        ///objectList->createEnemy(xM, yM+.15);
+        objectList->createEnemy(xM, yM+.15);
     }
     if(KbMs->isKeyPressed(0x60)&&mineSpawnTimer.getTicks() >1000) // z key
     {

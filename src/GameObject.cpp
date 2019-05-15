@@ -671,7 +671,7 @@ void Enemy::runPerFrame() //fix
             animationTimer.reset();
         }
     }
-    if(hit) // maybe make t a var in gamebject tself
+    if(hit && alive) // maybe make t a var in gamebject tself
     {
         if(onceagain)
         {
@@ -1257,7 +1257,7 @@ void BossFistR::updatePath()
     {
         x -= speed;
     }
-    if(py<px)
+    if(py<y)
     {
         y -= speed;
     }
@@ -1365,7 +1365,7 @@ void BossFistL::updatePath()
     {
         x -= speed;
     }
-    if(py<=px)
+    if(py<=y)
     {
         y -= speed;
     }

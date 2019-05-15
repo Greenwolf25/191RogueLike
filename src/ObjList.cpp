@@ -633,7 +633,7 @@ bool ObjList::collisioncheckEpW() // play enemy's sound somehow
         //if(getObj(i)->typeCheck == 'e'){//enemy is an object;
         if(getObj(i) == NULL){}
         //if(getObj(i)->typeCheck == 'g')
-        else if(getObj(i)->typeCheck == 'g')
+        else if((getObj(i)->typeCheck == 'g') && (getObj(i)->HP > 0))
         {
             double skullx = getObj(i)->x;
             double skully = getObj(i)->y;
@@ -1048,7 +1048,7 @@ bool ObjList::collisioncheckPE(double pX, double pY)
         if(getObj(i) == NULL){}
         else if((fabs(getObj(i)->x - pX) <= var) && (fabs(getObj(i)->y - pY) <= var))
         {
-            if(getObj(i)->typeCheck == 'g') /// enemy
+            if(getObj(i)->typeCheck == 'g' && (getObj(i)->HP > 0)) /// enemy
             {
                 ///player damaged sound
                 sfx->playSound("sounds/playerhit.wav");
