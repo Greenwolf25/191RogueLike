@@ -1114,20 +1114,20 @@ void LevelGen::generateLevels()
     int maxBranch = 0;
     if(maxMax < maxUp[2]){
         maxBranch = 1;
-        maxMax = maxUp[3];
+        maxMax = maxUp[2];
 
     }
     if(maxMax < maxRight[2]){
         maxBranch = 2;
-        maxMax = maxRight[3];
+        maxMax = maxRight[2];
 
     }
     if(maxMax < maxDown[2]){
         maxBranch = 3;
-        maxMax = maxDown[3];
+        maxMax = maxDown[2];
     }
 
-    //cout << maxLeft[2] << ' ' << maxUp[2] << ' ' << maxRight[2] << ' ' << maxDown[2] << ' ' << maxBranch << endl;
+    cout << maxLeft[2] << ' ' << maxUp[2] << ' ' << maxRight[2] << ' ' << maxDown[2] << ' ' << maxBranch << endl;
 
     // make max branch be boss room
     switch (maxBranch){
@@ -1311,9 +1311,9 @@ void LevelGen::generateLevels()
     mapGrid[keyBranchX][keyBranchY]->generateRoom(true); // create a room with an item spawn
     mapGrid[keyBranchX][keyBranchY]->setItemType(2); // type 2 is boss key;
 
-    keyBranch++; // then set the branch for the normal key;
+    keyBranch = (keyBranch+1)%3; // then set the branch for the normal key;
     if(keyBranch == maxBranch){
-        keyBranch++; // if it is the max branch just inc it again
+        keyBranch = (keyBranch+1)%3; // if it is the max branch just inc it again
     }
 
     switch(keyBranch){
@@ -1407,7 +1407,7 @@ int LevelGen::enterDoor(int door)
     currentRoom = currentRoom->getNextRoom(door);
 
     //spawn item
-    if(!(currentRoom->isItemTaken()) && currentRoom->getItemType() != 0){ // if there is an item
+    if((!currentRoom->isItemTaken()) && currentRoom->getItemType() != 0){ // if there is an item
         switch (currentRoom->getItemType()){
         case 1: // spawn key
             objectList->createItem('k',gridToCoordX(currentRoom->getItemX()), gridToCoordY(currentRoom->getItemY()));
@@ -1432,7 +1432,7 @@ int LevelGen::enterDoor(int door)
                                 );
     }
     //spawn enemies
-    if(currentRoom != startingRoom || !currentRoom->isBossRoom){ // do not spawn enemies in starting room or boss room
+    if(currentRoom != startingRoom && !currentRoom->isBossRoom){ // do not spawn enemies in starting room or boss room
         for(int i = 0; i < (currentRoom->getLevelTemplate().getEnemyLocationsSize()/2); i++){
                 objectList->createItem('h' ,gridToCoordX(currentRoom->getLevelTemplate().getEnemyLocations(i*2)), // get x location
                                     gridToCoordY(currentRoom->getLevelTemplate().getEnemyLocations(i*2 +1)) // get y location
