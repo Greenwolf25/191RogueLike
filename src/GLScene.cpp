@@ -136,12 +136,20 @@ GLint GLScene::idleGLScene()
     if(objectList->victory){ // if player is dead
         menu->menuName = "victory";
         menu->inMenu = true;
+        ///
+        SND->stopAllSounds();
+        ///
+        //SND->playSound("sounds/youwinyay.wav");
         Timer::pause(); // stop game to avoid
     }
 
     if(!player->stillAlive){ // if player is dead
         menu->menuName = "game over";
         menu->inMenu = true;
+        ///
+        SND->stopAllSounds();
+        ///
+        //SND->playSound("sounds/gameover.wav");
         Timer::pause(); // stop game to avoid
     }
 

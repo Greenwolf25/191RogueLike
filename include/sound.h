@@ -16,6 +16,7 @@ class sound
         //bgm & sfx
         void playSound(char *);
         void playMusic(char *);
+        void stopAllSounds();
         void cease();
         int  initSounds();
 

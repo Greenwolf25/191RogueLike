@@ -369,7 +369,9 @@ int ObjList::createBoss(double inputX, double inputY)
             break;
         }
     }
-
+    ///stop music somehow
+    ///sfx->stopAllSounds(); //Does not work here??
+    //sfx->playMusic("sounds/bossBattle2.wav");
     if(index == -1) return -1; // if no free space return -1
 
     Boss *temp = new Boss();

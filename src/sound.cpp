@@ -26,6 +26,12 @@ void sound::cease()
 
 }
 
+void sound::stopAllSounds()
+{
+    engine->stopAllSounds();
+}
+
+
 int sound::initSounds()
 {
  if(!engine)
